@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableBody,
@@ -8,8 +10,18 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+type leaderboardType = {
+  ranking: string;
+  name: string;
+  projects: number;
+  goals: number;
+  savings: number;
+  budget: number;
+  streak: string;
+};
 
-const leaderboard = [
+const leaderboard: leaderboardType[] = [
   {
     ranking: "01",
     name: "Clare Brown",
@@ -99,7 +111,7 @@ const UserRankingTable = () => {
         <Table className="table-fixed w-full">
           <colgroup>
             <col style={{ width: "12.5%" }} /> {/* Ranking */}
-            <col style={{ width: "25%" }} /> {/* Name (x2) */}
+            <col style={{ width: "25%" }} /> {/* Name */}
             <col style={{ width: "12.5%" }} /> {/* Projects */}
             <col style={{ width: "12.5%" }} /> {/* Goals */}
             <col style={{ width: "12.5%" }} /> {/* Savings */}
@@ -130,59 +142,85 @@ const UserRankingTable = () => {
           </TableHeader>
 
           <TableBody>
-            {loading
-              ? Array.from({ length: 8 }).map((_, i) => (
-                  <TableRow key={i} className="h-[60px]">
-                    <TableCell>
-                      <Skeleton className="h-4 w-6" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-40" />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Skeleton className="h-4 w-10 mx-auto" />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Skeleton className="h-4 w-10 mx-auto" />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Skeleton className="h-4 w-10 mx-auto" />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Skeleton className="h-4 w-10 mx-auto" />
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Skeleton className="h-4 w-16 ml-auto" />
-                    </TableCell>
-                  </TableRow>
-                ))
-              : leaderboard.map((item) => (
-                  <TableRow className="h-[60px]" key={item.ranking}>
-                    <TableCell className="font-medium whitespace-nowrap">
-                      {item.ranking}
-                    </TableCell>
-                    <TableCell>
-                      <div className="min-w-0">
-                        <span className="block truncate">{item.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center whitespace-nowrap">
-                      {item.projects}
-                    </TableCell>
-                    <TableCell className="text-center whitespace-nowrap">
-                      {item.goals}
-                    </TableCell>
-                    <TableCell className="text-center whitespace-nowrap">
-                      {item.savings}
-                    </TableCell>
-                    <TableCell className="text-center whitespace-nowrap">
-                      {item.budget}
-                    </TableCell>
-                    <TableCell className="text-right whitespace-nowrap">
-                      {item.streak}
-                    </TableCell>
-                  </TableRow>
-                ))}
+            {loading ? (
+              // show skeleton while loading
+              Array.from({ length: 8 }).map((_, i) => (
+                <TableRow key={i} className="h-[60px]">
+                  <TableCell>
+                    <Skeleton className="h-4 w-6" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-40" />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Skeleton className="h-4 w-10 mx-auto" />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Skeleton className="h-4 w-10 mx-auto" />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Skeleton className="h-4 w-10 mx-auto" />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Skeleton className="h-4 w-10 mx-auto" />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Skeleton className="h-4 w-16 ml-auto" />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : leaderboard.length === 0 ? (
+              // show empty state if no data
+              <TableRow>
+                <TableCell colSpan={7} className="text-center py-10">
+                  <div className="flex flex-col items-center gap-4">
+                    <Image
+                      src="/dashboard/EmptyLeaderBoard.svg"
+                      alt="Empty Table"
+                      width={290}
+                      height={290}
+                    />
+                    <aside className="flex flex-col gap-2">
+                      <h3 className="font-medium text-[#2A2829] text-[20px] leading-[30px]">
+                        Nothing to display right now
+                      </h3>
+                      <p className="text-[#2A2829] font-normal text-[16px] leading-[24px]">
+                        Data will show up here as soon as it&apos;s available.
+                      </p>
+                    </aside>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              // render actual leaderboard
+              leaderboard.map((item) => (
+                <TableRow className="h-[60px]" key={item.ranking}>
+                  <TableCell className="font-medium whitespace-nowrap">
+                    {item.ranking}
+                  </TableCell>
+                  <TableCell>
+                    <div className="min-w-0">
+                      <span className="block truncate">{item.name}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-center whitespace-nowrap">
+                    {item.projects}
+                  </TableCell>
+                  <TableCell className="text-center whitespace-nowrap">
+                    {item.goals}
+                  </TableCell>
+                  <TableCell className="text-center whitespace-nowrap">
+                    {item.savings}
+                  </TableCell>
+                  <TableCell className="text-center whitespace-nowrap">
+                    {item.budget}
+                  </TableCell>
+                  <TableCell className="text-right whitespace-nowrap">
+                    {item.streak}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
