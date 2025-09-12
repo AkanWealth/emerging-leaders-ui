@@ -1,89 +1,88 @@
 "use client";
 
 import { useToastStore } from "@/store/toastStore";
-import { useEffect, useState } from "react";
+import { FaCheckCircle } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 
 export default function Toast() {
-  const { isOpen, type, heading, description, duration, closeToast } =
+  const { isOpen, type, heading, description, closeToast, duration } =
     useToastStore();
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-
   useEffect(() => {
-    if (isOpen) {
-      setIsVisible(true);
-      setTimeout(() => setIsAnimating(true), 10);
+    if (isOpen && duration) {
+      const timer = setTimeout(() => {
+        closeToast();
+      }, duration);
 
-      const timer = setTimeout(() => handleClose(), duration);
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer); // cleanup on unmount or re-render
     }
-  }, [isOpen, duration]);
-
-  const handleClose = () => {
-    setIsAnimating(false);
-    setTimeout(() => {
-      setIsVisible(false);
-      closeToast();
-    }, 300);
-  };
-
-  if (!isVisible) return null;
+  }, [isOpen, duration, closeToast]);
 
   const colors = {
     success: {
-      bg: "bg-[#FAF5FF]",
-      border: "border-t-4 border-[#7C3AED]",
-      icon: "bg-[#7C3AED]",
-      heading: "text-[#5B21B6]",
+      bg: "bg-[#fff]",
+      border: "border-l-4 border-[#3DA755]",
+      iconText: "text-[#3DA755] h-[9px] w-[9px]",
+      icon: "bg-[#E7F6EC] border-2 border-[#B5E3C4] h-[24px] w-[24px] rounded-[8px]",
+      heading: "text-[#2A2829]",
     },
     error: {
-      bg: "bg-red-50",
-      border: "border-t-4 border-red-500",
-      icon: "bg-red-500",
-      heading: "text-red-600",
+      bg: "bg-[#fff]",
+      border: "border-l-4 border-[#E81313]",
+      iconText: "text-[#E81313] h-[9px] w-[9px]",
+      icon: "bg-[#FBEAE9] border-2 border-[#F2BCBA] h-[24px] w-[24px] rounded-[8px]",
+      heading: "text-[#2A2829]",
     },
     warning: {
-      bg: "bg-yellow-50",
-      border: "border-t-4 border-yellow-500",
-      icon: "bg-yellow-500",
-      heading: "text-yellow-600",
+      bg: "bg-[#fff]",
+      border: "border-l-4 border-[#FBBF24]",
+      iconText: "text-[#FBBF24] h-[9px] w-[9px]",
+      icon: "bg-[#FEF3C7] border-2 border-[#FCD34D] h-[24px] w-[24px] rounded-[8px]",
+      heading: "text-[#2A2829]",
     },
   };
 
-  const { bg, border, icon, heading: headingColor } = colors[type];
+  const { bg, border, icon, iconText, heading: headingColor } = colors[type];
 
   return (
     <div className="fixed top-7 right-4 z-50 pointer-events-none">
-      <div
-        className={`
-          ${bg} ${border} shadow-lg rounded-xl px-6 py-3 flex items-center gap-3
-          pointer-events-auto transition-all duration-300 ease-out
-          ${
-            isAnimating
-              ? "translate-y-0 opacity-100"
-              : "translate-y-6 opacity-0"
-          }
-        `}
-      >
-        <div
-          className={`w-6 h-6 rounded-full ${icon} flex items-center justify-center text-white text-sm`}
-        >
-          !
-        </div>
-        <div className="flex flex-col">
-          <span className={`text-sm font-medium ${headingColor}`}>
-            {heading}
-          </span>
-          <span className="text-xs text-gray-600">{description}</span>
-        </div>
-        <button
-          onClick={handleClose}
-          className="ml-3 text-gray-500 hover:text-gray-700"
-        >
-          ×
-        </button>
-      </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="toast"
+            initial={{ x: 300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 300, opacity: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 40,
+              duration: 0.4,
+            }}
+            className={`
+              ${bg} ${border} shadow-lg rounded-xl overflow-hidden pl-6 pr-6 py-3 flex items-center gap-3
+              pointer-events-auto w-[470px] h-[66px]
+            `}
+          >
+            <div className={`${icon} flex items-center justify-center`}>
+              <FaCheckCircle className={iconText} />
+            </div>
+
+            <div className="flex flex-col ml-3.5 gap-[2px] flex-1">
+              <span className={`text-sm font-medium ${headingColor}`}>
+                {heading}
+              </span>
+              <span className="text-xs text-[#65605C]">{description}</span>
+            </div>
+            <button
+              onClick={closeToast}
+              className="ml-3 cursor-pointer text-[#000000] hover:text-[#000000]/70"
+            >
+              ×
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

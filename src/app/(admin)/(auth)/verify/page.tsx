@@ -60,15 +60,19 @@ const VerifyPage = () => {
         <div className="w-full max-w-[563px] space-y-6 flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <h3 className="text-[28px] font-medium text-[#2A2829]">
-              Verify Email
+              Admin Invitation
             </h3>
             <p className="text-[#928F8B] font-normal text-[18px]">
-              Enter the 4-digit code sent to your email
+              You’ve been invited to join as an admin.
             </p>
           </div>
 
           <form className="space-y-4">
             <div className="grid gap-3">
+              <p className="text-[#928F8B] font-normal text-[18px]">
+                To continue, please verify your invitation using the passcode
+                sent to your email.
+              </p>
               <div>
                 <InputOTP
                   maxLength={4}
@@ -124,7 +128,7 @@ const VerifyPage = () => {
               type="submit"
               className="h-12 w-full bg-[#A2185A] cursor-pointer rounded-[12px] text-[18px] font-medium text-white mt-11"
             >
-              Verify Email
+              Verify Invitation
             </Button>
           </form>
         </div>

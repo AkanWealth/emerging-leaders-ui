@@ -19,7 +19,7 @@ export class HttpService {
     this.baseUrl = getBaseUrl(env);
   }
 
-  private async refreshAccessToken(cookieName: string): Promise<string | null> {
+  private async refreshAccessToken(cookieName: COOKIE_NAMES): Promise<string | null> {
     if (this.isRefreshing[cookieName]) return null;
 
     this.isRefreshing[cookieName] = true;
@@ -134,7 +134,7 @@ export class HttpService {
   async upload<T>(
     path: string,
     file: File,
-    cookieName?: string
+    cookieName?: COOKIE_NAMES
   ): Promise<T | HttpError> {
     let token: string | undefined;
 

@@ -1,15 +1,93 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import AuthBackground from "../../shared/Backgrounds/AuthBackground";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Link from "next/link";
+import authService from "@/services/authServices";
+import { useToastStore } from "@/store/toastStore";
+import { COOKIE_NAMES, setCookie } from "@/utils/cookiesUtils";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/userStore";
+type SigninResponse =
+  | { error: string }
+  | {
+      tokens: string;
+      user: {
+        id: string;
+        email: string;
+        name: string;
+      };
+    };
 
 const LoginPage = () => {
+  const router = useRouter();
+  const { showToast } = useToastStore();
+  const { setUser } = useUserStore();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
+
+  const handleAdminLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+
+    setIsLoading(true);
+    try {
+      // Define the expected response type
+
+      const response = (await authService.signin({
+        email,
+        password,
+      })) as SigninResponse;
+      // Type guard for response
+      if (
+        typeof response === "object" &&
+        response !== null &&
+        "error" in response
+      ) {
+        showToast(
+          "error",
+          "Invalid email or password",
+          "Please try again.",
+          3000
+        );
+      } else if (
+        typeof response === "object" &&
+        response !== null &&
+        "tokens" in response &&
+        "user" in response
+      ) {
+        console.log(response);
+        setCookie(COOKIE_NAMES.ADMIN_AUTH_TOKENS, response.tokens);
+
+        setUser({
+          id: response.user.id,
+          email: response.user.email,
+          name: response.user.name,
+        });
+        router.push("/admin/dashboard");
+        showToast("success", "Login successfully", "You are logged in.", 3000);
+      }
+    } catch (error) {
+      console.log(error);
+      showToast(
+        "error",
+        "Login Failed",
+        "Failed to sign in. Please try again.",
+        3000
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // const isDisabled = isLoading || !email || !password;
+
   return (
     <main className="flex min-h-screen">
       <section className="hidden md:flex flex-1">
@@ -27,7 +105,8 @@ const LoginPage = () => {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form onSubmit={handleAdminLogin} className="space-y-4">
+            {/* Email */}
             <div className="grid gap-2">
               <Label
                 className="text-[18px] font-medium text-[#2A2829]"
@@ -36,6 +115,7 @@ const LoginPage = () => {
                 Email
               </Label>
               <Input
+                onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 id="email"
                 placeholder="Enter your official email address"
@@ -43,6 +123,7 @@ const LoginPage = () => {
               />
             </div>
 
+            {/* Password */}
             <div className="grid gap-2">
               <Label
                 className="text-[18px] font-medium text-[#2A2829]"
@@ -81,11 +162,21 @@ const LoginPage = () => {
               </div>
             </div>
 
+            {/* Submit */}
             <Button
               type="submit"
-              className="h-12 w-full bg-[#A2185A] cursor-pointer rounded-[12px] text-[18px] font-medium text-white mt-11"
+              onClick={handleAdminLogin}
+              disabled={isLoading || !email || !password}
+              className="h-12 w-full rounded-[12px] text-[18px] font-medium mt-11 bg-[#A2185A] hover:bg-[#A2185A]/80 text-white shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              Log In
+              {isLoading ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Logging in...
+                </span>
+              ) : (
+                "Log In"
+              )}
             </Button>
           </form>
         </div>

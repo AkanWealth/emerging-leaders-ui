@@ -9,25 +9,25 @@ class AuthService {
     password: string;
     confirmPassword: string;
   }) {
-    return this.request.post("admin/auth/signup", data);
+    return this.request.post("/admin/auth/signup", data);
   }
 
   async signin(data: { email: string; password: string }) {
-    return this.request.post("admin/auth/login", {
+    return this.request.post("/admin/auth/login", {
       email: data.email,
       password: data.password,
     });
   }
 
   async verifyOtp(data: { email: string; otp: string }) {
-    return this.request.post("admin/auth/verify-otp", {
+    return this.request.post("/admin/auth/verify-otp", {
       email: data.email,
       otp: data.otp,
     });
   }
 
   async forgotPassword(data: { email: string }) {
-    return this.request.post("admin/auth/forgot-password", {
+    return this.request.post("/admin/auth/forgot-password", {
       email: data.email,
     });
   }

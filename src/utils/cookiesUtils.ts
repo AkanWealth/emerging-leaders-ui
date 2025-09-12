@@ -12,7 +12,7 @@ type ExtendedCookieOptions = Cookies.CookieAttributes & {
  * Stores a value (string or object) in a cookie.
  */
 export const setCookie = (
-  key: string,
+  key: COOKIE_NAMES,
   value: string | Record<string, unknown>,
   options: ExtendedCookieOptions = {}
 ): void => {
@@ -31,7 +31,7 @@ export const setCookie = (
  * Retrieves a cookie and parses it if it's JSON.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getCookie = <T = any>(key: string): T | undefined => {
+export const getCookie = <T = any>(key: COOKIE_NAMES): T | undefined => {
   const value = Cookies.get(key);
   if (!value) return undefined;
 
@@ -42,6 +42,6 @@ export const getCookie = <T = any>(key: string): T | undefined => {
   }
 };
 
-export const removeCookie = (key: string): void => {
+export const removeCookie = (key: COOKIE_NAMES): void => {
   Cookies.remove(key);
 };
