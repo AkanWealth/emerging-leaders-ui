@@ -18,28 +18,28 @@ import { useToastStore } from "@/store/toastStore";
 
 const VerifyPage = () => {
   const router = useRouter();
-  const [timeLeft, setTimeLeft] = useState(20 * 60);
+  //const [timeLeft, setTimeLeft] = useState(20 * 60);
   const [error, setError] = useState(false);
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const { showToast } = useToastStore();
 
-  // countdown logic
-  useEffect(() => {
-    if (timeLeft <= 0) return;
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [timeLeft]);
+  // // countdown logic
+  // useEffect(() => {
+  //   if (timeLeft <= 0) return;
+  //   const timer = setInterval(() => {
+  //     setTimeLeft((prev) => prev - 1);
+  //   }, 1000);
+  //   return () => clearInterval(timer);
+  // }, [timeLeft]);
 
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const s = (seconds % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  };
+  // const formatTime = (seconds: number) => {
+  //   const m = Math.floor(seconds / 60)
+  //     .toString()
+  //     .padStart(2, "0");
+  //   const s = (seconds % 60).toString().padStart(2, "0");
+  //   return `${m}:${s}`;
+  // };
 
   // grab OTP from cookie and animate filling one by one
   // useEffect(() => {
@@ -113,11 +113,11 @@ const VerifyPage = () => {
     }
   };
 
-  const handleResend = () => {
-    console.log("Resend OTP");
-    setTimeLeft(10 * 60);
-    setOtp("");
-  };
+  // const handleResend = () => {
+  //   console.log("Resend OTP");
+  //   setTimeLeft(10 * 60);
+  //   setOtp("");
+  // };
 
   return (
     <main className="flex min-h-screen">
@@ -186,7 +186,7 @@ const VerifyPage = () => {
                 </p>
               )}
 
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <p className="">Didn’t receive a code? </p>
                 {timeLeft > 0 ? (
                   <Button
@@ -203,7 +203,7 @@ const VerifyPage = () => {
                     Resend
                   </Button>
                 )}
-              </div>
+              </div> */}
             </div>
 
             <Button

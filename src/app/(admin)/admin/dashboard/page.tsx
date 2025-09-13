@@ -18,7 +18,7 @@ import { CiExport } from "react-icons/ci";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
-import ChartComponent from "./ChartComponent";
+// import ChartComponent from "./ChartComponent";
 import InteractiveChart from "./ChartComponent";
 import UserRankingFilter from "./UserRankingFilter";
 
