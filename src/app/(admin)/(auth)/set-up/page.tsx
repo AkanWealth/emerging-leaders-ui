@@ -3,24 +3,84 @@ import React, { useState } from "react";
 import AuthBackground from "../../shared/Backgrounds/AuthBackground";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import PasswordStrengthMeter from "../../shared/Meter/PasswordStrengthMeter";
+// import PasswordStrengthMeter from "../../shared/Meter/PasswordStrengthMeter";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import authService from "@/services/authServices";
+import { COOKIE_NAMES, getCookie } from "@/utils/cookiesUtils";
+import { useToastStore } from "@/store/toastStore";
+import { BeatLoader } from "react-spinners";
+type ResetPasswordResponse = {
+  error?: boolean;
+  message?: string;
+  [key: string]: unknown;
+};
 
 const SetUpAdminPasswordPage = () => {
-    const router = useRouter();
+  const router = useRouter();
+  const { showToast } = useToastStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const handleAdminPasswordSetup = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleAdminPasswordSetup = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/complete");
-    // handle password setup logic here
-    console.log("Password:", password);
-    console.log("Confirm Password:", confirmPassword);
-  }
+    setLoading(true);
+    try {
+      const email = getCookie(COOKIE_NAMES.INVITE_EMAIL);
+
+      if (password !== confirmPassword) {
+        showToast(
+          "error",
+          "Passwords do not match",
+          "Please make sure your password and confirm password fields are the same."
+        );
+        setLoading(false);
+        return;
+      }
+
+      const response = (await authService.resetPassword({
+        email,
+        newPassword: password,
+        confirmNewPassword: confirmPassword,
+      })) as ResetPasswordResponse;
+
+      // Type guard for response
+      if (
+        typeof response === "object" &&
+        response !== null &&
+        "error" in response &&
+        response.error
+      ) {
+        showToast(
+          "error",
+          "Password reset failed",
+          response.message ||
+            "We couldn’t reset your password. Please try again."
+        );
+        setLoading(false);
+        return;
+      }
+
+      showToast(
+        "success",
+        "Account setup successful",
+        "Your password has been set. You can now log in to your account."
+      );
+      router.push("/complete");
+    } catch (error: unknown) {
+      console.error(error);
+      showToast("error", "Something went wrong", "Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isFormValid = password.length > 0 && confirmPassword.length > 0;
+
   return (
     <main className="flex min-h-screen">
       <section className="hidden md:flex flex-1">
@@ -38,7 +98,8 @@ const SetUpAdminPasswordPage = () => {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleAdminPasswordSetup}>
+            {/* Password */}
             <div className="grid gap-2">
               <Label
                 className="text-[18px] font-medium text-[#2A2829]"
@@ -68,6 +129,7 @@ const SetUpAdminPasswordPage = () => {
               </div>
             </div>
 
+            {/* Confirm Password */}
             <div className="grid gap-2 mt-2.5">
               <Label
                 className="text-[18px] font-medium text-[#2A2829]"
@@ -97,12 +159,23 @@ const SetUpAdminPasswordPage = () => {
               </div>
             </div>
 
+            {/* Submit Button */}
             <Button
-              onClick={handleAdminPasswordSetup}
               type="submit"
-              className="h-12 w-full bg-[#A2185A] cursor-pointer rounded-[12px] text-[18px] font-medium text-white mt-11"
+              disabled={loading || !isFormValid}
+              className={`h-12 w-full rounded-[12px] text-[18px] font-medium mt-11 
+                ${
+                  loading
+                    ? "bg-[#A2185A]/70 cursor-not-allowed"
+                    : "bg-[#A2185A] text-white hover:bg-[#A2185A]/80 cursor-pointer"
+                }
+              `}
             >
-              Complete setup
+              {loading ? (
+                <BeatLoader size={8} color="#fff" />
+              ) : (
+                "Complete setup"
+              )}
             </Button>
           </form>
         </div>

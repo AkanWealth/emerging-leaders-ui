@@ -9,9 +9,20 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { cn } from "@/lib/utils";
+import { COOKIE_NAMES, getCookie, removeCookie } from "@/utils/cookiesUtils";
+import { motion } from "framer-motion";
+import { BeatLoader } from "react-spinners";
+import authService from "@/services/authServices";
+import { useRouter } from "next/navigation";
+import { useToastStore } from "@/store/toastStore";
 
 const VerifyPage = () => {
-  const [timeLeft, setTimeLeft] = useState(20 * 60); // 10 minutes (in seconds)
+  const router = useRouter();
+  const [timeLeft, setTimeLeft] = useState(20 * 60);
+  const [error, setError] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { showToast } = useToastStore();
 
   // countdown logic
   useEffect(() => {
@@ -30,24 +41,82 @@ const VerifyPage = () => {
     return `${m}:${s}`;
   };
 
-  const [error, setError] = useState(false);
-  const [otp, setOtp] = useState("");
+  // grab OTP from cookie and animate filling one by one
+  // useEffect(() => {
+  //   const code = getCookie(COOKIE_NAMES.INVITE_CODE);
+  //   if (code) {
+  //     let i = 0;
+  //     const interval = setInterval(() => {
+  //       setOtp((prev) => prev + String(code)[i]);
+  //       i++;
+  //       if (i >= String(code).length) clearInterval(interval);
+  //     }, 200);
+  //   }
+  // }, []);
+  useEffect(() => {
+    const code = getCookie(COOKIE_NAMES.INVITE_CODE);
+    if (code) {
+      let i = 0;
+      let newOtp = "";
+      const interval = setInterval(() => {
+        newOtp += String(code)[i];
+        setOtp(newOtp); // replace instead of appending to stale prev
+        i++;
+        if (i >= String(code).length) clearInterval(interval);
+      }, 200);
+    }
+  }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (otp !== "1234") {
-      // fake validation
+    if (otp.length !== 6) {
       setError(true);
-    } else {
-      setError(false);
-      console.log("OTP Verified!");
+      // showToast("error", "");
+      return;
+    }
+
+    setError(false);
+    setLoading(true);
+
+    try {
+      const email = getCookie(COOKIE_NAMES.INVITE_EMAIL);
+      const response = await authService.verifyOtp({ email, otp });
+      // Type assertion to expected response shape
+      const res = response as { error?: boolean };
+      if (res.error) {
+        showToast(
+          "error",
+          "Invalid or Expired OTP.",
+          "The OTP you entered is either incorrect or has expired."
+        );
+        setError(true);
+        return;
+      }
+      showToast(
+        "success",
+        "Email verified successfully",
+        "Your account has been successfully created"
+      );
+      removeCookie(COOKIE_NAMES.INVITE_CODE);
+      router.push("/success");
+    } catch (err: unknown) {
+      console.log(err);
+      showToast(
+        "error",
+        "Failed to verify otp",
+        "There was an error while verifying otp"
+      );
+      setError(true);
+    } finally {
+      setLoading(false);
     }
   };
+
   const handleResend = () => {
-    // put your resend OTP API call here
     console.log("Resend OTP");
-    setTimeLeft(10 * 60); // reset timer back to 10 minutes
+    setTimeLeft(10 * 60);
+    setOtp("");
   };
 
   return (
@@ -73,30 +142,44 @@ const VerifyPage = () => {
                 To continue, please verify your invitation using the passcode
                 sent to your email.
               </p>
+
               <div>
                 <InputOTP
-                  maxLength={4}
+                  maxLength={6}
                   pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
                   value={otp}
                   onChange={(val) => setOtp(val)}
                   aria-invalid={error ? "true" : "false"}
                 >
                   <InputOTPGroup className="gap-3">
-                    {[0, 1, 2, 3].map((index) => (
+                    {[0, 1, 2, 3, 4, 5].map((index) => (
                       <InputOTPSlot
                         key={index}
                         index={index}
                         aria-invalid={error ? "true" : "false"}
                         className={cn(
-                          "h-16 w-14 text-[20px] text-center rounded-lg border border-[#BDC0CE] transition",
+                          "relative h-16 w-14 text-[20px] text-center rounded-lg border border-[#BDC0CE] transition",
                           "data-[active=true]:border-[#A2185A] data-[active=true]:ring-1 data-[active=true]:ring-[#A2185A]",
                           "aria-invalid:border-[#FF9594] aria-invalid:ring-1 aria-invalid:ring-[#FF9594]"
                         )}
-                      />
+                      >
+                        {otp[index] && (
+                          <motion.span
+                            key={otp[index] + index}
+                            initial={{ y: 20, opacity: 0, scale: 0.8 }}
+                            animate={{ y: 0, opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            className="inline-block"
+                          >
+                            {otp[index]}
+                          </motion.span>
+                        )}
+                      </InputOTPSlot>
                     ))}
                   </InputOTPGroup>
                 </InputOTP>
               </div>
+
               {error && (
                 <p className="text-[#E81313] font-normal text-[16px]">
                   You entered an invalid code
@@ -126,9 +209,16 @@ const VerifyPage = () => {
             <Button
               onClick={handleSubmit}
               type="submit"
-              className="h-12 w-full bg-[#A2185A] cursor-pointer rounded-[12px] text-[18px] font-medium text-white mt-11"
+              disabled={loading || otp.length != 6}
+              className={cn(
+                "h-12 w-full cursor-pointer rounded-[12px] text-[18px] font-medium mt-11",
+                loading
+                  ? "bg-[#A2185A]/70 cursor-not-allowed"
+                  : "bg-[#A2185A] text-white hover:bg-[#A2185A]/80"
+              )}
             >
-              Verify Invitation
+              {loading && <BeatLoader size={8} color="#fff" />}
+              {!loading && "Verify Invitation"}
             </Button>
           </form>
         </div>

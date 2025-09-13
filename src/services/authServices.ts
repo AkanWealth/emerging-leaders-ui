@@ -34,15 +34,13 @@ class AuthService {
 
   async resetPassword(data: {
     email: string;
-    otp: string;
     newPassword: string;
     confirmNewPassword: string;
   }) {
-    return this.request.post("admin/auth/reset-password", {
+    return this.request.post("/admin/auth/reset-password", {
       email: data.email,
-      otp: data.otp,
       newPassword: data.newPassword,
-      confirmNewPassword: data.confirmNewPassword,
+      confirmPassword: data.confirmNewPassword,
     });
   }
 }

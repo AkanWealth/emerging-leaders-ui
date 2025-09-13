@@ -2,6 +2,8 @@ import Cookies from "js-cookie";
 
 export enum COOKIE_NAMES {
   ADMIN_AUTH_TOKENS = "emerging_leaders_admin_auth_tokens",
+  INVITE_EMAIL = "emerging_leaders_admin_invite_email",
+  INVITE_CODE = "emerging_leaders_admin_invite_code",
 }
 
 type ExtendedCookieOptions = Cookies.CookieAttributes & {

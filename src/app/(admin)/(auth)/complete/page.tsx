@@ -31,7 +31,7 @@ const CompleteAdminSetUp = () => {
           </div>
 
           <Button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push("/admin/dashboard")}
             className="bg-[#A2185A] cursor-pointer min-w-[200px] text-[#fff] rounded-[16px] h-[50px] text-[16px] font-medium"
           >
             Open Dashboard

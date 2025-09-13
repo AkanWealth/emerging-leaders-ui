@@ -3,9 +3,22 @@
 import { Button } from "@/components/ui/button";
 import AuthBackground from "../../shared/Backgrounds/AuthBackground";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { COOKIE_NAMES, setCookie } from "@/utils/cookiesUtils";
 
 const InviteAdminPage = () => {
   const router = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const rawEmail = params.get("email");
+    const code = params.get("code");
+
+    if (!rawEmail || !code) return;
+
+    setCookie(COOKIE_NAMES.INVITE_EMAIL, rawEmail);
+    setCookie(COOKIE_NAMES.INVITE_CODE, code);
+  }, []);
 
   return (
     <main className="flex min-h-screen">
@@ -34,7 +47,7 @@ const InviteAdminPage = () => {
             </div>
             <Button
               onClick={() => router.push("/verify")} // 👈 change this route
-              className="bg-[#A2185A] cursor-pointer min-w-[200px] text-[#fff] rounded-[16px] h-[40px] text-[16px] font-medium"
+              className="bg-[#A2185A] hover:bg-inherit hover:text-[#A2185A] hover:border hover:border-[#A2185A] cursor-pointer min-w-[200px] text-[#fff] rounded-[16px] h-[40px] text-[16px] font-medium"
             >
               Join
             </Button>

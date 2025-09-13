@@ -33,7 +33,7 @@ const SuccessPage = () => {
 
           <Button
             onClick={() => router.push("/set-up")}
-            className="bg-[#A2185A] cursor-pointer min-w-[200px] text-[#fff] rounded-[16px] h-[50px] text-[16px] font-medium"
+            className="bg-[#A2185A] hover:border-[#A2185A] hover:text-[#A2185A] hover:bg-white hover:border cursor-pointer min-w-[200px] text-[#fff] rounded-[16px] h-[50px] text-[16px] font-medium"
           >
             Set up account
           </Button>
