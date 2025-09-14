@@ -4,6 +4,7 @@ import { UserListType } from "@/app/(admin)/admin/user-management/UserList";
 import { create } from "zustand";
 
 type ModalType =
+  | "createAdmin"
   | "editAdmin"
   | "resendInvite"
   | "deactivate"

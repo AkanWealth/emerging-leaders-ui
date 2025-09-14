@@ -12,6 +12,7 @@ import ResendInviteAdmin from "./AdminTab/ResendInviteAdmin";
 import ReactivateAdmin from "./AdminTab/ReactivateAdmin";
 import ReactivateUser from "./UserTab/ReactivateUser";
 import DeactivateUser from "./UserTab/DeactivateUser";
+import CreateAdmin from "./AdminTab/CreateAdmin";
 
 const UserManagementPage = () => {
   const { modalType, closeModal } = userModalStore();
@@ -30,7 +31,10 @@ const UserManagementPage = () => {
           </p>
         </section>
         <TabsContent className="flex justify-end" value="admin">
-          <Button className="bg-[#A2185A] w-[162px] cursor-pointer hover:bg-[#A2185A] rounded-[16px] h-[48px] font-medium text-[16px] leading-[24px]">
+          <Button
+            onClick={() => userModalStore.getState().openModal("createAdmin")}
+            className="bg-[#A2185A] w-[162px] cursor-pointer hover:bg-[#A2185A] rounded-[16px] h-[48px] font-medium text-[16px] leading-[24px]"
+          >
             Add User
           </Button>
         </TabsContent>
@@ -113,6 +117,7 @@ const UserManagementPage = () => {
             </DialogClose>
 
             {/* Modal Content */}
+            {modalType === "createAdmin" && <CreateAdmin />}
             {modalType === "editAdmin" && <EditAdmin />}
             {modalType === "resendInvite" && <ResendInviteAdmin />}
             {/* {modalType === "resendInvite" && (
