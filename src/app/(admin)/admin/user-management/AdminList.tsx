@@ -11,9 +11,15 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Ban, RotateCcw, Eye } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 import { formatDate } from "@/utils/formatDate";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type AdminStatus = "Active" | "Inactive" | "Pending" | "Deactivated";
 
@@ -64,30 +70,20 @@ const AdminList = () => {
       <div className="overflow-x-auto">
         <Table className="table-fixed w-full">
           <colgroup>
-            <col style={{ width: "30%" }} /> {/* Full Name */}
-            <col style={{ width: "15%" }} /> {/* Role */}
-            <col style={{ width: "20%" }} /> {/* Date */}
-            <col style={{ width: "20%" }} /> {/* Status */}
-            <col style={{ width: "15%" }} /> {/* Action */}
+            <col className="w-[30%]" />
+            <col className="w-[15%]" />
+            <col className="w-[20%]" />
+            <col className="w-[20%]" />
+            <col className="w-[15%]" />
           </colgroup>
 
           <TableHeader>
             <TableRow className="bg-[#F9F9F7] h-[60px]">
-              <TableHead className="whitespace-nowrap text-[#2A2829] text-[16px] leading-[24px] font-medium">
-                Full Name
-              </TableHead>
-              <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] leading-[24px] font-medium">
-                Assigned Role
-              </TableHead>
-              <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] leading-[24px] font-medium">
-                Date Added
-              </TableHead>
-              <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] leading-[24px] font-medium">
-                Current Status
-              </TableHead>
-              <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] leading-[24px] font-medium">
-                Action
-              </TableHead>
+              <TableHead>Full Name</TableHead>
+              <TableHead className="text-center">Assigned Role</TableHead>
+              <TableHead className="text-center">Date Added</TableHead>
+              <TableHead className="text-center">Current Status</TableHead>
+              <TableHead className="text-center">Action</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -126,7 +122,7 @@ const AdminList = () => {
                       <h3 className="font-medium text-[#2A2829] text-[20px] leading-[30px]">
                         Nothing to display right now
                       </h3>
-                      <p className="text-[#2A2829] font-normal text-[16px] leading-[24px]">
+                      <p className="text-[#2A2829] text-[16px] leading-[24px]">
                         Data will show up here as soon as it&apos;s available.
                       </p>
                     </aside>
@@ -136,20 +132,72 @@ const AdminList = () => {
             ) : (
               adminData.map((admin, i) => (
                 <TableRow className="h-[60px]" key={i}>
-                  <TableCell className="font-normal  text-[16px] leading-[24px]  text-[#2A2829]">
-                    {admin.full_name}
-                  </TableCell>
-                  <TableCell className="text-center font-normal  text-[16px] leading-[24px]  text-[#2A2829]">
-                    {admin.role}
-                  </TableCell>
-                  <TableCell className="text-center font-normal  text-[16px] leading-[24px]  text-[#2A2829]">
+                  <TableCell>{admin.full_name}</TableCell>
+                  <TableCell className="text-center">{admin.role}</TableCell>
+                  <TableCell className="text-center">
                     {formatDate(admin.createdAt)}
                   </TableCell>
-                  <TableCell className="text-center font-normal  text-[16px] leading-[24px]  text-[#2A2829]">
+                  <TableCell className="text-center">
                     <StatusBadge status={admin.status} />
                   </TableCell>
-                  <TableCell className="text-center font-normal  text-[16px] leading-[24px]  text-[#2A2829]">
-                    <EllipsisVertical className="mx-auto cursor-pointer " />
+                  <TableCell className="text-center">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <EllipsisVertical className="mx-auto cursor-pointer" />
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent
+                        align="end"
+                        sideOffset={4}
+                        className="w-56 p-0 text-[#65605C] text-[16px] leading-[24px] font-normal rounded-[20px] shadow-md border border-[#E5E7EF]"
+                      >
+                        {/* Edit Admin Details */}
+                        <>
+                          <DropdownMenuItem className="gap-2 py-[18px] px-[25px] cursor-pointer rounded-b-none">
+                            <Eye className="h-[18px] w-[18px]" />
+                            Edit Admin Details
+                          </DropdownMenuItem>
+                          <div className="w-full h-[1px] bg-[#E5E7EF]" />
+                        </>
+
+                        {/* Resend Invite (only if Pending) */}
+                        {admin.status === "Pending" && (
+                          <>
+                            <DropdownMenuItem className="gap-2 py-[18px] px-[25px] cursor-pointer rounded-t-none">
+                              <Image
+                                src="/user-management/Resend.svg"
+                                alt="Resend Icon"
+                                width={18}
+                                height={18}
+                              />
+                              {/* <RotateCcw className="h-[18px] w-[18px]" /> */}
+                              Resend Invite
+                            </DropdownMenuItem>
+                            <div className="w-full h-[1px] bg-[#E5E7EF]" />
+                          </>
+                        )}
+
+                        {/* Deactivate */}
+                        {admin.status === "Active" && (
+                          <>
+                            <DropdownMenuItem className="gap-2 py-[18px] rounded-t-none px-[25px] cursor-pointer text-[#E81313] focus:bg-[#FEE2E2] focus:text-[#E81313]">
+                              <Ban className="h-[18px] w-[18px] text-[#E81313]" />
+                              Deactivate Account
+                            </DropdownMenuItem>
+                            <div className="w-full h-[1px] bg-[#E5E7EF]" />
+                          </>
+                        )}
+
+                        {/* Reactivate */}
+                        {(admin.status === "Inactive" ||
+                          admin.status === "Deactivated") && (
+                          <DropdownMenuItem className="gap-2 rounded-t-none py-[18px] px-[25px] cursor-pointer text-[#3DA755] focus:bg-[#c5f8d1] focus:text-[#3DA755]">
+                            <RotateCcw className="h-[18px] w-[18px] text-[#3DA755]" />
+                            Reactivate Account
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))

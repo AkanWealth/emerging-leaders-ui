@@ -45,7 +45,7 @@ export default function Toast() {
   const { bg, border, icon, iconText, heading: headingColor } = colors[type];
 
   return (
-    <div className="fixed top-7 right-4 z-50 pointer-events-none">
+    <div className="fixed top-7 right-4 z-[99999] pointer-events-none">
       <AnimatePresence>
         {isOpen && (
           <motion.div

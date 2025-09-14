@@ -3,10 +3,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListFilter, Search } from "lucide-react";
 import UserRankingTable from "../dashboard/UserRankingTable";
 import AdminList from "./AdminList";
+import UserList from "./UserList";
 
 const UserManagementPage = () => {
   return (
-    <main className="flex flex-col gap-[32px]">
+    <Tabs defaultValue="user" className="flex flex-col gap-[32px]">
       <section className="flex items-center justify-between">
         <section className="flex flex-col gap-[4px]">
           <h2 className="text-[#2A2829] font-medium text-[24px]">
@@ -16,15 +17,14 @@ const UserManagementPage = () => {
             Monitor, filter, and manage users effectively.
           </p>
         </section>
-        <Button className="bg-[#A2185A] w-[162px] cursor-pointer hover:bg-[#A2185A] rounded-[16px] h-[48px] font-medium text-[16px] leading-[24px]">
-          Add User
-        </Button>
+        <TabsContent className="flex justify-end" value="admin">
+          <Button className="bg-[#A2185A] w-[162px] cursor-pointer hover:bg-[#A2185A] rounded-[16px] h-[48px] font-medium text-[16px] leading-[24px]">
+            Add User
+          </Button>
+        </TabsContent>
       </section>
       <section className="">
-        <Tabs
-          defaultValue="user"
-          className="bg-[#FFFFFF] pb-[8px] pt-[12px] rounded-[12px] shadow relative"
-        >
+        <section className="bg-[#FFFFFF] pb-[8px] pt-[12px] rounded-[12px] shadow relative">
           <aside className="flex px-[20px] items-center justify-between ">
             <TabsList className="h-[40px] w-[267px] bg-inherit border-none p-0 flex items-center">
               <TabsTrigger
@@ -74,21 +74,22 @@ const UserManagementPage = () => {
           )} */}
           <aside>
             <TabsContent
-              className="border-t mt-[15px] px-[20px] rounded-t-[12px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
+              className="border-t mt-[15px] px-[20px] rounded-t-[12px] min-h-[500px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
               value="user"
             >
-              <UserRankingTable />
+              <UserList />
             </TabsContent>
             <TabsContent
-              className="border-t mt-[15px] px-[20px] rounded-t-[12px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
+              className="border-t mt-[15px] px-[20px] rounded-t-[12px]  min-h-[500px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
               value="admin"
             >
               <AdminList />
             </TabsContent>
           </aside>
-        </Tabs>
+          {/* </Tabs> */}
+        </section>
       </section>
-    </main>
+    </Tabs>
   );
 };
 
