@@ -11,13 +11,20 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { EllipsisVertical } from "lucide-react";
+import { Ban, EllipsisVertical, RotateCcw } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 import { formatDate } from "@/utils/formatDate";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { manageUserModalStore } from "@/store/userModalStore";
 
 type UserStatus = "Active" | "Deactivated";
 
-type UserListType = {
+export type UserListType = {
   full_name: string;
   email: string;
   last_active: Date;
@@ -149,8 +156,52 @@ const UserList = () => {
                   <TableCell className="text-center text-[16px] text-[#2A2829]">
                     <StatusBadge status={user.status} />
                   </TableCell>
-                  <TableCell className="text-center text-[16px] text-[#2A2829]">
-                    <EllipsisVertical className="mx-auto cursor-pointer" />
+                  <TableCell className="text-center">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <EllipsisVertical className="mx-auto cursor-pointer" />
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent
+                        align="end"
+                        sideOffset={2}
+                        className="w-56 p-0 text-[#65605C] text-[16px] leading-[24px] font-normal rounded-[20px] shadow-md border border-[#E5E7EF]"
+                      >
+                        {user.status === "Active" && (
+                          <>
+                            <DropdownMenuItem
+                              className="gap-2 py-[18px] rounded-t-none px-[25px] cursor-pointer text-[#E81313] focus:bg-[#FEE2E2] focus:text-[#E81313]"
+                              onClick={() =>
+                                manageUserModalStore
+                                  .getState()
+                                  .openModal("deactivateUser", user)
+                              }
+                            >
+                              <Ban className="h-[18px] w-[18px] text-[#E81313]" />
+                              Deactivate User
+                            </DropdownMenuItem>
+                            <div className="w-full h-[1px] bg-[#E5E7EF]" />
+                          </>
+                        )}
+
+                        {user.status === "Deactivated" && (
+                          <>
+                            <DropdownMenuItem
+                              className="gap-2 rounded-t-none py-[18px] px-[25px] cursor-pointer text-[#3DA755] focus:bg-[#c5f8d1] focus:text-[#3DA755]"
+                              onClick={() =>
+                                manageUserModalStore
+                                  .getState()
+                                  .openModal("reactivateUser", user)
+                              }
+                            >
+                              <RotateCcw className="h-[18px] w-[18px] text-[#3DA755]" />
+                              Reactivate User
+                            </DropdownMenuItem>
+                            <div className="w-full h-[1px] bg-[#E5E7EF]" />
+                          </>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))

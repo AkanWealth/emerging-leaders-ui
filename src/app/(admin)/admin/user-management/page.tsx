@@ -5,14 +5,18 @@ import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
 import { ListFilter, Search, X } from "lucide-react";
 import AdminList from "./AdminList";
 import UserList from "./UserList";
-import { userModalStore } from "@/store/userModalStore";
+import { manageUserModalStore, userModalStore } from "@/store/userModalStore";
 import EditAdmin from "./AdminTab/EditAdmin";
 import DeactivateAdmin from "./AdminTab/DeactivateAdmin";
 import ResendInviteAdmin from "./AdminTab/ResendInviteAdmin";
 import ReactivateAdmin from "./AdminTab/ReactivateAdmin";
+import ReactivateUser from "./UserTab/ReactivateUser";
+import DeactivateUser from "./UserTab/DeactivateUser";
 
 const UserManagementPage = () => {
   const { modalType, closeModal } = userModalStore();
+  const { modalType: userModalType, closeModal: closeUserModalType } =
+    manageUserModalStore();
 
   return (
     <Tabs defaultValue="user" className="flex flex-col gap-[32px]">
@@ -117,6 +121,23 @@ const UserManagementPage = () => {
 
             {modalType === "deactivate" && <DeactivateAdmin />}
             {modalType === "reactivate" && <ReactivateAdmin />}
+          </DialogContent>
+        </Dialog>
+      </TabsContent>
+      <TabsContent className="relative" value="user">
+        <Dialog open={!!userModalType} onOpenChange={closeUserModalType}>
+          <DialogContent
+            showCloseButton={false}
+            className="min-w-[880px] w-full "
+          >
+            {/* Custom Close Button */}
+            <DialogClose className="absolute right-4 top-4">
+              <X className="text-[#A2185A] h-[24px] w-[24px] cursor-pointer" />
+            </DialogClose>
+
+            {/* Modal Content */}
+            {userModalType === "deactivateUser" && <DeactivateUser />}
+            {userModalType === "reactivateUser" && <ReactivateUser />}
           </DialogContent>
         </Dialog>
       </TabsContent>

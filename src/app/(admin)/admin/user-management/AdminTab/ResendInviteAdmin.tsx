@@ -5,11 +5,11 @@ import Image from "next/image";
 
 const ResendInviteAdmin = () => {
   const { showToast } = useToastStore();
-  const { modalType, selectedAdmin, closeModal } = userModalStore();
+  const { selectedAdmin, closeModal } = userModalStore();
 
   const handleResendInviteAdmin = () => {
     try {
-    //   throw Error();
+      //   throw Error();
       showToast(
         "success",
         "Admin invite sent successfully.",

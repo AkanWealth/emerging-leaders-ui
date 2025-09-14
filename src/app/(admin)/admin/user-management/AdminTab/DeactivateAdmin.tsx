@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const DeactivateAdmin = () => {
   const { showToast } = useToastStore();
-  const { modalType, selectedAdmin, closeModal } = userModalStore();
+  const { selectedAdmin, closeModal } = userModalStore();
 
   const handleUpdateAdmin = () => {
     try {
