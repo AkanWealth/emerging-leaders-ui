@@ -1,11 +1,19 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ListFilter, Search } from "lucide-react";
-import UserRankingTable from "../dashboard/UserRankingTable";
+import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
+import { ListFilter, Search, X } from "lucide-react";
 import AdminList from "./AdminList";
 import UserList from "./UserList";
+import { userModalStore } from "@/store/userModalStore";
+import EditAdmin from "./AdminTab/EditAdmin";
+import DeactivateAdmin from "./AdminTab/DeactivateAdmin";
+import ResendInviteAdmin from "./AdminTab/ResendInviteAdmin";
+import ReactivateAdmin from "./AdminTab/ReactivateAdmin";
 
 const UserManagementPage = () => {
+  const { modalType, closeModal } = userModalStore();
+
   return (
     <Tabs defaultValue="user" className="flex flex-col gap-[32px]">
       <section className="flex items-center justify-between">
@@ -89,6 +97,29 @@ const UserManagementPage = () => {
           {/* </Tabs> */}
         </section>
       </section>
+      <TabsContent className="relative" value="admin">
+        <Dialog open={!!modalType} onOpenChange={closeModal}>
+          <DialogContent
+            showCloseButton={false}
+            className="min-w-[880px] w-full "
+          >
+            {/* Custom Close Button */}
+            <DialogClose className="absolute right-4 top-4">
+              <X className="text-[#A2185A] h-[24px] w-[24px] cursor-pointer" />
+            </DialogClose>
+
+            {/* Modal Content */}
+            {modalType === "editAdmin" && <EditAdmin />}
+            {modalType === "resendInvite" && <ResendInviteAdmin />}
+            {/* {modalType === "resendInvite" && (
+              <p>Resend invite to {selectedAdmin?.full_name}?</p>
+            )} */}
+
+            {modalType === "deactivate" && <DeactivateAdmin />}
+            {modalType === "reactivate" && <ReactivateAdmin />}
+          </DialogContent>
+        </Dialog>
+      </TabsContent>
     </Tabs>
   );
 };

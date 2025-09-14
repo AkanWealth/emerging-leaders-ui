@@ -20,10 +20,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { userModalStore } from "@/store/userModalStore";
 
 type AdminStatus = "Active" | "Inactive" | "Pending" | "Deactivated";
 
-type AdminListType = {
+export type AdminListType = {
   full_name: string;
   role: "Admin";
   createdAt: Date;
@@ -151,19 +152,31 @@ const AdminList = () => {
                         sideOffset={4}
                         className="w-56 p-0 text-[#65605C] text-[16px] leading-[24px] font-normal rounded-[20px] shadow-md border border-[#E5E7EF]"
                       >
-                        {/* Edit Admin Details */}
                         <>
-                          <DropdownMenuItem className="gap-2 py-[18px] px-[25px] cursor-pointer rounded-b-none">
+                          <DropdownMenuItem
+                            onClick={() =>
+                              userModalStore
+                                .getState()
+                                .openModal("editAdmin", admin)
+                            }
+                            className="gap-2 py-[18px] px-[25px] cursor-pointer rounded-b-none"
+                          >
                             <Eye className="h-[18px] w-[18px]" />
                             Edit Admin Details
                           </DropdownMenuItem>
                           <div className="w-full h-[1px] bg-[#E5E7EF]" />
                         </>
 
-                        {/* Resend Invite (only if Pending) */}
                         {admin.status === "Pending" && (
                           <>
-                            <DropdownMenuItem className="gap-2 py-[18px] px-[25px] cursor-pointer rounded-t-none">
+                            <DropdownMenuItem
+                              className="gap-2 py-[18px] px-[25px] cursor-pointer rounded-t-none"
+                              onClick={() =>
+                                userModalStore
+                                  .getState()
+                                  .openModal("resendInvite", admin)
+                              }
+                            >
                               <Image
                                 src="/user-management/Resend.svg"
                                 alt="Resend Icon"
@@ -177,10 +190,17 @@ const AdminList = () => {
                           </>
                         )}
 
-                        {/* Deactivate */}
-                        {admin.status === "Active" && (
+                        {(admin.status === "Active" ||
+                          admin.status === "Pending") && (
                           <>
-                            <DropdownMenuItem className="gap-2 py-[18px] rounded-t-none px-[25px] cursor-pointer text-[#E81313] focus:bg-[#FEE2E2] focus:text-[#E81313]">
+                            <DropdownMenuItem
+                              onClick={() =>
+                                userModalStore
+                                  .getState()
+                                  .openModal("deactivate", admin)
+                              }
+                              className="gap-2 py-[18px] rounded-t-none px-[25px] cursor-pointer text-[#E81313] focus:bg-[#FEE2E2] focus:text-[#E81313]"
+                            >
                               <Ban className="h-[18px] w-[18px] text-[#E81313]" />
                               Deactivate Account
                             </DropdownMenuItem>
@@ -188,10 +208,16 @@ const AdminList = () => {
                           </>
                         )}
 
-                        {/* Reactivate */}
                         {(admin.status === "Inactive" ||
                           admin.status === "Deactivated") && (
-                          <DropdownMenuItem className="gap-2 rounded-t-none py-[18px] px-[25px] cursor-pointer text-[#3DA755] focus:bg-[#c5f8d1] focus:text-[#3DA755]">
+                          <DropdownMenuItem
+                            onClick={() =>
+                              userModalStore
+                                .getState()
+                                .openModal("reactivate", admin)
+                            }
+                            className="gap-2 rounded-t-none py-[18px] px-[25px] cursor-pointer text-[#3DA755] focus:bg-[#c5f8d1] focus:text-[#3DA755]"
+                          >
                             <RotateCcw className="h-[18px] w-[18px] text-[#3DA755]" />
                             Reactivate Account
                           </DropdownMenuItem>
