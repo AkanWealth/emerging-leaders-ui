@@ -43,6 +43,9 @@ class AuthService {
       confirmPassword: data.confirmNewPassword,
     });
   }
+  async getAdminCount(){
+    return this.request.get("/admin/auth/count")
+  }
 }
 
 const authService = new AuthService();

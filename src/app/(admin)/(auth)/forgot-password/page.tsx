@@ -1,9 +1,47 @@
+"use client";
 import { Label } from "@/components/ui/label";
 import AuthBackground from "../../shared/Backgrounds/AuthBackground";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import authService from "@/services/authServices";
+import { useToastStore } from "@/store/toastStore";
+import { BeatLoader } from "react-spinners";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ForgotPasswordPage = () => {
+  const [error, setError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const { showToast } = useToastStore();
+
+  const handleSubmit = async (ev: React.FormEvent) => {
+    ev.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await authService.forgotPassword({ email });
+      if (response.error) {
+        setError(true);
+        showToast("error", "Failed to send reset link", response.message);
+        return;
+      }
+      showToast(
+        "success",
+        "Reset link sent successfully",
+        "Check your email to access the link"
+      );
+    } catch (error: unknown) {
+      console.log(error);
+      showToast(
+        "error",
+        "Error",
+        "Error occurred while trying to send reset link"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <main className="flex min-h-screen">
       <section className="hidden md:flex flex-1">
@@ -21,7 +59,7 @@ const ForgotPasswordPage = () => {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2">
               <div className="grid gap-2">
                 <Label
@@ -30,20 +68,51 @@ const ForgotPasswordPage = () => {
                 >
                   Email
                 </Label>
-                <Input
-                  type="email"
-                  id="email"
-                  placeholder="Enter your official email address"
-                  className="h-12 text-[16px] rounded-[12px] border-[#B1B1AE] px-4 outline-none"
-                />
+
+                <motion.div
+                  animate={error ? { x: [0, -6, 6, -6, 6, 0] } : { x: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <Input
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (error) setError(false); // reset error on typing
+                    }}
+                    type="email"
+                    id="email"
+                    placeholder="Enter your official email address"
+                    className={`h-12 text-[16px] rounded-[12px] border px-4 outline-none transition 
+                      ${error ? "border-red-500" : "border-[#B1B1AE]"}`}
+                  />
+                </motion.div>
               </div>
-              <p className="text-[#E81313]">Invalid email address</p>
+
+              <AnimatePresence>
+                {error && (
+                  <motion.p
+                    className="text-[#E81313] text-sm"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    Invalid email address
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </div>
+
             <Button
               type="submit"
-              className="h-12 w-full bg-[#A2185A] cursor-pointer rounded-[12px] text-[18px] font-medium text-white mt-11"
+              disabled={isLoading || !email}
+              className="h-12 w-full bg-[#A2185A] hover:bg-[#8f1450] cursor-pointer rounded-[12px] text-[18px] font-medium text-white mt-11 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Send Reset Link
+              {isLoading ? (
+                <BeatLoader size={8} color="#fff" />
+              ) : (
+                "Send Reset Link"
+              )}
             </Button>
           </form>
         </div>

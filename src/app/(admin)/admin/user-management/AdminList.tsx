@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { userModalStore } from "@/store/userModalStore";
+import EmptyList from "./EmptyList";
 
 type AdminStatus = "Active" | "Inactive" | "Pending" | "Deactivated";
 
@@ -32,30 +33,30 @@ export type AdminListType = {
 };
 
 const adminData: AdminListType[] = [
-  {
-    full_name: "David Jack",
-    role: "Admin",
-    createdAt: new Date("2025-01-10"),
-    status: "Active",
-  },
-  {
-    full_name: "Sarah Lee",
-    role: "Admin",
-    createdAt: new Date("2024-12-05"),
-    status: "Inactive",
-  },
-  {
-    full_name: "Michael Brown",
-    role: "Admin",
-    createdAt: new Date("2025-02-20"),
-    status: "Pending",
-  },
-  {
-    full_name: "Emily Davis",
-    role: "Admin",
-    createdAt: new Date("2025-03-15"),
-    status: "Deactivated",
-  },
+  // {
+  //   full_name: "David Jack",
+  //   role: "Admin",
+  //   createdAt: new Date("2025-01-10"),
+  //   status: "Active",
+  // },
+  // {
+  //   full_name: "Sarah Lee",
+  //   role: "Admin",
+  //   createdAt: new Date("2024-12-05"),
+  //   status: "Inactive",
+  // },
+  // {
+  //   full_name: "Michael Brown",
+  //   role: "Admin",
+  //   createdAt: new Date("2025-02-20"),
+  //   status: "Pending",
+  // },
+  // {
+  //   full_name: "Emily Davis",
+  //   role: "Admin",
+  //   createdAt: new Date("2025-03-15"),
+  //   status: "Deactivated",
+  // },
 ];
 
 const AdminList = () => {
@@ -77,16 +78,17 @@ const AdminList = () => {
             <col className="w-[20%]" />
             <col className="w-[15%]" />
           </colgroup>
-
-          <TableHeader>
-            <TableRow className="bg-[#F9F9F7] h-[60px]">
-              <TableHead>Full Name</TableHead>
-              <TableHead className="text-center">Assigned Role</TableHead>
-              <TableHead className="text-center">Date Added</TableHead>
-              <TableHead className="text-center">Current Status</TableHead>
-              <TableHead className="text-center">Action</TableHead>
-            </TableRow>
-          </TableHeader>
+          {!loading && adminData.length > 0 && (
+            <TableHeader>
+              <TableRow className="bg-[#F9F9F7] h-[60px]">
+                <TableHead>Full Name</TableHead>
+                <TableHead className="text-center">Assigned Role</TableHead>
+                <TableHead className="text-center">Date Added</TableHead>
+                <TableHead className="text-center">Current Status</TableHead>
+                <TableHead className="text-center">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+          )}
 
           <TableBody>
             {loading ? (
@@ -112,22 +114,7 @@ const AdminList = () => {
             ) : adminData.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-10">
-                  <div className="flex flex-col items-center gap-4">
-                    <Image
-                      src="/dashboard/EmptyLeaderBoard.svg"
-                      alt="Empty Table"
-                      width={290}
-                      height={290}
-                    />
-                    <aside className="flex flex-col gap-2">
-                      <h3 className="font-medium text-[#2A2829] text-[20px] leading-[30px]">
-                        Nothing to display right now
-                      </h3>
-                      <p className="text-[#2A2829] text-[16px] leading-[24px]">
-                        Data will show up here as soon as it&apos;s available.
-                      </p>
-                    </aside>
-                  </div>
+                  <EmptyList />
                 </TableCell>
               </TableRow>
             ) : (

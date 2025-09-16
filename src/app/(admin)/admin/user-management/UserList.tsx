@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { Ban, EllipsisVertical, RotateCcw } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 import { formatDate } from "@/utils/formatDate";
@@ -21,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { manageUserModalStore } from "@/store/userModalStore";
+import EmptyList from "./EmptyList";
 
 type UserStatus = "Active" | "Deactivated";
 
@@ -33,20 +33,20 @@ export type UserListType = {
 };
 
 const UserData: UserListType[] = [
-  {
-    full_name: "David Jack",
-    email: "iamjack@gmail.com",
-    last_active: new Date("2025-06-01"),
-    createdAt: new Date("2025-01-10"),
-    status: "Active",
-  },
-  {
-    full_name: "Sarah Green",
-    email: "sarah.green@gmail.com",
-    last_active: new Date("2025-05-20"),
-    createdAt: new Date("2025-02-14"),
-    status: "Deactivated",
-  },
+  // {
+  //   full_name: "David Jack",
+  //   email: "iamjack@gmail.com",
+  //   last_active: new Date("2025-06-01"),
+  //   createdAt: new Date("2025-01-10"),
+  //   status: "Active",
+  // },
+  // {
+  //   full_name: "Sarah Green",
+  //   email: "sarah.green@gmail.com",
+  //   last_active: new Date("2025-05-20"),
+  //   createdAt: new Date("2025-02-14"),
+  //   status: "Deactivated",
+  // },
 ];
 
 const UserList = () => {
@@ -70,28 +70,30 @@ const UserList = () => {
             <col className="w-[10%]" /> {/* Action */}
           </colgroup>
 
-          <TableHeader>
-            <TableRow className="bg-[#F9F9F7] h-[60px]">
-              <TableHead className="whitespace-nowrap text-[#2A2829] text-[16px] font-medium">
-                Full Name
-              </TableHead>
-              <TableHead className="whitespace-nowrap text-[#2A2829] text-[16px] font-medium">
-                Email
-              </TableHead>
-              <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] font-medium">
-                Last Active
-              </TableHead>
-              <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] font-medium">
-                Date Joined
-              </TableHead>
-              <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] font-medium">
-                Status
-              </TableHead>
-              <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] font-medium">
-                Action
-              </TableHead>
-            </TableRow>
-          </TableHeader>
+          {!loading && UserData.length > 0 && (
+            <TableHeader>
+              <TableRow className="bg-[#F9F9F7] h-[60px]">
+                <TableHead className="whitespace-nowrap text-[#2A2829] text-[16px] font-medium">
+                  Full Name
+                </TableHead>
+                <TableHead className="whitespace-nowrap text-[#2A2829] text-[16px] font-medium">
+                  Email
+                </TableHead>
+                <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] font-medium">
+                  Last Active
+                </TableHead>
+                <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] font-medium">
+                  Date Joined
+                </TableHead>
+                <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] font-medium">
+                  Status
+                </TableHead>
+                <TableHead className="whitespace-nowrap text-center text-[#2A2829] text-[16px] font-medium">
+                  Action
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+          )}
 
           <TableBody>
             {loading ? (
@@ -120,22 +122,7 @@ const UserList = () => {
             ) : UserData.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-10">
-                  <div className="flex flex-col items-center gap-4">
-                    <Image
-                      src="/dashboard/EmptyLeaderBoard.svg"
-                      alt="Empty Table"
-                      width={290}
-                      height={290}
-                    />
-                    <aside className="flex flex-col gap-2">
-                      <h3 className="font-medium text-[#2A2829] text-[20px]">
-                        No users available
-                      </h3>
-                      <p className="text-[#2A2829] font-normal text-[16px]">
-                        Users will appear here once added.
-                      </p>
-                    </aside>
-                  </div>
+                  <EmptyList />
                 </TableCell>
               </TableRow>
             ) : (

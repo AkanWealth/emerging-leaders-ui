@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 import {
-  ArrowUp,
   EllipsisVertical,
   ListFilter,
   Search,
@@ -21,6 +20,8 @@ import { useState, useEffect } from "react";
 // import ChartComponent from "./ChartComponent";
 import InteractiveChart from "./ChartComponent";
 import UserRankingFilter from "./UserRankingFilter";
+// import { useUserGrowth } from "@/hooks/admin/analytics/useUserGrowth";
+export type UserGrowthPeriodType = "7d" | "30d" | "12m";
 
 const chartTotalData = [
   { name: "Jan", value: 40 },
@@ -44,14 +45,11 @@ const chartActiveData = [
 
 const DashboardPage = () => {
   const { user } = useUserStore();
+
   const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [selectedPeriod, setSelectedPeriod] = useState("12months");
-  const timePeriods = [
-    { key: "12months", label: "12 months" },
-    { key: "30days", label: "30 days" },
-    { key: "7days", label: "7 days" },
-  ];
+
+  
 
   // Simulate data fetching
   useEffect(() => {
@@ -291,50 +289,10 @@ const DashboardPage = () => {
               </section>
               <UserRankingTable />
             </TabsContent>
-
             <TabsContent
               className="border-t mt-[15px] px-[20px] py-[20px] rounded-t-[12px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
               value="growth"
             >
-              <div className="flex justify-between ">
-                <div className="flex flex-col gap-[12px]">
-                  <h3 className="text-[#181D27] font-medium text-[32px] leading-[48px]">
-                    32,422
-                  </h3>
-                  <div className="flex items-center gap-[8px]">
-                    <p className="flex items-center font-medium gap-0.5 text-[#079455]">
-                      <ArrowUp className="h-[16px] w-[16px]" />
-                      <span className="text-[14px] leading-[20px]">3.2%</span>
-                    </p>
-                    <p className="text-[#535862] leading-[20px] text-[14px] font-medium">
-                      vs last{" "}
-                      <span className="">
-                        {
-                          timePeriods.find((p) => p.key === selectedPeriod)
-                            ?.label
-                        }
-                      </span>
-                    </p>
-                  </div>
-                </div>
-                <div className="">
-                  <div className="flex items-center gap-1 p-1 bg-[#FAFAFA] border border-[#E9EAEB] rounded-lg ">
-                    {timePeriods.map((period) => (
-                      <button
-                        key={period.key}
-                        onClick={() => setSelectedPeriod(period.key)}
-                        className={`px-4 py-2 rounded-[8px] text-[14px] leading-[20px]  transition-all cursor-pointer duration-200 ${
-                          selectedPeriod === period.key
-                            ? "bg-white text-[#414651] font-semibold shadow-sm"
-                            : "text-[#717680]  font-medium hover:bg-gray-50"
-                        }`}
-                      >
-                        {period.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
               <InteractiveChart />
             </TabsContent>
           </aside>

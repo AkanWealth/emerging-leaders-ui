@@ -13,11 +13,14 @@ import ReactivateAdmin from "./AdminTab/ReactivateAdmin";
 import ReactivateUser from "./UserTab/ReactivateUser";
 import DeactivateUser from "./UserTab/DeactivateUser";
 import CreateAdmin from "./AdminTab/CreateAdmin";
+import { useState } from "react";
+import UserManagementFilter from "./UserManagementFilter";
 
 const UserManagementPage = () => {
   const { modalType, closeModal } = userModalStore();
   const { modalType: userModalType, closeModal: closeUserModalType } =
     manageUserModalStore();
+  const [showFilter, setShowFilter] = useState<boolean>(false);
 
   return (
     <Tabs defaultValue="user" className="flex flex-col gap-[32px]">
@@ -71,8 +74,8 @@ const UserManagementPage = () => {
                   />
                 </div>
                 <Button
-                  // onClick={() => setShowFilter((prev) => !prev)}
-                  className="flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl"
+                  onClick={() => setShowFilter((prev) => !prev)}
+                  className="cursor-pointer flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl"
                 >
                   <ListFilter className="h-[12.75px] w-[22.5px]" />
                   <span>Filter</span>
@@ -80,14 +83,7 @@ const UserManagementPage = () => {
               </section>
             </aside>
           </aside>
-          {/* {showFilter && (
-            <TabsContent
-              className="absolute z-10 right-0 top-[100px] pb-[100px]"
-              value="ranking"
-            >
-              <UserRankingFilter onClose={() => setShowFilter(false)} />
-            </TabsContent>
-          )} */}
+          {showFilter && <UserManagementFilter />}
           <aside>
             <TabsContent
               className="border-t mt-[15px] px-[20px] rounded-t-[12px] min-h-[500px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"

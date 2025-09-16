@@ -10,18 +10,25 @@ interface UserState {
   clearUser: () => void;
   setLoading: (loading: boolean) => void;
 }
-
 export const useUserStore = create<UserState>()(
   persist(
     (set) => ({
       user: null,
-      loading: false,
-      setUser: (user) => set({ user }),
-      clearUser: () => set({ user: null }),
+      loading: true,
+      setUser: (user) => set({ user, loading: false }),
+      clearUser: () => set({ user: null, loading: false }),
       setLoading: (loading) => set({ loading }),
     }),
     {
       name: LOCAL_STORAGE_NAMES.EMERGING_LEADERS_CURRENT_USER,
+      onRehydrateStorage: () => (state) => {
+        // Once hydration completes, if user exists -> stop loading
+        if (state?.user) {
+          state.setLoading(false);
+        } else {
+          state?.setLoading(false);
+        }
+      },
     }
   )
 );

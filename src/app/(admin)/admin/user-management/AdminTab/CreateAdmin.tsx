@@ -7,7 +7,7 @@ import { userModalStore } from "@/store/userModalStore";
 
 const CreateAdmin = () => {
   const { showToast } = useToastStore();
-  const { modalType, selectedAdmin, closeModal } = userModalStore();
+  const { closeModal } = userModalStore();
 
   const handleUpdateAdmin = () => {
     try {
