@@ -1,6 +1,7 @@
 export type AdminUserType = {
   id: string;
   email: string;
-  name: string;
+  firstname: string;
+  lastname: string;
   profilePicture?: string | null;
 };

@@ -11,6 +11,12 @@ class AnalyticsService {
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }
+  async getGrowthRecords() {
+    return this.request.get(
+      `/analytics/growth`,
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
 }
 
 const analyticsService = new AnalyticsService();

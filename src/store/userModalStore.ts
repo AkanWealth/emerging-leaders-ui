@@ -1,4 +1,3 @@
-// stores/useModalStore.ts
 import { AdminListType } from "@/app/(admin)/admin/user-management/AdminList";
 import { UserListType } from "@/app/(admin)/admin/user-management/UserList";
 import { create } from "zustand";

@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { Bell, ChevronDown, LogOut, User } from "lucide-react";
@@ -10,6 +10,7 @@ import { useToastStore } from "@/store/toastStore";
 import { useUserStore } from "@/store/userStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import NotificationModal from "../Notification/NotificationModal";
+import notificationService from "@/services/notificationService"; // ✅ import service
 
 // TruncatedText with instant tooltip
 const TruncatedText = ({
@@ -46,6 +47,7 @@ const AdminHeader = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0); // ✅ state for unread notifications
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -73,6 +75,25 @@ const AdminHeader = () => {
     };
   }, []);
 
+  // ✅ Poll for unread notifications every 15 seconds
+  // useEffect(() => {
+  //   let interval: NodeJS.Timeout;
+
+  //   async function fetchUnread() {
+  //     try {
+  //       const res = await notificationService.getUnreadNotificationCount();
+  //       setUnreadCount(res?.unreadCount ?? 0);
+  //     } catch (error) {
+  //       console.error("Failed to fetch unread notifications:", error);
+  //     }
+  //   }
+
+  //   fetchUnread(); // run immediately
+  //   interval = setInterval(fetchUnread, 15000); // run every 15s
+
+  //   return () => clearInterval(interval); // cleanup
+  // }, []);
+
   return (
     <header className="w-full h-[80px] bg-white flex justify-end items-center px-6 shadow-md relative">
       <section
@@ -89,7 +110,11 @@ const AdminHeader = () => {
           }}
         >
           <Bell className="h-[32px] w-[32px] text-[#65605C]" />
-          <span className="absolute top-1 right-3 bg-[#F29100] text-white text-xs font-bold rounded-full h-[8px] w-[8px] flex items-center justify-center"></span>
+          {unreadCount > 0 && (
+            <span className="absolute top-1 right-3 bg-[#F29100] text-white text-xs font-bold rounded-full h-[18px] w-[18px] flex items-center justify-center">
+              {unreadCount}
+            </span>
+          )}
         </aside>
 
         {/* Divider */}
@@ -111,7 +136,7 @@ const AdminHeader = () => {
               src={
                 user?.profilePicture && user?.profilePicture !== ""
                   ? user.profilePicture
-                  : `https://ui-avatars.com/api/?name=${user?.name}&background=000000&color=fff`
+                  : `https://ui-avatars.com/api/?name=${user?.firstname}&background=000000&color=fff`
               }
               alt="User Avatar"
               className="rounded-full h-[50px] w-[50px] object-cover"
@@ -156,7 +181,7 @@ const AdminHeader = () => {
                     src={
                       user?.profilePicture && user?.profilePicture !== ""
                         ? user.profilePicture
-                        : `https://ui-avatars.com/api/?name=${user?.name}&background=000000&color=fff`
+                        : `https://ui-avatars.com/api/?name=${user?.firstname}&background=000000&color=fff`
                     }
                     alt="Description"
                     className="h-[32px] w-[32px] object-cover rounded-full"
@@ -166,11 +191,11 @@ const AdminHeader = () => {
                   />
                   <aside className="flex flex-col w-[150px]">
                     <TruncatedText
-                      text={user?.name}
+                      text={`${user?.firstname ?? ""} ${user?.lastname ?? ""}`}
                       className="text-[16px] font-medium text-[#2A2829]"
                     />
                     <TruncatedText
-                      text={user?.email}
+                      text={user?.email || "Default"}
                       className="text-[#65605C] font-normal text-[14px]"
                     />
                   </aside>

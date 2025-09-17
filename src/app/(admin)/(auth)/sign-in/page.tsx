@@ -18,7 +18,9 @@ type SigninResponse =
       user: {
         id: string;
         email: string;
-        name: string;
+        firstname: string;
+        lastname: string;
+        profilePicture: string | null;
       };
     };
 
@@ -68,7 +70,9 @@ const LoginPage = () => {
         setUser({
           id: response.user.id,
           email: response.user.email,
-          name: response.user.name,
+          firstname: response.user.firstname,
+          lastname: response.user.lastname,
+          profilePicture: response.user.profilePicture,
         });
         router.push("/admin/dashboard");
         showToast("success", "Login successfully", "You are logged in.", 3000);

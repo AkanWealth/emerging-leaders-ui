@@ -4,9 +4,7 @@ import { useUserStore } from "@/store/userStore";
 import UserRankingTable from "./UserRankingTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
-
 import {
-  EllipsisVertical,
   ListFilter,
   Search,
   TrendingDown,
@@ -20,50 +18,25 @@ import { useState, useEffect } from "react";
 // import ChartComponent from "./ChartComponent";
 import InteractiveChart from "./ChartComponent";
 import UserRankingFilter from "./UserRankingFilter";
+import {
+  ChartPoint,
+  useCardGrowth,
+} from "@/hooks/admin/analytics/useCardGrowth";
 // import { useUserGrowth } from "@/hooks/admin/analytics/useUserGrowth";
 export type UserGrowthPeriodType = "7d" | "30d" | "12m";
 
-const chartTotalData = [
-  { name: "Jan", value: 40 },
-  { name: "Feb", value: 45 },
-  { name: "Mar", value: 60 },
-  { name: "Apr", value: 58 },
-  { name: "May", value: 70 },
-  { name: "Jun", value: 80 },
-  { name: "Jul", value: 72 },
-];
-
-const chartActiveData = [
-  { name: "Jan", value: 80 },
-  { name: "Feb", value: 72 },
-  { name: "Mar", value: 65 },
-  { name: "Apr", value: 58 },
-  { name: "May", value: 50 },
-  { name: "Jun", value: 45 },
-  { name: "Jul", value: 40 },
-];
-
 const DashboardPage = () => {
   const { user } = useUserStore();
+  const { data, isLoading: loading } = useCardGrowth();
 
   const [showFilter, setShowFilter] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  
-
-  // Simulate data fetching
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <main className="flex flex-col gap-[39px]">
       {/* Welcome Section */}
       <section className="flex flex-col gap-[4px]">
         <h2 className="text-[#2A2829] font-medium text-[24px]">
-          Welcome back,{" "}
-          <span className="">{user?.name.trim().split(/\s+/)[0]}</span>
+          Welcome back, <span className="">{user?.firstname || "Name"}</span>
         </h2>
         <p className="text-[#65605C] font-normal text-[16px]">
           Monitor analytics on users effectively.
@@ -91,12 +64,26 @@ const DashboardPage = () => {
                 ) : (
                   <aside className="flex items-center gap-[8px]">
                     <h3 className="text-[#181D27] font-medium text-[32px]">
-                      2,420
+                      {data?.totalUsers.current?.toLocaleString()}
                     </h3>
                     <div className="flex items-center gap-[8px]">
-                      <div className="flex items-center text-[#079455] gap-[4px] text-[14px] font-medium leading-[20px]">
-                        <TrendingUp />
-                        <span>40%</span>
+                      <div
+                        className={`flex items-center ${
+                          data?.totalUsers.trend === "positive" ||
+                          data?.totalUsers.trend === "neutral"
+                            ? "text-[#079455]"
+                            : "text-[#D92D20]"
+                        }  gap-[4px] text-[14px] font-medium leading-[20px]`}
+                      >
+                        {data?.totalUsers.trend === "positive" ||
+                        data?.totalUsers.trend === "neutral" ? (
+                          <TrendingUp />
+                        ) : (
+                          <TrendingDown />
+                        )}
+                        <span>
+                          {data?.totalUsers.growthPercentage?.toLocaleString()}%
+                        </span>
                       </div>
                       <span className="text-[#535862] text-[14px] leading-[20px] font-medium">
                         vs last month
@@ -104,7 +91,7 @@ const DashboardPage = () => {
                     </div>
                   </aside>
                 )}
-                <EllipsisVertical />
+                {/* <EllipsisVertical /> */}
               </aside>
 
               <aside className="mt-4 h-[60px]">
@@ -112,7 +99,7 @@ const DashboardPage = () => {
                   <Skeleton className="w-full h-full rounded-lg" />
                 ) : (
                   <DashboardCharts
-                    data={chartTotalData}
+                    data={data?.charts.totalUsers as ChartPoint[]}
                     stopColor="#3DA755"
                     strokeColor="#17B26A"
                   />
@@ -139,12 +126,28 @@ const DashboardPage = () => {
                 ) : (
                   <aside className="flex items-center gap-[8px]">
                     <h3 className="text-[#181D27] font-medium text-[32px]">
-                      1,210
+                      {data?.activeUsers.current?.toLocaleString()}
                     </h3>
+
                     <div className="flex items-center gap-[8px]">
-                      <div className="flex items-center text-[#D92D20] gap-[4px] text-[14px] font-medium leading-[20px]">
-                        <TrendingDown />
-                        <span>10%</span>
+                      <div
+                        className={`flex items-center ${
+                          data?.activeUsers.trend === "positive" ||
+                          data?.activeUsers.trend === "neutral"
+                            ? "text-[#079455]"
+                            : "text-[#D92D20]"
+                        }  gap-[4px] text-[14px] font-medium leading-[20px]`}
+                      >
+                        {data?.activeUsers.trend === "positive" ||
+                        data?.activeUsers.trend === "neutral" ? (
+                          <TrendingUp />
+                        ) : (
+                          <TrendingDown />
+                        )}
+                        <span>
+                          {data?.activeUsers.growthPercentage?.toLocaleString()}
+                          %
+                        </span>
                       </div>
                       <span className="text-[#535862] text-[14px] leading-[20px] font-medium">
                         vs last month
@@ -152,7 +155,7 @@ const DashboardPage = () => {
                     </div>
                   </aside>
                 )}
-                <EllipsisVertical />
+                {/* <EllipsisVertical /> */}
               </aside>
 
               <aside className="mt-4 h-[60px]">
@@ -160,9 +163,21 @@ const DashboardPage = () => {
                   <Skeleton className="w-full h-full rounded-lg" />
                 ) : (
                   <DashboardCharts
-                    data={chartActiveData}
-                    stopColor="#F04438"
-                    strokeColor="#F04438"
+                    data={data?.charts.activeUsers as ChartPoint[]}
+                    stopColor={
+                      data?.activeUsers.trend === "positive"
+                        ? "#3DA755" // green
+                        : data?.activeUsers.trend === "neutral"
+                        ? "#17B26A" // lighter green (or keep same green if you prefer)
+                        : "#F04438" // red
+                    }
+                    strokeColor={
+                      data?.activeUsers.trend === "positive"
+                        ? "#17B26A" // bright green stroke
+                        : data?.activeUsers.trend === "neutral"
+                        ? "#3DA755" // softer green stroke
+                        : "#F04438" // red stroke
+                    }
                   />
                 )}
               </aside>
@@ -187,12 +202,28 @@ const DashboardPage = () => {
                 ) : (
                   <aside className="flex items-center gap-[8px]">
                     <h3 className="text-[#181D27] font-medium text-[32px]">
-                      316
+                      {data?.newRegistrations.current?.toLocaleString()}
                     </h3>
+
                     <div className="flex items-center gap-[8px]">
-                      <div className="flex items-center text-[#079455] gap-[4px] text-[14px] font-medium leading-[20px]">
-                        <TrendingUp />
-                        <span>20%</span>
+                      <div
+                        className={`flex items-center ${
+                          data?.newRegistrations.trend === "positive" ||
+                          data?.newRegistrations.trend === "neutral"
+                            ? "text-[#079455]"
+                            : "text-[#D92D20]"
+                        }  gap-[4px] text-[14px] font-medium leading-[20px]`}
+                      >
+                        {data?.newRegistrations.trend === "positive" ||
+                        data?.newRegistrations.trend === "neutral" ? (
+                          <TrendingUp />
+                        ) : (
+                          <TrendingDown />
+                        )}
+                        <span>
+                          {data?.newRegistrations.growthPercentage?.toLocaleString()}
+                          %
+                        </span>
                       </div>
                       <span className="text-[#535862] text-[14px] leading-[20px] font-medium">
                         vs last month
@@ -200,17 +231,35 @@ const DashboardPage = () => {
                     </div>
                   </aside>
                 )}
-                <EllipsisVertical />
+                {/* <EllipsisVertical /> */}
               </aside>
 
               <aside className="mt-4 h-[60px]">
                 {loading ? (
                   <Skeleton className="w-full h-full rounded-lg" />
                 ) : (
+                  // `flex items-center ${
+                  //         data?.newRegistrations.trend === "positive" ||
+                  //         data?.newRegistrations.trend === "neutral"
+                  //           ? "text-[#079455]"
+                  //           : "text-[#D92D20]"
+                  //       }
                   <DashboardCharts
-                    data={chartTotalData}
-                    stopColor="#3DA755"
-                    strokeColor="#17B26A"
+                    data={data?.charts.newRegistrations as ChartPoint[]}
+                    stopColor={
+                      data?.newRegistrations.trend === "positive"
+                        ? "#3DA755" // green
+                        : data?.newRegistrations.trend === "neutral"
+                        ? "#17B26A" // lighter green (or keep same green if you prefer)
+                        : "#F04438" // red
+                    }
+                    strokeColor={
+                      data?.newRegistrations.trend === "positive"
+                        ? "#17B26A" // bright green stroke
+                        : data?.newRegistrations.trend === "neutral"
+                        ? "#3DA755" // softer green stroke
+                        : "#F04438" // red stroke
+                    }
                   />
                 )}
               </aside>
@@ -305,7 +354,7 @@ const DashboardPage = () => {
 export default DashboardPage;
 
 // Chart component
-type DataType = { name: string; value: number }[];
+type DataType = { label: string; value: number }[];
 type DashboardChartsProps = {
   stopColor: string;
   strokeColor: string;
@@ -328,7 +377,7 @@ function DashboardCharts({
             <stop offset="95%" stopColor={stopColor} stopOpacity={0} />
           </linearGradient>
         </defs>
-        <XAxis dataKey="name" hide />
+        <XAxis dataKey="label" hide />
         <YAxis hide />
         <Area
           type="monotone"

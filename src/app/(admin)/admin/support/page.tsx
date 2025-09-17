@@ -8,6 +8,7 @@ import SupportFilter from "./SupportFilter";
 import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
 import { supportModalStore } from "@/store/supportStore";
 import ViewTicket from "./Tabs/ViewTicket";
+import CloseTicket from "./Tabs/CloseTicket";
 
 const SupportPage = () => {
   const [loading, setLoading] = useState(true);
@@ -168,6 +169,7 @@ const SupportPage = () => {
 
           {/* Modal Content */}
           {modalType === "viewTicket" && <ViewTicket />}
+          {modalType === "closeTicket" && <CloseTicket />}
         </DialogContent>
       </Dialog>
     </main>
