@@ -51,7 +51,7 @@ const UserReportTable = () => {
               </TableCell>
               {months.map((month) => (
                 <TableCell key={month} className="px-4 py-2 text-center">
-                  {user[month as keyof typeof user] ?? "-"}
+                  {user[month as keyof typeof user] ?? "null"}
                 </TableCell>
               ))}
             </TableRow>
