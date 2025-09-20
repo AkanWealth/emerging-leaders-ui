@@ -1,50 +1,65 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
-import EmptyUserGrowthTab from "../EmptyUserGrowthTab";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TabsContent } from "@/components/ui/tabs";
 
-const UserReportTab = () => {
-  type LabelType = "12-months" | "30-days" | "7-days";
+import userReportData from "@/data/userReportData";
 
-  const [activeUserGrowthTab, setActiveUserGrowthTab] =
-    useState<LabelType>("12-months");
+const UserReportTable = () => {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   return (
-    <TabsContent value="user-report" className="flex-1 min-h-0 h-full">
-      <Card className="h-full min-h-0 flex-1 relative">
-        <CardHeader>
-          <h2 className="text-2xl font-semibold mb-3">0</h2>
-          <p>0% no records yet</p>
-        </CardHeader>
+    <TabsContent value="user-report" className="flex-1 flex min-h-96">
+      <Table className="table-auto w-full h-full bg-blue-500">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="px-4 py-2">Full Name</TableHead>
+            {months.map((month) => (
+              <TableHead key={month} className="px-4 py-2 text-center">
+                {month}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
 
-        <CardContent className="grid gap-6 min-h-0 h-full">
-          <Tabs
-            defaultValue="12-months"
-            value={activeUserGrowthTab}
-            onValueChange={(val) => setActiveUserGrowthTab(val as LabelType)}
-          >
-            <TabsList className="absolute top-6 right-6">
-              <TabsTrigger value="12-months">12 months</TabsTrigger>
-              <TabsTrigger value="30-days">30 days</TabsTrigger>
-              <TabsTrigger value="7-days">7 days</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="12-months" className="flex-1 min-h-0 h-96">
-              <EmptyUserGrowthTab label={activeUserGrowthTab} />
-            </TabsContent>
-            <TabsContent value="30-days" className="flex-1 min-h-0 h-full">
-              <EmptyUserGrowthTab label={activeUserGrowthTab} />
-            </TabsContent>
-            <TabsContent value="7-days" className="flex-1 min-h-0 h-full">
-              <EmptyUserGrowthTab label={activeUserGrowthTab} />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+        <TableBody>
+          {/* NOTE: Displaying only the first 8 assessments, as the design specifies pagination in pages of 8 items. */}
+          {userReportData.slice(0, 8).map((user, index) => (
+            <TableRow key={index}>
+              <TableCell className="font-medium px-4 py-2">
+                {user.fullName}
+              </TableCell>
+              {months.map((month) => (
+                <TableCell key={month} className="px-4 py-2 text-center">
+                  {user[month as keyof typeof user] ?? "-"}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </TabsContent>
   );
 };
 
-export default UserReportTab;
+export default UserReportTable;

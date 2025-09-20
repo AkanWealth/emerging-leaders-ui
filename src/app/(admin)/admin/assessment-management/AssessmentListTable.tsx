@@ -53,7 +53,6 @@ const AssessmentTable = () => {
 
       <TableBody>
         {/* NOTE: Displaying only the first 8 assessments, as the design specifies pagination in pages of 8 items. */}
-
         {assessmentListData.slice(0, 8).map((assessment) => (
           <TableRow key={assessment.id}>
             <TableCell className="font-medium px-[25px] w-full">
