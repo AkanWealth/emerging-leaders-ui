@@ -8,7 +8,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
-    <main className="flex w-full h-screen overflow-hidden">
+    <div className="flex w-full h-screen overflow-hidden">
       {/* Sidebar stays fixed */}
       <AdminSidebar />
 
@@ -18,9 +18,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <AdminHeader />
 
         {/* Scrollable content */}
-        <section className="flex-1 overflow-y-auto px-8 py-10">{children}</section>
+        <main className="flex-1 overflow-y-auto px-8 py-10">{children}</main>
       </div>
-    </main>
+    </div>
   );
 };
 
