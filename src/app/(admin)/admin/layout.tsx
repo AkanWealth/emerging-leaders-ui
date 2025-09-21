@@ -13,7 +13,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <AdminSidebar />
 
       {/* Right section */}
-      <div className="flex flex-col flex-1 bg-[#F9F9F7]">
+      <div className="flex flex-col flex-1 bg-[#F9F9F7] overflow-auto">
         {/* Fixed header */}
         <AdminHeader />
 
