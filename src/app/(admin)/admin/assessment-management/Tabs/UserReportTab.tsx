@@ -28,19 +28,6 @@ const UserReportTable = () => {
     "Dec",
   ];
 
-  const getBadgeStyle = (value: string | null) => {
-    switch (value) {
-      case "done":
-        return "bg-[#E5FBEC] text-[#3DA755]";
-      case "not done":
-        return "bg-[#FFEDED] text-[#E81313]";
-      case "null":
-        return "bg-[#F3F3F1] text-[#65605C]";
-      default:
-        return "bg-gray-100 text-gray-500";
-    }
-  };
-
   return (
     <TabsContent value="user-report" className="flex-1 flex min-h-96">
       <div className="w-full overflow-x-auto">
