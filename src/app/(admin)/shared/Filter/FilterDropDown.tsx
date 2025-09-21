@@ -18,7 +18,7 @@ const FilterDropdown = () => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="toolbar"
-          className="group flex items-center gap-2 px-4 py-3"
+          className="group flex items-center gap-2 px-4 py-3 bg-[#F9F9F7] h-[48px]"
         >
           <ListFilter
             size={24}
