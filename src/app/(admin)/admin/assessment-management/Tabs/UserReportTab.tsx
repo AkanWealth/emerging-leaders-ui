@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -26,6 +27,19 @@ const UserReportTable = () => {
     "Nov",
     "Dec",
   ];
+
+  const getBadgeStyle = (value: string | null) => {
+    switch (value) {
+      case "done":
+        return "bg-[#E5FBEC] text-[#3DA755]";
+      case "not done":
+        return "bg-[#FFEDED] text-[#E81313]";
+      case "null":
+        return "bg-[#F3F3F1] text-[#65605C]";
+      default:
+        return "bg-gray-100 text-gray-500";
+    }
+  };
 
   return (
     <TabsContent value="user-report" className="flex-1 flex min-h-96">
@@ -60,14 +74,26 @@ const UserReportTable = () => {
                 <TableCell className="sticky left-0 z-10 text-[16px] text-[#2A2829] font-medium truncate">
                   {user.fullName}
                 </TableCell>
-                {months.map((month) => (
-                  <TableCell
-                    key={month}
-                    className="text-center text-[16px] text-[#2A2829]"
-                  >
-                    {user[month as keyof typeof user] ?? "null"}
-                  </TableCell>
-                ))}
+                {months.map((month) => {
+                  const value = (user[month as keyof typeof user] ??
+                    "null") as string;
+                  return (
+                    <TableCell key={month} className="text-[16px]">
+                      <Badge
+                        variant={
+                          value === "done"
+                            ? "done"
+                            : value === "not done"
+                            ? "notDone"
+                            : "nullValue"
+                        }
+                        className="capitalize px-3 py-1"
+                      >
+                        {value}
+                      </Badge>
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))}
           </TableBody>
