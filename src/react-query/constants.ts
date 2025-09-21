@@ -6,4 +6,6 @@ export const QUERY_KEYS = {
   ADMIN_COUNT: ["adminCount"] as const,
   USER_GROWTH: ["userGrowth"] as const,
   USER_CARDS: ["userCards"] as const,
+  ANALYTICS_LEADERBOARD: ["analyticsLeaderboard"] as const,
+  SUPPORT_TICKETS: ["supportsTicket"] as const,
 };
