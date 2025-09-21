@@ -13,7 +13,7 @@ const AssessmentManagementPage = () => {
         </div>
       </section>
 
-      <section className="flex-1 min-h-0 flex flex-col rounded-xl border border-border-secondary bg-red-500 p-1 white shadow-2xs overflow-hidden">
+      <section className="flex-1 min-h-0 flex flex-col rounded-xl border border-border-secondary white shadow-2xs overflow-hidden">
         <AssessmentTabs />
       </section>
 

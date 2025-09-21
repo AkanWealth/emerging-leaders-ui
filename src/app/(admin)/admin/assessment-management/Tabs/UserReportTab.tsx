@@ -30,7 +30,7 @@ const UserReportTable = () => {
 
   return (
     <TabsContent value="user-report" className="flex-1 flex min-h-96">
-      <div className="w-full overflow-x-auto">
+      <div className="w-full overflow-x-auto pb-1">
         <Table className="table-fixed min-w-[1000px]">
           <colgroup>
             <col className="w-[200px]" /> {/* Full Name fixed width */}
@@ -41,24 +41,21 @@ const UserReportTable = () => {
 
           <TableHeader>
             <TableRow className="bg-[#F9F9F7] h-[60px]">
-              <TableHead className="sticky left-0 z-10 text-[#2A2829] text-[16px] font-medium">
+              <TableHead className="sticky left-0 z-10 pl-[25px] bg-[#F9F9F7] text-[16px] font-medium">
                 Full Name
               </TableHead>
               {months.map((month) => (
-                <TableHead
-                  key={month}
-                  className="text-center text-[#2A2829] text-[16px] font-medium"
-                >
+                <TableHead key={month} className="text-[16px] font-medium">
                   {month}
                 </TableHead>
               ))}
             </TableRow>
           </TableHeader>
 
-          <TableBody>
+          <TableBody className="bg-white">
             {userReportData.slice(0, 8).map((user, index) => (
               <TableRow key={index} className="h-[60px]">
-                <TableCell className="sticky left-0 z-10 text-[16px] text-[#2A2829] font-medium truncate">
+                <TableCell className="sticky left-0 z-10 pl-[25px] bg-white text-[16px] text-[#2A2829] truncate">
                   {user.fullName}
                 </TableCell>
                 {months.map((month) => {
