@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import AssessmentTab from "./Tabs/AssessmentTab";
+import Pagination from "../../shared/Pagination/Pagination";
 
 const AssessmentManagementPage = () => {
   const [activeTab, setActiveTab] = useState<"assessment-list" | "user-report">(
@@ -30,7 +31,6 @@ const AssessmentManagementPage = () => {
           </p>
         </div>
       </section>
-
       <section className="bg-[#FFFFFF] pb-[8px] pt-[12px] rounded-[12px] shadow overflow-hidden">
         <Tabs
           defaultValue="assessment-list"
@@ -93,7 +93,6 @@ const AssessmentManagementPage = () => {
           </div>
 
           {/* Assessment-list Tab */}
-
           <AssessmentTab />
 
           {/* User-report  Tab */}
