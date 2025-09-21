@@ -30,7 +30,7 @@ const AssessmentTabs = () => {
           <TabsTrigger
             value="assessment-list"
             className={cn(
-              "data-[state=active]:shadow-none",
+              "data-[state=active]:shadow-none data-[state=active]:text-[#A2185B] data-[state=active]:bg-transparent",
               activeTab === "assessment-list" ? "text-primary" : ""
             )}
           >
@@ -40,7 +40,7 @@ const AssessmentTabs = () => {
           <TabsTrigger
             value="user-report"
             className={cn(
-              "data-[state=active]:shadow-none",
+              "data-[state=active]:shadow-none data-[state=active]:text-[#A2185B] data-[state=active]:bg-transparent",
               activeTab === "user-report" ? "text-primary" : ""
             )}
           >

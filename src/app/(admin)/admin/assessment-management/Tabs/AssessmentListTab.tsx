@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import AssessmentListTable from "../AssessmentListTable";
+import AssessmentListTable from "./Tables/AssessmentListTable";
 
 const AssessmentListTab = () => {
   return (
