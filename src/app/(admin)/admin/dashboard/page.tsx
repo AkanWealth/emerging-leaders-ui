@@ -4,12 +4,7 @@ import { useUserStore } from "@/store/userStore";
 import UserRankingTable from "./UserRankingTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
-import {
-  ListFilter,
-  Search,
-  TrendingDown,
-  TrendingUp,
-} from "lucide-react";
+import { ListFilter, Search, TrendingDown, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CiExport } from "react-icons/ci";
 import Image from "next/image";
@@ -22,10 +17,53 @@ import {
   ChartPoint,
   useCardGrowth,
 } from "@/hooks/admin/analytics/useCardGrowth";
+import Pagination from "../../shared/Pagination/Pagination";
+import {
+  LeaderboardMeta,
+  LeaderboardType,
+  useLeaderboard,
+} from "@/hooks/admin/analytics/useLeaderboard";
 // import { useUserGrowth } from "@/hooks/admin/analytics/useUserGrowth";
 export type UserGrowthPeriodType = "7d" | "30d" | "12m";
+type FilterState = {
+  ranking?: string;
+  completed?: string;
+  goals?: string;
+  streak?: string;
+};
 
 const DashboardPage = () => {
+  const [searchInput, setSearchInput] = useState(""); // raw text input
+  const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState<FilterState>({});
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(8);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1); // reset to first page on new search
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(handler);
+  }, [searchInput]);
+
+  const {
+    data: leaderBoardData,
+    isLoading: isLeaderboardLoading,
+    isError,
+  } = useLeaderboard({
+    search,
+    page,
+    limit,
+    ...{
+      ...filters,
+      ranking:
+        filters.ranking === "highest" || filters.ranking === "lowest"
+          ? filters.ranking
+          : undefined,
+    },
+  });
+
   const { user } = useUserStore();
   const { data, isLoading: loading } = useCardGrowth();
 
@@ -268,83 +306,107 @@ const DashboardPage = () => {
         </section>
 
         {/* Tabs */}
-        <Tabs
-          defaultValue="growth"
-          className="bg-[#FFFFFF] pb-[8px] pt-[12px] rounded-[12px] shadow relative"
-        >
-          <aside className="flex px-[20px] items-center justify-between ">
-            <TabsList className="h-[40px] w-[238px] bg-[#FAFAFA] border border-[#D5D7DA]">
-              <TabsTrigger value="growth">User growth</TabsTrigger>
-              <TabsTrigger value="ranking">User ranking</TabsTrigger>
-            </TabsList>
+        <Tabs defaultValue="growth">
+          <section className="bg-[#FFFFFF] pb-[8px] pt-[12px] rounded-[12px] shadow relative">
+            <aside className="flex px-[20px] items-center justify-between ">
+              <TabsList className="h-[40px] w-[238px] bg-[#FAFAFA] border border-[#D5D7DA]">
+                <TabsTrigger value="growth">User growth</TabsTrigger>
+                <TabsTrigger value="ranking">User ranking</TabsTrigger>
+              </TabsList>
+              <aside>
+                <TabsContent
+                  value="ranking"
+                  className="flex items-center gap-[16px]"
+                >
+                  <div className="rounded-[12px] bg-[#F9F9F7] relative min-w-[385px] h-[48px] flex items-center justify-center py-[12px] px-[16px]">
+                    <Search className="absolute left-3 text-[#928F8B] h-[19.5px] w-[19.5px]" />
+                    <input
+                      className="border-none outline-none pl-[40px] w-full text-[14px] text-[#928F8B]"
+                      type="text"
+                      placeholder="Search by user..."
+                      value={searchInput}
+                      onChange={(e) => setSearchInput(e.target.value)}
+                    />
+                  </div>
+                  <Button
+                    onClick={() => setShowFilter((prev) => !prev)}
+                    className="flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl"
+                  >
+                    <ListFilter className="h-[12.75px] w-[22.5px]" />
+                    <span>Filter</span>
+                  </Button>
+                  <Button className="flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl">
+                    <CiExport className="h-[12.75px] w-[22.5px]" />
+                    <span>Download</span>
+                  </Button>
+                </TabsContent>
+              </aside>
+            </aside>
+            {showFilter && (
+              <TabsContent
+                className="absolute z-10 right-0 top-[100px] pb-[100px]"
+                value="ranking"
+              >
+                <UserRankingFilter
+                  onClose={() => setShowFilter(false)}
+                  onApply={(appliedFilters) => {
+                    setFilters(appliedFilters);
+                  }}
+                  currentFilters={filters} // Add this prop
+                />
+              </TabsContent>
+            )}
             <aside>
               <TabsContent
+                className="border-t mt-[15px] min-h-[500px] px-[20px] rounded-t-[12px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
                 value="ranking"
-                className="flex items-center gap-[16px]"
               >
-                <div className="rounded-[12px] bg-[#F9F9F7] relative min-w-[385px] h-[48px] flex items-center justify-center py-[12px] px-[16px]">
-                  <Search className="absolute left-3 text-[#928F8B] h-[19.5px] w-[19.5px]" />
-                  <input
-                    className="border-none outline-none pl-[40px] w-full text-[14px] text-[#928F8B]"
-                    type="text"
-                    placeholder="Search by user..."
-                  />
-                </div>
-                <Button
-                  onClick={() => setShowFilter((prev) => !prev)}
-                  className="flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl"
-                >
-                  <ListFilter className="h-[12.75px] w-[22.5px]" />
-                  <span>Filter</span>
-                </Button>
-                <Button className="flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl">
-                  <CiExport className="h-[12.75px] w-[22.5px]" />
-                  <span>Download</span>
-                </Button>
+                <section className="flex items-center justify-center">
+                  <div className="flex items-center justify-between gap-[18px] py-9">
+                    <Image
+                      src="/dashboard/leaderBadge.svg"
+                      alt="Leaderboard badge"
+                      width={32}
+                      height={32}
+                    />
+                    <h2 className="text-[#000000] text-[24px] font-medium">
+                      Leaderboard
+                    </h2>
+                    <Image
+                      src="/dashboard/leaderBadge.svg"
+                      alt="Leaderboard badge"
+                      width={32}
+                      height={32}
+                    />
+                  </div>
+                </section>
+                <UserRankingTable
+                  search={search}
+                  currentFilters={filters} // Add this prop
+                  data={leaderBoardData?.data as LeaderboardType[]}
+                  meta={leaderBoardData?.meta as LeaderboardMeta}
+                  loading={isLeaderboardLoading}
+                />
+              </TabsContent>
+              <TabsContent
+                className="border-t mt-[15px] px-[20px] py-[20px] rounded-t-[12px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
+                value="growth"
+              >
+                <InteractiveChart />
               </TabsContent>
             </aside>
-          </aside>
-          {showFilter && (
-            <TabsContent
-              className="absolute z-10 right-0 top-[100px] pb-[100px]"
-              value="ranking"
-            >
-              <UserRankingFilter onClose={() => setShowFilter(false)} />
+          </section>
+          {leaderBoardData?.data && leaderBoardData.data.length > 0 && (
+            <TabsContent className="" value="ranking">
+              <Pagination
+                totalItems={leaderBoardData?.meta.total ?? 0}
+                page={page}
+                pageSize={limit}
+                onPageChange={setPage}
+                onPageSizeChange={setLimit}
+              />
             </TabsContent>
           )}
-          <aside>
-            <TabsContent
-              className="border-t mt-[15px] px-[20px] rounded-t-[12px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
-              value="ranking"
-            >
-              <section className="flex items-center justify-center">
-                <div className="flex items-center justify-between gap-[18px] py-9">
-                  <Image
-                    src="/dashboard/leaderBadge.svg"
-                    alt="Leaderboard badge"
-                    width={32}
-                    height={32}
-                  />
-                  <h2 className="text-[#000000] text-[24px] font-medium">
-                    Leaderboard
-                  </h2>
-                  <Image
-                    src="/dashboard/leaderBadge.svg"
-                    alt="Leaderboard badge"
-                    width={32}
-                    height={32}
-                  />
-                </div>
-              </section>
-              <UserRankingTable />
-            </TabsContent>
-            <TabsContent
-              className="border-t mt-[15px] px-[20px] py-[20px] rounded-t-[12px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
-              value="growth"
-            >
-              <InteractiveChart />
-            </TabsContent>
-          </aside>
         </Tabs>
       </section>
     </main>
