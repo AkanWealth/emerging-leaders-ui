@@ -11,100 +11,32 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-type leaderboardType = {
-  ranking: string;
-  name: string;
-  projects: number;
-  goals: number;
-  savings: number;
-  budget: number;
-  streak: string;
+import {
+  LeaderboardMeta,
+  LeaderboardType,
+} from "@/hooks/admin/analytics/useLeaderboard";
+type FilterState = {
+  ranking?: string;
+  completed?: string;
+  goals?: string;
+  streak?: string;
 };
 
-const leaderboard: leaderboardType[] = [
-  {
-    ranking: "01",
-    name: "Clare Brown",
-    projects: 169,
-    goals: 803,
-    savings: 803,
-    budget: 803,
-    streak: "400 days",
-  },
-  {
-    ranking: "02",
-    name: "Kelvin Tade",
-    projects: 138,
-    goals: 682,
-    savings: 682,
-    budget: 682,
-    streak: "387 days",
-  },
-  {
-    ranking: "03",
-    name: "White Jane",
-    projects: 127,
-    goals: 492,
-    savings: 492,
-    budget: 492,
-    streak: "266 days",
-  },
-  {
-    ranking: "04",
-    name: "Ade shayo",
-    projects: 114,
-    goals: 302,
-    savings: 302,
-    budget: 302,
-    streak: "118 days",
-  },
-  {
-    ranking: "05",
-    name: "Clare Brown",
-    projects: 107,
-    goals: 295,
-    savings: 295,
-    budget: 295,
-    streak: "93 days",
-  },
-  {
-    ranking: "06",
-    name: "Clare Brown",
-    projects: 93,
-    goals: 110,
-    savings: 110,
-    budget: 110,
-    streak: "62 days",
-  },
-  {
-    ranking: "07",
-    name: "Clare Brown",
-    projects: 82,
-    goals: 94,
-    savings: 94,
-    budget: 94,
-    streak: "53 days",
-  },
-  {
-    ranking: "08",
-    name: "Clare Brown",
-    projects: 73,
-    goals: 82,
-    savings: 82,
-    budget: 82,
-    streak: "49 days",
-  },
-];
+type UserRankingTableProps = {
+  loading: boolean;
+  data: LeaderboardType[];
+  search: string;
+  currentFilters: FilterState;
+  meta: LeaderboardMeta;
+};
 
-const UserRankingTable = () => {
-  const [loading, setLoading] = useState(true);
-
-  // fake loading simulation
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
+const UserRankingTable = ({
+  loading,
+  data: leaderboard,
+  search,
+  currentFilters,
+  meta,
+}: UserRankingTableProps) => {
   return (
     <section>
       <div className="overflow-x-auto">
@@ -169,57 +101,50 @@ const UserRankingTable = () => {
                   </TableCell>
                 </TableRow>
               ))
-            ) : leaderboard.length === 0 ? (
-              // show empty state if no data
-              <TableRow>
-                <TableCell colSpan={7} className="text-center py-10">
-                  <div className="flex flex-col items-center gap-4">
-                    <Image
-                      src="/dashboard/EmptyLeaderBoard.svg"
-                      alt="Empty Table"
-                      width={290}
-                      height={290}
-                    />
-                    <aside className="flex flex-col gap-2">
-                      <h3 className="font-medium text-[#2A2829] text-[20px] leading-[30px]">
-                        Nothing to display right now
-                      </h3>
-                      <p className="text-[#2A2829] font-normal text-[16px] leading-[24px]">
-                        Data will show up here as soon as it&apos;s available.
-                      </p>
-                    </aside>
-                  </div>
-                </TableCell>
-              </TableRow>
+            ) : leaderboard?.length === 0 ? (
+              // no data at all
+              search === "" &&
+              currentFilters.completed === "" &&
+              currentFilters.goals === "" &&
+              currentFilters.ranking === "" &&
+              currentFilters.streak === "" ? (
+                <EmptyTable />
+              ) : (
+                <NotFound />
+              )
             ) : (
+              // <EmptyTable />
               // render actual leaderboard
-              leaderboard.map((item) => (
-                <TableRow className="h-[60px]" key={item.ranking}>
-                  <TableCell className="font-medium whitespace-nowrap">
-                    {item.ranking}
-                  </TableCell>
-                  <TableCell>
-                    <div className="min-w-0">
-                      <span className="block truncate">{item.name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center whitespace-nowrap">
-                    {item.projects}
-                  </TableCell>
-                  <TableCell className="text-center whitespace-nowrap">
-                    {item.goals}
-                  </TableCell>
-                  <TableCell className="text-center whitespace-nowrap">
-                    {item.savings}
-                  </TableCell>
-                  <TableCell className="text-center whitespace-nowrap">
-                    {item.budget}
-                  </TableCell>
-                  <TableCell className="text-right whitespace-nowrap">
-                    {item.streak}
-                  </TableCell>
-                </TableRow>
-              ))
+              leaderboard.map((item, index) => {
+                const serialNumber = (meta.page - 1) * meta.limit + (index + 1);
+                return (
+                  <TableRow className="h-[60px]" key={index}>
+                    <TableCell className="font-medium whitespace-nowrap">
+                      {serialNumber}
+                    </TableCell>
+                    <TableCell>
+                      <div className="min-w-0">
+                        <span className="block truncate">{item.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center whitespace-nowrap">
+                      {item.projects.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-center whitespace-nowrap">
+                      {item.goals.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-center whitespace-nowrap">
+                      {item.savings.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-center whitespace-nowrap">
+                      {item.budget.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right whitespace-nowrap">
+                      {item.streak} {item.streak > 1 ? "days" : "day"}
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>
@@ -229,3 +154,50 @@ const UserRankingTable = () => {
 };
 
 export default UserRankingTable;
+
+function EmptyTable() {
+  return (
+    <TableRow>
+      <TableCell colSpan={7} className="text-center py-10">
+        <div className="flex flex-col items-center gap-4">
+          <Image
+            src="/dashboard/EmptyLeaderBoard.svg"
+            alt="Empty Table"
+            width={290}
+            height={290}
+          />
+          <aside className="flex flex-col gap-2">
+            <h3 className="font-medium text-[#2A2829] text-[20px] leading-[30px]">
+              Nothing to display right now
+            </h3>
+            <p className="text-[#2A2829] font-normal text-[16px] leading-[24px]">
+              Data will show up here as soon as it&apos;s available.
+            </p>
+          </aside>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function NotFound() {
+  return (
+    <TableRow>
+      <TableCell colSpan={7} className="text-center py-10">
+        <div className="flex flex-col items-center gap-4">
+          <Image
+            src="/dashboard/NotFound.svg"
+            alt="Empty Table"
+            width={290}
+            height={290}
+          />
+          <aside className="flex flex-col gap-2">
+            <h3 className="font-medium text-[#2A2829] text-[20px] leading-[30px]">
+              Result Not Found
+            </h3>
+          </aside>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}

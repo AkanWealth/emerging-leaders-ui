@@ -4,14 +4,20 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { SupportStatus } from "./SupportTable";
 
+const StatusList = {
+  IN_PROGRESS: "In Progress",
+  PENDING: "Pending",
+  RESOLVED: "Resolved",
+};
+
 interface StatusBadgeProps {
   status: SupportStatus;
 }
 
 const statusStyles: Record<SupportStatus, string> = {
-  "In Progress": "bg-[#E5F5FF] text-[#407BFF]",
-  Pending: "bg-[#F3F3F1] text-[#65605C] ",
-  Resolved: "bg-[#E5FBEC] text-[#3DA755] ",
+  IN_PROGRESS: "bg-[#E5F5FF] text-[#407BFF]",
+  PENDING: "bg-[#F3F3F1] text-[#65605C] ",
+  RESOLVED: "bg-[#E5FBEC] text-[#3DA755] ",
 };
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
@@ -22,7 +28,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
         statusStyles[status]
       )}
     >
-      {status}
+      {StatusList[status]}
     </span>
   );
 };

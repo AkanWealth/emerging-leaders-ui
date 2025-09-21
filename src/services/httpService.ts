@@ -19,7 +19,9 @@ export class HttpService {
     this.baseUrl = getBaseUrl(env);
   }
 
-  private async refreshAccessToken(cookieName: COOKIE_NAMES): Promise<string | null> {
+  private async refreshAccessToken(
+    cookieName: COOKIE_NAMES
+  ): Promise<string | null> {
     if (this.isRefreshing[cookieName]) return null;
 
     this.isRefreshing[cookieName] = true;
@@ -31,8 +33,8 @@ export class HttpService {
     }
     console.log(tokens, "This are my tokens");
     try {
-      const response = await fetch(`${this.baseUrl}/auth/refresh`, {
-        method: "GET",
+      const response = await fetch(`${this.baseUrl}/admin/auth/refresh`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${tokens.refreshToken}`,

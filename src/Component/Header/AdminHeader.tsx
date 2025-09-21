@@ -10,7 +10,7 @@ import { useToastStore } from "@/store/toastStore";
 import { useUserStore } from "@/store/userStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import NotificationModal from "../Notification/NotificationModal";
-import notificationService from "@/services/notificationService"; // ✅ import service
+// import notificationService from "@/services/notificationService"; // ✅ import service
 
 // TruncatedText with instant tooltip
 const TruncatedText = ({
@@ -47,6 +47,7 @@ const AdminHeader = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [unreadCount, setUnreadCount] = useState<number>(0); // ✅ state for unread notifications
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -56,6 +57,9 @@ const AdminHeader = () => {
     router.push("/sign-in");
     showToast("success", "Logout Successful", "You are now logged out");
   };
+  const GoToProfile=()=>{
+        router.push("/admin/profile");
+  }
 
   // Close on outside click
   useEffect(() => {
@@ -211,6 +215,7 @@ const AdminHeader = () => {
                 <button
                   type="button"
                   className="flex items-center gap-2 px-4 py-3 w-full cursor-pointer hover:bg-gray-100 transition"
+                  onClick={GoToProfile}
                 >
                   <User />
                   <span>View profile</span>
