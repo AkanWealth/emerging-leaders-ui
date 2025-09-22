@@ -101,6 +101,7 @@ const AddressInfoForm = () => {
                     !form.formState.isValid ||
                     form.formState.isSubmitting
                   }
+                  className="bg-[#A2185A] hover:bg-[#A2185A]/90"
                 >
                   {form.formState.isSubmitting ? (
                     <span className="flex items-center gap-2">

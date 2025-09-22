@@ -105,10 +105,11 @@ const PersonalInformationForm = () => {
                     !form.formState.isValid ||
                     form.formState.isSubmitting
                   }
+                  className="bg-[#A2185A] hover:bg-[#A2185A]/90"
                 >
                   {form.formState.isSubmitting ? (
                     <span className="flex items-center gap-2">
-                      <LoaderCircle className="h-4 w-4 animate-spin" />
+                      <LoaderCircle className="size-4 animate-spin" />
                       Saving...
                     </span>
                   ) : (
