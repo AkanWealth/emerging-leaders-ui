@@ -1,5 +1,3 @@
-"use client";
-
 import AddressInfoForm from "./AddressInfoForm";
 import BackButton from "./BackButton";
 import PersonalInformationForm from "./PersonalInformationForm";

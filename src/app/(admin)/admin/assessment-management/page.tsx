@@ -10,7 +10,6 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import AssessmentTab from "./Tabs/AssessmentTab";
-import Pagination from "../../shared/Pagination/Pagination";
 
 const AssessmentManagementPage = () => {
   const [activeTab, setActiveTab] = useState<"assessment-list" | "user-report">(

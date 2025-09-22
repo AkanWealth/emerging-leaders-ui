@@ -10,7 +10,7 @@ interface UserAvatarProps {
 }
 
 const UserAvatar = ({
-  src = "/icons/profile.jpg",
+  src = "/profile.jpg",
   alt = "User",
   fallback,
   size = "size-10",
