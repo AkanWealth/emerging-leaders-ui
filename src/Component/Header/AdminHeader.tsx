@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { Bell, ChevronDown, LogOut, User } from "lucide-react";
@@ -57,9 +57,9 @@ const AdminHeader = () => {
     router.push("/sign-in");
     showToast("success", "Logout Successful", "You are now logged out");
   };
-  const GoToProfile = () => {
-    router.push("/admin/profile");
-  };
+  const GoToProfile=()=>{
+        router.push("/admin/profile");
+  }
 
   // Close on outside click
   useEffect(() => {
@@ -106,16 +106,16 @@ const AdminHeader = () => {
       >
         {/* Notification bell */}
         <aside
-          className="bg-[#F9F9F7] p-[10px] rounded-full cursor-pointer relative"
+          className="bg-[#F9F9F7] px-[10px] py-[10px] rounded-full cursor-pointer relative"
           onClick={(e) => {
             e.stopPropagation();
             setShowNotifications((prev) => !prev);
             setIsOpen(false); // close user dropdown
           }}
         >
-          <Bell className="size-[32px] text-[#65605C]" />
+          <Bell className="h-[32px] w-[32px] text-[#65605C]" />
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-3 bg-[#F29100] text-white text-xs font-bold rounded-full size-[18px] flex items-center justify-center">
+            <span className="absolute top-1 right-3 bg-[#F29100] text-white text-xs font-bold rounded-full h-[18px] w-[18px] flex items-center justify-center">
               {unreadCount}
             </span>
           )}
@@ -134,7 +134,7 @@ const AdminHeader = () => {
           }}
         >
           {loading ? (
-            <Skeleton className="size-[50px] rounded-full" />
+            <Skeleton className="h-[50px] w-[50px] rounded-full" />
           ) : (
             <Image
               src={
@@ -188,7 +188,7 @@ const AdminHeader = () => {
                         : `https://ui-avatars.com/api/?name=${user?.firstname}&background=000000&color=fff`
                     }
                     alt="Description"
-                    className="size-8 object-cover rounded-full"
+                    className="h-[32px] w-[32px] object-cover rounded-full"
                     width={120}
                     height={120}
                     unoptimized
@@ -214,24 +214,19 @@ const AdminHeader = () => {
               <aside className="w-full">
                 <button
                   type="button"
-                  className="flex items-center gap-2.5 px-4 py-3 w-full cursor-pointer hover:bg-gray-100 transition"
+                  className="flex items-center gap-2 px-4 py-3 w-full cursor-pointer hover:bg-gray-100 transition"
                   onClick={GoToProfile}
                 >
-                  <Image
-                    src="/icons/profile.svg"
-                    alt=""
-                    width="18"
-                    height="18"
-                  />
+                  <User />
                   <span>View profile</span>
                 </button>
                 <div className="w-full h-[1px] bg-[#E5E7EF]" />
                 <button
                   onClick={handleAdminLogOut}
                   type="button"
-                  className="flex items-center gap-2.5 text-[#E81313] w-full px-4 py-3 cursor-pointer hover:bg-red-50 transition"
+                  className="flex items-center gap-2 text-[#E81313] w-full px-4 py-3 cursor-pointer hover:bg-red-50 transition"
                 >
-                  <LogOut className="size-[18px]" />
+                  <LogOut />
                   <span>Log out</span>
                 </button>
               </aside>
