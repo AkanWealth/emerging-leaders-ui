@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -26,7 +28,6 @@ const UserReportTab = () => {
     "Nov",
     "Dec",
   ];
-
   return (
     <TabsContent value="user-report" className="flex-1 flex min-h-96">
       <div className="w-full overflow-x-auto pb-1">

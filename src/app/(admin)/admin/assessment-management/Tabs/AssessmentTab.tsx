@@ -1,3 +1,5 @@
+"use client";
+
 import { assessmentListData } from "@/data/assessmentListData";
 import { Button } from "@/components/ui/button";
 import {
