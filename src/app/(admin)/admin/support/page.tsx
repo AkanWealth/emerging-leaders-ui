@@ -4,21 +4,37 @@ import React, { useEffect, useState } from "react";
 import { ListFilter, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SupportTable from "./SupportTable";
-import SupportFilter from "./SupportFilter";
+import SupportFilter, { TicketStatus } from "./SupportFilter";
 import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
 import { supportModalStore } from "@/store/supportStore";
 import ViewTicket from "./Tabs/ViewTicket";
 import CloseTicket from "./Tabs/CloseTicket";
+import { SupportTicket, useSupport } from "@/hooks/admin/support/useSupport";
+import Pagination from "../../shared/Pagination/Pagination";
+import DeleteTicket from "./Tabs/DeleteTicket";
 
 const SupportPage = () => {
-  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<TicketStatus | null>(null);
+  const [searchInput, setSearchInput] = useState(""); // raw text input
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(8);
   const [showFilter, setShowFilter] = useState(false);
   const { modalType, closeModal } = supportModalStore();
-
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(timer);
-  }, []);
+    const handler = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1); // reset to first page on new search
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(handler);
+  }, [searchInput]);
+  const { data: supportData, isLoading } = useSupport({
+    search,
+    status: selected ?? undefined,
+    page,
+    limit,
+  });
   return (
     <main className="flex flex-col gap-[39px]">
       {/* Welcome Section */}
@@ -40,7 +56,7 @@ const SupportPage = () => {
             </h3>
             <aside className="border-t rounded-[12px] px-[20px] py-[15px]">
               <aside className="flex items-center justify-between">
-                {loading ? (
+                {isLoading ? (
                   <aside className="flex items-center gap-[8px]">
                     <Skeleton className="w-[60px] h-[32px] rounded-md" />
                   </aside>
@@ -61,7 +77,7 @@ const SupportPage = () => {
             </h3>
             <aside className="border-t rounded-[12px] px-[20px] py-[15px]">
               <aside className="flex items-center justify-between">
-                {loading ? (
+                {isLoading ? (
                   <aside className="flex items-center gap-[8px]">
                     <Skeleton className="w-[60px] h-[32px] rounded-md" />
                   </aside>
@@ -82,7 +98,7 @@ const SupportPage = () => {
             </h3>
             <aside className="border-t rounded-[12px] px-[20px] py-[15px]">
               <aside className="flex items-center justify-between">
-                {loading ? (
+                {isLoading ? (
                   <aside className="flex items-center gap-[8px]">
                     <Skeleton className="w-[60px] h-[32px] rounded-md" />
                   </aside>
@@ -103,7 +119,7 @@ const SupportPage = () => {
             </h3>
             <aside className="border-t rounded-[12px] px-[20px] py-[15px]">
               <aside className="flex items-center justify-between">
-                {loading ? (
+                {isLoading ? (
                   <aside className="flex items-center gap-[8px]">
                     <Skeleton className="w-[60px] h-[32px] rounded-md" />
                   </aside>
@@ -132,6 +148,8 @@ const SupportPage = () => {
                     className="border-none outline-none pl-[40px] w-full text-[14px] text-[#928F8B]"
                     type="text"
                     placeholder="Search by ticket id, date..."
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                   />
                 </div>
                 <Button
@@ -146,15 +164,33 @@ const SupportPage = () => {
           </aside>
           <aside>
             <section className="border-t mt-[15px] min-h-[500px] px-[20px] rounded-t-[12px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-              <SupportTable />
+              <SupportTable
+                search={search}
+                selected={selected}
+                loading={isLoading}
+                data={supportData?.data as SupportTicket[]}
+              />
             </section>
           </aside>
           {showFilter && (
             <section className="absolute z-10 right-0 top-[100px] pb-[100px]">
-              <SupportFilter onClose={() => setShowFilter(false)} />
+              <SupportFilter
+                setSelected={setSelected}
+                selected={selected}
+                onClose={() => setShowFilter(false)}
+              />
             </section>
           )}
         </section>
+        {supportData?.data && supportData.data.length > 0 && (
+          <Pagination
+            totalItems={supportData?.meta.total ?? 0}
+            page={page}
+            pageSize={limit}
+            onPageChange={setPage}
+            onPageSizeChange={setLimit}
+          />
+        )}
       </section>
 
       <Dialog open={!!modalType} onOpenChange={closeModal}>
@@ -170,6 +206,7 @@ const SupportPage = () => {
           {/* Modal Content */}
           {modalType === "viewTicket" && <ViewTicket />}
           {modalType === "closeTicket" && <CloseTicket />}
+          {modalType === "deleteTicket" && <DeleteTicket />}
         </DialogContent>
       </Dialog>
     </main>

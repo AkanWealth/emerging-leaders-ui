@@ -23,43 +23,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Ban, EllipsisVertical, RotateCcw } from "lucide-react";
+import {
+  Ban,
+  EllipsisVertical,
+  Eye,
+  RotateCcw,
+  Ticket,
+  Trash2,
+} from "lucide-react";
 import { supportModalStore } from "@/store/supportStore";
+import { SupportTicket } from "@/hooks/admin/support/useSupport";
+import { TicketStatus } from "./SupportFilter";
+import Image from "next/image";
 
-export type SupportStatus = "Pending" | "In Progress" | "Resolved";
-
-export type supportType = {
-  ticket_id: string;
-  subject: string;
-  name: string;
-  status: SupportStatus;
-  createdAt: Date;
-};
-
-const SupportData: supportType[] = [
-  {
-    ticket_id: "#82937",
-    subject: "Leadership resources not loading",
-    name: "Jane Adebayo",
-    status: "In Progress",
-    createdAt: new Date(),
-  },
-  {
-    ticket_id: "#82938",
-    subject: "Unable to reset password",
-    name: "Michael John",
-    status: "Pending",
-    createdAt: new Date(),
-  },
-  {
-    ticket_id: "#82939",
-    subject:
-      "Billing issue with subscription and invoice mismatch — very long subject to test truncation",
-    name: "Chioma Okafor",
-    status: "Resolved",
-    createdAt: new Date(),
-  },
-];
+export type SupportStatus = "PENDING" | "IN_PROGRESS" | "RESOLVED";
 
 // Custom hook to detect text overflow
 const useTextOverflow = () => {
@@ -115,14 +92,19 @@ const ConditionalTooltip = ({
   );
 };
 
-const SupportTable = () => {
-  const [loading, setLoading] = useState(true);
+type SupportTableProps = {
+  loading: boolean;
+  data: SupportTicket[];
+  search?: string;
+  selected?: TicketStatus | null;
+};
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
+const SupportTable = ({
+  loading,
+  data,
+  search,
+  selected,
+}: SupportTableProps) => {
   return (
     <section>
       <div className="w-full overflow-x-auto">
@@ -136,7 +118,7 @@ const SupportTable = () => {
             <col className="w-[5%]" /> {/* Action */}
           </colgroup>
 
-          {!loading && SupportData.length > 0 && (
+          {!loading && data.length > 0 && (
             <TableHeader>
               <TableRow className="bg-[#F9F9F7] h-[60px]">
                 <TableHead className="text-[#2A2829] text-[16px] font-medium">
@@ -185,18 +167,19 @@ const SupportTable = () => {
                   </TableCell>
                 </TableRow>
               ))
-            ) : SupportData.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-10">
-                  No tickets found
-                </TableCell>
-              </TableRow>
+            ) : data?.length === 0 ? (
+              // no data at all
+              search === "" && selected === null ? (
+                <EmptyTable />
+              ) : (
+                <NotFound />
+              )
             ) : (
-              SupportData.map((ticket, i) => (
+              data.map((ticket, i) => (
                 <TableRow className="h-[60px]" key={i}>
                   {/* Ticket ID with conditional tooltip */}
                   <TableCell className="text-[16px] text-[#2A2829] truncate max-w-[120px]">
-                    <ConditionalTooltip content={ticket.ticket_id} />
+                    <ConditionalTooltip content={ticket.ticketNumber} />
                   </TableCell>
 
                   {/* Subject with conditional tooltip */}
@@ -206,7 +189,7 @@ const SupportTable = () => {
 
                   {/* Name with conditional tooltip */}
                   <TableCell className="text-[16px] text-[#2A2829] truncate max-w-[160px]">
-                    <ConditionalTooltip content={ticket.name} />
+                    <ConditionalTooltip content={ticket.userName} />
                   </TableCell>
 
                   <TableCell className="text-center text-[16px] text-[#2A2829]">
@@ -228,29 +211,41 @@ const SupportTable = () => {
                       >
                         {/* Example Actions */}
                         <DropdownMenuItem
-                          className="gap-2 py-[18px] px-[25px] cursor-pointer text-[#3DA755] focus:bg-[#c5f8d1] focus:text-[#3DA755]"
+                          className="gap-2 py-[18px] px-[25px] cursor-pointer text-[#65605C] hover:bg-[#f4f4f4] focus:bg-[#f4f4f4]"
                           onClick={() =>
                             supportModalStore
                               .getState()
                               .openModal("viewTicket", ticket)
                           }
                         >
-                          <RotateCcw className="h-[18px] w-[18px] text-[#3DA755]" />
+                          <Eye className="h-[18px] w-[18px] text-[#65605C]" />
                           View Ticket
                         </DropdownMenuItem>
 
                         <div className="w-full h-[1px] bg-[#E5E7EF]" />
 
                         <DropdownMenuItem
-                          className="gap-2 py-[18px] px-[25px] cursor-pointer text-[#E81313] focus:bg-[#FEE2E2] focus:text-[#E81313]"
+                          className="gap-2 py-[18px] px-[25px] cursor-pointer text-[#65605C] hover:bg-[#f4f4f4] focus:bg-[#f4f4f4]"
                           onClick={() =>
                             supportModalStore
                               .getState()
                               .openModal("closeTicket", ticket)
                           }
                         >
-                          <Ban className="h-[18px] w-[18px] text-[#E81313]" />
+                          <Ticket className="h-[18px] w-[18px] text-[#65605C]" />
                           Close Ticket
+                        </DropdownMenuItem>
+                        <div className="w-full h-[1px] bg-[#E5E7EF]" />
+                        <DropdownMenuItem
+                          className="gap-2 py-[18px] px-[25px] cursor-pointer  hover:bg-[#fdecec] focus:bg-[#fdecec]"
+                          onClick={() =>
+                            supportModalStore
+                              .getState()
+                              .openModal("deleteTicket", ticket)
+                          }
+                        >
+                          <Trash2 className="h-[18px] w-[18px] text-[#E81313]" />
+                          <span className="text-[#E81313]">Delete Ticket</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -266,3 +261,50 @@ const SupportTable = () => {
 };
 
 export default SupportTable;
+
+function EmptyTable() {
+  return (
+    <TableRow>
+      <TableCell colSpan={7} className="text-center py-10">
+        <div className="flex flex-col items-center gap-4">
+          <Image
+            src="/dashboard/EmptyLeaderBoard.svg"
+            alt="Empty Table"
+            width={290}
+            height={290}
+          />
+          <aside className="flex flex-col gap-2">
+            <h3 className="font-medium text-[#2A2829] text-[20px] leading-[30px]">
+              Nothing to display right now
+            </h3>
+            <p className="text-[#2A2829] font-normal text-[16px] leading-[24px]">
+              Data will show up here as soon as it&apos;s available.
+            </p>
+          </aside>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function NotFound() {
+  return (
+    <TableRow>
+      <TableCell colSpan={7} className="text-center py-10">
+        <div className="flex flex-col items-center gap-4">
+          <Image
+            src="/dashboard/NotFound.svg"
+            alt="Empty Table"
+            width={290}
+            height={290}
+          />
+          <aside className="flex flex-col gap-2">
+            <h3 className="font-medium text-[#2A2829] text-[20px] leading-[30px]">
+              Result Not Found
+            </h3>
+          </aside>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
