@@ -1,5 +1,9 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import { supportModalStore } from "@/store/supportStore";
+import {
+  supportModalStore,
+  useUpdateTicketMutation,
+} from "@/store/supportStore";
 import { useToastStore } from "@/store/toastStore";
 import StatusBadge from "../StatusBadge";
 import { SupportStatus } from "../SupportTable";
@@ -7,23 +11,36 @@ import { formatDate } from "@/utils/formatDate";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { TicketStatus } from "../SupportFilter";
+import { BeatLoader } from "react-spinners";
 
 const ViewTicket = () => {
   const { showToast } = useToastStore();
   const { closeModal, selectedTicket } = supportModalStore();
+  const updateTicket = useUpdateTicketMutation();
+  const isUpdating = updateTicket.isPending; 
+
+  const isResolved = selectedTicket?.status === TicketStatus.RESOLVED;
+
   const handleUpdateAdmin = () => {
-    try {
-      throw Error();
+    if (!selectedTicket) {
       showToast(
-        "success",
-        "Ticket Opened Successfully.",
-        `Your support ticket ${selectedTicket?.ticket_id} has been opened and is now being reviewed.`
+        "error",
+        "No Ticket Selected.",
+        "Please select a ticket before performing this action."
       );
+      return;
+    }
+    try {
+      updateTicket.mutate({
+        id: selectedTicket.id,
+        status: TicketStatus.IN_PROGRESS,
+      });
     } catch (error) {
       showToast(
         "error",
         "Failed to Open Ticket.",
-        `We couldn’t open ticket ${selectedTicket?.ticket_id} right now. Please try again later.`
+        `We couldn’t open ticket ${selectedTicket?.ticketNumber} right now. Please try again later.`
       );
       console.log(error);
     } finally {
@@ -50,7 +67,7 @@ const ViewTicket = () => {
                 Ticket ID
               </h4>
               <p className="text-[#2A2829] text-[1rem] leading-[24px] font-normal">
-                #82937
+                #{selectedTicket?.ticketNumber}
               </p>
             </div>
             <div className="flex items-center">
@@ -58,7 +75,7 @@ const ViewTicket = () => {
                 Name
               </h4>
               <p className="text-[#2A2829] text-[1rem] leading-[24px] font-normal">
-                Jane Austen
+                {selectedTicket?.userName}
               </p>
             </div>
             <div className="flex items-center">
@@ -74,7 +91,9 @@ const ViewTicket = () => {
                 Date
               </h4>
               <p className="text-[#2A2829] text-[1rem] leading-[24px] font-normal">
-                {formatDate(selectedTicket?.createdAt as Date)}
+                {selectedTicket?.createdAt
+                  ? formatDate(new Date(selectedTicket.createdAt))
+                  : ""}
               </p>
             </div>
           </div>
@@ -87,9 +106,11 @@ const ViewTicket = () => {
                 Subject
               </Label>
               <Input
+                value={selectedTicket?.subject}
                 type="text"
                 id="last_name"
                 placeholder="User’s Last Name"
+                disabled={isResolved} // 🚨 disabled if resolved
                 className="h-[40px] w-full text-[16px] rounded-[12px] border-[#B1B1AE] px-4 outline-none"
               />
             </div>
@@ -101,8 +122,10 @@ const ViewTicket = () => {
                 Description
               </Label>
               <Textarea
+                value={selectedTicket?.subject}
                 id="subject"
                 placeholder="Enter subject here"
+                disabled={isResolved} // 🚨 disabled if resolved
                 className="h-[150px] w-full text-[16px] rounded-[12px] border-[#B1B1AE] px-4 outline-none focus:border-none resize-none"
               />
             </div>
@@ -111,15 +134,20 @@ const ViewTicket = () => {
         <div className="flex gap-[12px] ">
           <Button
             onClick={closeModal}
-            className="flex-1  text-[20px] leading-[30px] font-medium border border-[#A2185A] text-[#A2185A] rounded-[16px] bg-white h-[62px] cursor-pointer hover:bg-white"
+            className="flex-1 text-[20px] leading-[30px] font-medium border border-[#A2185A] text-[#A2185A] rounded-[16px] bg-white h-[62px] cursor-pointer hover:bg-white"
           >
             Cancel
           </Button>
           <Button
             onClick={handleUpdateAdmin}
-            className="flex-1  text-[20px] leading-[30px] font-medium  border-none text-[#fff] rounded-[16px] bg-[#A2185A] h-[62px] cursor-pointer hover:bg-[#A2185A]"
+            disabled={isResolved || isUpdating} // 🚨 disable button if resolved
+            className={`flex-1 text-[20px] leading-[30px] font-medium border-none rounded-[16px] h-[62px] cursor-pointer ${
+              isResolved || isUpdating
+                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                : "bg-[#A2185A] text-white hover:bg-[#A2185A]"
+            }`}
           >
-            Open Ticket
+            {isUpdating ? <BeatLoader size={8} color="#fff" /> : "Open Ticket"}
           </Button>
         </div>
       </form>

@@ -17,12 +17,13 @@ import {
   ChartPoint,
   useCardGrowth,
 } from "@/hooks/admin/analytics/useCardGrowth";
-import Pagination from "../../shared/Pagination/Pagination";
+import Pagination from "../../../../shared/Pagination/Pagination";
 import {
   LeaderboardMeta,
   LeaderboardType,
   useLeaderboard,
 } from "@/hooks/admin/analytics/useLeaderboard";
+import { useToastStore } from "@/store/toastStore";
 // import { useUserGrowth } from "@/hooks/admin/analytics/useUserGrowth";
 export type UserGrowthPeriodType = "7d" | "30d" | "12m";
 type FilterState = {
@@ -38,6 +39,7 @@ const DashboardPage = () => {
   const [filters, setFilters] = useState<FilterState>({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(8);
+  const { showToast } = useToastStore();
   useEffect(() => {
     const handler = setTimeout(() => {
       setSearch(searchInput);
@@ -68,6 +70,43 @@ const DashboardPage = () => {
   const { data, isLoading: loading } = useCardGrowth();
 
   const [showFilter, setShowFilter] = useState(false);
+  const handleDownload = () => {
+    if (isError) {
+      showToast(
+        "error",
+        "Failed to download",
+        "Error fetching leaderboard data"
+      );
+      return;
+    }
+    // Logic to download the data as CSV
+    const headers = ["User ID", "Name", "Completed Goals", "Ranking", "Streak"];
+    const rows = leaderBoardData?.data.map((user) => [
+      user.id,
+      user.name,
+      user.completed,
+      user.budget,
+      user.streak,
+    ]);
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers, ...(rows || [])].map((e) => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "leaderboard_data.csv");
+    document.body.appendChild(link); // Required for FF
+
+    link.click();
+    document.body.removeChild(link); // Clean up
+    showToast(
+      "success",
+      "Download complete",
+      "Leaderboard CSV downloaded successfully"
+    );
+  };
 
   return (
     <main className="flex flex-col gap-[39px]">
@@ -335,7 +374,10 @@ const DashboardPage = () => {
                     <ListFilter className="h-[12.75px] w-[22.5px]" />
                     <span>Filter</span>
                   </Button>
-                  <Button className="flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl">
+                  <Button
+                    onClick={handleDownload}
+                    className="cursor-pointer flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl"
+                  >
                     <CiExport className="h-[12.75px] w-[22.5px]" />
                     <span>Download</span>
                   </Button>

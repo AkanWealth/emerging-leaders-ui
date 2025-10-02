@@ -1,6 +1,6 @@
 "use client";
 import { Label } from "@/components/ui/label";
-import AuthBackground from "../../shared/Backgrounds/AuthBackground";
+import AuthBackground from "../../../../shared/Backgrounds/AuthBackground";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";

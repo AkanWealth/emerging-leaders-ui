@@ -33,30 +33,30 @@ export type AdminListType = {
 };
 
 const adminData: AdminListType[] = [
-  // {
-  //   full_name: "David Jack",
-  //   role: "Admin",
-  //   createdAt: new Date("2025-01-10"),
-  //   status: "Active",
-  // },
-  // {
-  //   full_name: "Sarah Lee",
-  //   role: "Admin",
-  //   createdAt: new Date("2024-12-05"),
-  //   status: "Inactive",
-  // },
-  // {
-  //   full_name: "Michael Brown",
-  //   role: "Admin",
-  //   createdAt: new Date("2025-02-20"),
-  //   status: "Pending",
-  // },
-  // {
-  //   full_name: "Emily Davis",
-  //   role: "Admin",
-  //   createdAt: new Date("2025-03-15"),
-  //   status: "Deactivated",
-  // },
+  {
+    full_name: "David Jack",
+    role: "Admin",
+    createdAt: new Date("2025-01-10"),
+    status: "Active",
+  },
+  {
+    full_name: "Sarah Lee",
+    role: "Admin",
+    createdAt: new Date("2024-12-05"),
+    status: "Inactive",
+  },
+  {
+    full_name: "Michael Brown",
+    role: "Admin",
+    createdAt: new Date("2025-02-20"),
+    status: "Pending",
+  },
+  {
+    full_name: "Emily Davis",
+    role: "Admin",
+    createdAt: new Date("2025-03-15"),
+    status: "Deactivated",
+  },
 ];
 
 const AdminList = () => {

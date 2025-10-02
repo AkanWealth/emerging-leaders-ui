@@ -23,6 +23,20 @@ class SupportService {
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }
+  async updateTicketStatus(id: string, status: TicketStatus) {
+    return this.request.patch(
+      `/tickets/${id}/status`,
+      { status },
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
+  async deleteTicket(id: string) {
+    return this.request.delete(
+      `/tickets/${id}`,
+      undefined,
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
 }
 
 const supportService = new SupportService();

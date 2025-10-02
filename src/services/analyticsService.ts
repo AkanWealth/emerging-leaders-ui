@@ -1,4 +1,4 @@
-import { COOKIE_NAMES } from "@/utils/cookiesUtils";
+import { COOKIE_NAMES, getCookie } from "@/utils/cookiesUtils";
 import { HttpService } from "./httpService";
 import { UserGrowthPeriodType } from "@/app/(admin)/admin/dashboard/page";
 
@@ -35,7 +35,8 @@ class AnalyticsService {
     if (filters?.streak) query.append("streak", filters.streak);
     if (filters?.limit) query.append("limit", String(filters.limit));
     if (filters?.page) query.append("page", String(filters.page));
-
+    const respon = getCookie(COOKIE_NAMES.ADMIN_AUTH_TOKENS);
+    console.log(respon, "These are my cookies");
     return this.request.get(
       `/analytics/admin/leaderboard?${query.toString()}`,
       COOKIE_NAMES.ADMIN_AUTH_TOKENS

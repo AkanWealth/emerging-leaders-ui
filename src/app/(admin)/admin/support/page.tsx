@@ -10,7 +10,7 @@ import { supportModalStore } from "@/store/supportStore";
 import ViewTicket from "./Tabs/ViewTicket";
 import CloseTicket from "./Tabs/CloseTicket";
 import { SupportTicket, useSupport } from "@/hooks/admin/support/useSupport";
-import Pagination from "../../shared/Pagination/Pagination";
+import Pagination from "../../../../shared/Pagination/Pagination";
 import DeleteTicket from "./Tabs/DeleteTicket";
 
 const SupportPage = () => {
@@ -63,7 +63,9 @@ const SupportPage = () => {
                 ) : (
                   <aside className="flex items-center gap-[8px]">
                     <h3 className="text-[#181D27] font-medium text-[32px]">
-                      2,420
+                      {(supportData?.stats.resolved ?? 0) +
+                        (supportData?.stats.pending ?? 0) +
+                        (supportData?.stats.inProgress ?? 0)}
                     </h3>
                   </aside>
                 )}
@@ -84,7 +86,7 @@ const SupportPage = () => {
                 ) : (
                   <aside className="flex items-center gap-[8px]">
                     <h3 className="text-[#181D27] font-medium text-[32px]">
-                      2,420
+                      {supportData?.stats.resolved ?? 0}
                     </h3>
                   </aside>
                 )}
@@ -105,7 +107,7 @@ const SupportPage = () => {
                 ) : (
                   <aside className="flex items-center gap-[8px]">
                     <h3 className="text-[#181D27] font-medium text-[32px]">
-                      2,420
+                      {supportData?.stats.inProgress ?? 0}
                     </h3>
                   </aside>
                 )}
@@ -126,7 +128,7 @@ const SupportPage = () => {
                 ) : (
                   <aside className="flex items-center gap-[8px]">
                     <h3 className="text-[#181D27] font-medium text-[32px]">
-                      2,420
+                      {supportData?.stats.pending ?? 0}
                     </h3>
                   </aside>
                 )}

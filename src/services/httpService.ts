@@ -31,20 +31,19 @@ export class HttpService {
       this.isRefreshing[cookieName] = false;
       return null;
     }
-    console.log(tokens, "This are my tokens");
     try {
       const response = await fetch(`${this.baseUrl}/admin/auth/refresh`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${tokens.refreshToken}`,
         },
+        body: JSON.stringify({ refreshToken: tokens.refreshToken }),
       });
 
       if (!response.ok) throw new Error("Refresh token failed");
 
       const newTokens = await response.json();
-      setCookie(cookieName, newTokens);
+      setCookie(cookieName, newTokens.tokens);
 
       return newTokens.accessToken;
     } catch (error) {
@@ -85,7 +84,7 @@ export class HttpService {
 
     let response = await makeRequest(token);
 
-    if (response.status === 401 && cookieName) {
+    if (response.status == 401 && cookieName) {
       const newAccessToken = await this.refreshAccessToken(cookieName);
       if (newAccessToken) {
         response = await makeRequest(newAccessToken);

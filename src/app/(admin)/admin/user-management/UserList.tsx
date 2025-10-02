@@ -33,20 +33,20 @@ export type UserListType = {
 };
 
 const UserData: UserListType[] = [
-  // {
-  //   full_name: "David Jack",
-  //   email: "iamjack@gmail.com",
-  //   last_active: new Date("2025-06-01"),
-  //   createdAt: new Date("2025-01-10"),
-  //   status: "Active",
-  // },
-  // {
-  //   full_name: "Sarah Green",
-  //   email: "sarah.green@gmail.com",
-  //   last_active: new Date("2025-05-20"),
-  //   createdAt: new Date("2025-02-14"),
-  //   status: "Deactivated",
-  // },
+  {
+    full_name: "David Jack",
+    email: "iamjack@gmail.com",
+    last_active: new Date("2025-06-01"),
+    createdAt: new Date("2025-01-10"),
+    status: "Active",
+  },
+  {
+    full_name: "Sarah Green",
+    email: "sarah.green@gmail.com",
+    last_active: new Date("2025-05-20"),
+    createdAt: new Date("2025-02-14"),
+    status: "Deactivated",
+  },
 ];
 
 const UserList = () => {

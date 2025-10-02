@@ -4,7 +4,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { SupportStatus } from "./SupportTable";
 
-const StatusList = {
+export const SupportStatusList = {
   IN_PROGRESS: "In Progress",
   PENDING: "Pending",
   RESOLVED: "Resolved",
@@ -28,7 +28,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
         statusStyles[status]
       )}
     >
-      {StatusList[status]}
+      {SupportStatusList[status]}
     </span>
   );
 };

@@ -6,8 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 
-import AuthBackground from "../../shared/Backgrounds/AuthBackground";
-import PasswordStrengthMeter from "../../shared/Meter/PasswordStrengthMeter";
+import AuthBackground from "../../../../shared/Backgrounds/AuthBackground";
+import PasswordStrengthMeter from "../../../../shared/Meter/PasswordStrengthMeter";
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);

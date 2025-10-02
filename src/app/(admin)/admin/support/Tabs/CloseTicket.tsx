@@ -1,25 +1,36 @@
 import { Button } from "@/components/ui/button";
-import { supportModalStore } from "@/store/supportStore";
+import {
+  supportModalStore,
+  useUpdateTicketMutation,
+} from "@/store/supportStore";
 import { useToastStore } from "@/store/toastStore";
 import Image from "next/image";
+import { TicketStatus } from "../SupportFilter";
 
 const CloseTicket = () => {
   const { showToast } = useToastStore();
-  const { closeModal,  selectedTicket } =
-    supportModalStore();
+  const { closeModal, selectedTicket } = supportModalStore();
+  console.log(selectedTicket)
+  const updateTicket = useUpdateTicketMutation();
   const handleUpdateAdmin = () => {
-    try {
-      //   throw Error();
+    if (!selectedTicket) {
       showToast(
-        "success",
-        "User Deactivated successfully.",
-        `s account is now deactivated and access has been restricted.`
+        "error",
+        "No Ticket Selected.",
+        "Please select a ticket before performing this action."
       );
+      return;
+    }
+    try {
+      updateTicket.mutate({
+        id: selectedTicket.id,
+        status: TicketStatus.RESOLVED,
+      });
     } catch (error) {
       showToast(
         "error",
-        "Failed to Deactivate User.",
-        `We couldn’t deactivateaccess. Please try again later.`
+        "Failed to Open Ticket.",
+        `We couldn’t open ticket ${selectedTicket?.ticketNumber} right now. Please try again later.`
       );
       console.log(error);
     } finally {
@@ -48,7 +59,7 @@ const CloseTicket = () => {
             </p>
           </aside>
           <h3 className="text-[#2A2829] text-[20px] leading-[30px] font-medium">
-            Are you sure you want to close ticket ${selectedTicket?.ticket_id} ?
+            Are you sure you want to close ticket ${selectedTicket?.ticketNumber} ?
           </h3>
         </div>
 

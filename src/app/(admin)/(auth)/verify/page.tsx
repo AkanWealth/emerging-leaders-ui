@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import AuthBackground from "../../shared/Backgrounds/AuthBackground";
+import AuthBackground from "../../../../shared/Backgrounds/AuthBackground";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
