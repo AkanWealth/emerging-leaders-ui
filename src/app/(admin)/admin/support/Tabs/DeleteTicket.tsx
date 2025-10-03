@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   supportModalStore,
   useDeleteTicketMutation,
-  useUpdateTicketMutation,
 } from "@/store/supportStore";
 import { useToastStore } from "@/store/toastStore";
 import Image from "next/image";
@@ -12,7 +11,8 @@ import { BeatLoader } from "react-spinners";
 const DeleteTicket = () => {
   const { showToast } = useToastStore();
   const { closeModal, selectedTicket } = supportModalStore();
-  const { mutate: deleteTicket, isLoading } = useDeleteTicketMutation();
+  const { mutate: deleteTicket, isPending: isLoading } =
+    useDeleteTicketMutation();
 
   const handleUpdateAdmin = () => {
     if (!selectedTicket) {
@@ -77,7 +77,7 @@ const DeleteTicket = () => {
           </aside>
           <h3 className="text-[#2A2829] text-[20px] leading-[30px] font-medium">
             Are you sure you want to permanently delete Ticket{" "}
-            {selectedTicket?.ticket_id} ?
+            {selectedTicket?.ticketNumber} ?
           </h3>
         </div>
 
@@ -93,11 +93,7 @@ const DeleteTicket = () => {
             onClick={handleUpdateAdmin}
             className="flex-1  text-[20px] leading-[30px] font-medium  border-none text-[#fff] rounded-[16px] bg-[#E81313] h-[62px] cursor-pointer hover:bg-[#E81313]"
           >
-            {isLoading ? (
-              <BeatLoader size={8} color="#fff" />
-            ) : (
-              "Delete Ticket"
-            )}
+            {isLoading ? <BeatLoader size={8} color="#fff" /> : "Delete Ticket"}
           </Button>
         </div>
       </div>
