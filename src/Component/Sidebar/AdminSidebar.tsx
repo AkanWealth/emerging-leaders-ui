@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Icons from "../../assets/icons"
 
 const AdminSidebar = () => {
   const pathname = usePathname();
@@ -10,26 +11,26 @@ const AdminSidebar = () => {
     {
       name: "Analytics",
       href: "/admin/dashboard",
-      activeIcon: "/icons/usedAnalytics.svg",
-      inactiveIcon: "/icons/unusedAnalytics.svg",
+      activeIcon:Icons.Used.Analytics ,
+      inactiveIcon: Icons.UnUsed.Analytics,
     },
     {
       name: "User Management",
       href: "/admin/user-management",
-      activeIcon: "/icons/usedUserManagement.svg",
-      inactiveIcon: "/icons/unusedUserManagement.svg",
+      activeIcon: Icons.Used.UserManagement,
+      inactiveIcon: Icons.UnUsed.UserManagement,
     },
     {
       name: "Assessment Management",
       href: "/admin/assessment-management",
-      activeIcon: "/icons/usedAssessment.svg",
-      inactiveIcon: "/icons/unusedAssessment.svg",
+      activeIcon: Icons.Used.Assessment,
+      inactiveIcon: Icons.UnUsed.Assessment,
     },
     {
       name: "Support",
       href: "/admin/support",
-      activeIcon: "/icons/usedSupport.svg",
-      inactiveIcon: "/icons/unusedSupport.svg",
+      activeIcon: Icons.Used.Support,
+      inactiveIcon: Icons.UnUsed.Support,
     },
   ];
 
