@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import AuthBackground from "../../shared/Backgrounds/AuthBackground";
+import AuthBackground from "../../../../shared/Backgrounds/AuthBackground";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
-import PasswordStrengthMeter from "../../shared/Meter/PasswordStrengthMeter";
+import PasswordStrengthMeter from "../../../../shared/Meter/PasswordStrengthMeter";
 import { Button } from "@/components/ui/button";
 
 const ResetPassword = () => {

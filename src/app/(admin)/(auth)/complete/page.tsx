@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import AuthBackground from "../../shared/Backgrounds/AuthBackground";
+import AuthBackground from "../../../../shared/Backgrounds/AuthBackground";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
@@ -16,12 +16,7 @@ const CompleteAdminSetUp = () => {
       <section className="flex flex-1 flex-col justify-center items-center p-6 bg-white">
         <div className="w-full max-w-[563px] space-y-6 flex flex-col gap-6">
           <div className="flex flex-col gap-2 mb-[16px]">
-            <Image
-              src="/AuthFlower.svg"
-              alt="Success"
-              width={80}
-              height={83}
-            />
+            <Image src="/AuthFlower.svg" alt="Success" width={80} height={83} />
             <h3 className="text-[32px] font-medium text-[#2A2829]">
               Welcome to the Admin Portal
             </h3>

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import AuthBackground from "../../shared/Backgrounds/AuthBackground";
+import AuthBackground from "../../../../shared/Backgrounds/AuthBackground";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";

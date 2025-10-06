@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import AuthBackground from "../../shared/Backgrounds/AuthBackground";
+import AuthBackground from "../../../../shared/Backgrounds/AuthBackground";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { COOKIE_NAMES, setCookie } from "@/utils/cookiesUtils";
@@ -9,7 +9,7 @@ import { useAdminCount } from "@/hooks/useAdminCount";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const InviteAdminPage = () => {
-  const { data, isLoading:loading, error } = useAdminCount();
+  const { data, isLoading: loading, error } = useAdminCount();
   const router = useRouter();
 
   useEffect(() => {

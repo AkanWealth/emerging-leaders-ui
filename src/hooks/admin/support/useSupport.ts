@@ -5,6 +5,16 @@ import supportService from "@/services/supportService";
 import { QUERY_KEYS } from "@/react-query/constants";
 import { TicketStatus } from "@/app/(admin)/admin/support/SupportFilter";
 
+export type supportType = {
+  id: string;
+  ticketNumber: string;
+  subject: string;
+  status: TicketStatus;
+  userId: string;
+  userName: string;
+  createdAt: string;
+};
+
 export type SupportTicketFilters = {
   search?: string;
   status?: TicketStatus;
@@ -31,6 +41,11 @@ export type SupportTicketMeta = {
 
 export type SupportTicketResponse = {
   data: SupportTicket[];
+  stats: {
+    resolved: number;
+    inProgress: number;
+    pending: number;
+  };
   meta: SupportTicketMeta;
   error?: string;
 };
@@ -51,7 +66,7 @@ export function useSupport(filters: SupportTicketFilters) {
     },
     retry: 1,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 3000, // 3 seconds
   });
 
   return query;

@@ -3,7 +3,7 @@
 import { ReactNode, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { getQueryClient } from "./queryClient";
-import Toast from "@/app/(admin)/shared/Toast/Toast";
+import Toast from "@/shared/Toast/Toast";
 
 export default function ReactQueryProvider({
   children,

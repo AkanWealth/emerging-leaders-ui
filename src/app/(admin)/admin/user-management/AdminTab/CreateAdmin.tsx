@@ -9,7 +9,7 @@ const CreateAdmin = () => {
   const { showToast } = useToastStore();
   const { closeModal } = userModalStore();
 
-  const handleUpdateAdmin = () => {
+  const handleAddAdmin = () => {
     try {
       throw Error();
       showToast(
@@ -28,20 +28,7 @@ const CreateAdmin = () => {
       closeModal();
     }
   };
-  const handleDeleteAdmin = () => {
-    try {
-      showToast(
-        "success",
-        "Changes saved successfully.",
-        "User profile has been updated with the new information."
-      );
-      closeModal();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      closeModal();
-    }
-  };
+
   return (
     <section className="flex flex-col gap-[40px] py-[30px] px-[40px]">
       <aside className="flex flex-col gap-[4px] ">
@@ -108,7 +95,7 @@ const CreateAdmin = () => {
         </div>
         <div className="flex  ">
           <Button
-            onClick={handleUpdateAdmin}
+            onClick={handleAddAdmin}
             className="flex-1  text-[20px] leading-[30px] font-medium  border-none text-[#fff] rounded-[16px] bg-[#A2185A] h-[62px] cursor-pointer hover:bg-[#A2185A]"
           >
             Create Admin

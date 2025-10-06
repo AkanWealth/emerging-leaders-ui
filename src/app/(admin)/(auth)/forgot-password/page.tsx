@@ -1,6 +1,6 @@
 "use client";
 import { Label } from "@/components/ui/label";
-import AuthBackground from "../../shared/Backgrounds/AuthBackground";
+import AuthBackground from "../../../../shared/Backgrounds/AuthBackground";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -20,10 +20,18 @@ const ForgotPasswordPage = () => {
     setIsLoading(true);
     try {
       const response = await authService.forgotPassword({ email });
-      if (response.error) {
-        setError(true);
-        showToast("error", "Failed to send reset link", response.message);
-        return;
+      // Narrow the type of response before accessing its properties
+      if (
+        typeof response === "object" &&
+        response !== null &&
+        "error" in response
+      ) {
+        if (response.error) {
+          setError(true);
+          // @ts-expect-error: We expect response to have message property
+          showToast("error", "Failed to send reset link", response.message);
+          return;
+        }
       }
       showToast(
         "success",

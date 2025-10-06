@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
-import FooterBar from "../../shared/Footer/FooterBar";
+import FooterBar from "../../../../shared/Footer/FooterBar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import UserReportTab from "./Tabs/UserReportTab";
-import FilterDropdown from "../../shared/Filter/FilterDropDown";
+import FilterDropdown from "../../../../shared/Filter/FilterDropDown";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
