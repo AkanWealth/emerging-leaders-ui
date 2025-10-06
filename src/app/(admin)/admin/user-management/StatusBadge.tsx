@@ -2,18 +2,20 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import { AdminStatus } from "@/hooks/admin/user-management/useAdminList";
+import { format } from "path";
+import formatText from "@/utils/formatText";
 
-type AdminStatus = "Active" | "Inactive" | "Pending" | "Deactivated";
 
 interface StatusBadgeProps {
   status: AdminStatus;
 }
 
 const statusStyles: Record<AdminStatus, string> = {
-  Active: "bg-[#E5FBEC] text-[#3DA755] ",
-  Inactive: "bg-[#FFF7E5] text-[#B36F09] ",
-  Pending: "bg-[#F3F3F1] text-[#65605C] ",
-  Deactivated: "bg-[#FFEDED] text-[#E81313]",
+  ACTIVE: "bg-[#E5FBEC] text-[#3DA755] ",
+  INACTIVE: "bg-[#FFF7E5] text-[#B36F09] ",
+  PENDING: "bg-[#F3F3F1] text-[#65605C] ",
+  DEACTIVATED: "bg-[#FFEDED] text-[#E81313]",
 };
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
@@ -24,7 +26,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
         statusStyles[status]
       )}
     >
-      {status}
+      {formatText(status)}
     </span>
   );
 };

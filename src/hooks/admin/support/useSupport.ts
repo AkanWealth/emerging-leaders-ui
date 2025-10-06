@@ -9,6 +9,7 @@ export type supportType = {
   id: string;
   ticketNumber: string;
   subject: string;
+  description: string;
   status: TicketStatus;
   userId: string;
   userName: string;

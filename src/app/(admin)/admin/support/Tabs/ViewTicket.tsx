@@ -122,9 +122,9 @@ const ViewTicket = () => {
                 Description
               </Label>
               <Textarea
-                value={selectedTicket?.subject}
-                id="subject"
-                placeholder="Enter subject here"
+                value={selectedTicket?.description}
+                id="description"
+                placeholder="Enter description here"
                 disabled={isResolved} // 🚨 disabled if resolved
                 className="h-[150px] w-full text-[16px] rounded-[12px] border-[#B1B1AE] px-4 outline-none focus:border-none resize-none"
               />

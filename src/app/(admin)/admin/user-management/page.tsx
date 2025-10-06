@@ -13,14 +13,41 @@ import ReactivateAdmin from "./AdminTab/ReactivateAdmin";
 import ReactivateUser from "./UserTab/ReactivateUser";
 import DeactivateUser from "./UserTab/DeactivateUser";
 import CreateAdmin from "./AdminTab/CreateAdmin";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserManagementFilter from "./UserManagementFilter";
+import {
+  AdminStatus,
+  useAdminList,
+} from "@/hooks/admin/user-management/useAdminList";
+import Pagination from "@/shared/Pagination/Pagination";
 
 const UserManagementPage = () => {
   const { modalType, closeModal } = userModalStore();
   const { modalType: userModalType, closeModal: closeUserModalType } =
     manageUserModalStore();
-  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [selected, setSelected] = useState<AdminStatus | null>(null);
+  const [searchInput, setSearchInput] = useState(""); // raw text input
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(8);
+  const [showFilter, setShowFilter] = useState(false);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1); // reset to first page on new search
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(handler);
+  }, [searchInput]);
+  const {
+    data: adminData = { data: [], meta: { total: 0 } },
+    isLoading: isAdminLoading,
+  } = useAdminList({
+    search,
+    status: selected ?? undefined,
+    page,
+    limit,
+  });
 
   return (
     <Tabs defaultValue="user" className="flex flex-col gap-[32px]">
@@ -68,6 +95,8 @@ const UserManagementPage = () => {
                 <div className="rounded-[12px] bg-[#F9F9F7] relative min-w-[385px] h-[48px] flex items-center justify-center py-[12px] px-[16px]">
                   <Search className="absolute left-3 text-[#928F8B] h-[19.5px] w-[19.5px]" />
                   <input
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                     className="border-none outline-none pl-[40px] w-full text-[14px] text-[#928F8B]"
                     type="text"
                     placeholder="Search by name, role, date added..."
@@ -83,7 +112,13 @@ const UserManagementPage = () => {
               </section>
             </aside>
           </aside>
-          {showFilter && <UserManagementFilter />}
+          {showFilter && (
+            <UserManagementFilter
+              onClose={() => setShowFilter(false)}
+              setSelected={setSelected}
+              selected={selected}
+            />
+          )}
           <aside>
             <TabsContent
               className="border-t mt-[15px] px-[20px] rounded-t-[12px] min-h-[500px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
@@ -95,11 +130,23 @@ const UserManagementPage = () => {
               className="border-t mt-[15px] px-[20px] rounded-t-[12px]  min-h-[500px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
               value="admin"
             >
-              <AdminList />
+              <AdminList
+                isLoading={isAdminLoading}
+                adminData={adminData.data}
+              />
             </TabsContent>
           </aside>
           {/* </Tabs> */}
         </section>
+        {adminData?.data && adminData.data.length > 0 && (
+          <Pagination
+            totalItems={adminData?.meta?.total ?? 0}
+            page={page}
+            pageSize={limit}
+            onPageChange={setPage}
+            onPageSizeChange={setLimit}
+          />
+        )}
       </section>
       <TabsContent className="relative" value="admin">
         <Dialog open={!!modalType} onOpenChange={closeModal}>
