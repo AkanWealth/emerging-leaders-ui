@@ -1,5 +1,5 @@
-import { AdminListType } from "@/app/(admin)/admin/user-management/AdminList";
 import { UserListType } from "@/app/(admin)/admin/user-management/UserList";
+import { AdminType } from "@/hooks/admin/user-management/Admins/useAdminList";
 import { create } from "zustand";
 
 type ModalType =
@@ -14,8 +14,8 @@ type UserModalType = "reactivateUser" | "deactivateUser" | null;
 
 interface ModalState {
   modalType: ModalType;
-  selectedAdmin: AdminListType | null;
-  openModal: (type: ModalType, admin?: AdminListType) => void;
+  selectedAdmin: AdminType | null;
+  openModal: (type: ModalType, admin?: AdminType) => void;
   closeModal: () => void;
 }
 

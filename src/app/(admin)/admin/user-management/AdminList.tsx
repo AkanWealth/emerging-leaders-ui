@@ -25,7 +25,7 @@ import EmptyList from "./EmptyList";
 import {
   AdminResponse,
   AdminType,
-} from "@/hooks/admin/user-management/useAdminList";
+} from "@/hooks/admin/user-management/Admins/useAdminList";
 
 const AdminList = ({
   isLoading,

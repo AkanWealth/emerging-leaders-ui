@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CircleCheck } from "lucide-react";
-import { AdminStatus } from "@/hooks/admin/user-management/useAdminList";
+import { AdminStatus } from "@/hooks/admin/user-management/Admins/useAdminList";
 
 type FilterItem = {
   label: string;

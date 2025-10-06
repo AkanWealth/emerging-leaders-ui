@@ -18,7 +18,7 @@ import UserManagementFilter from "./UserManagementFilter";
 import {
   AdminStatus,
   useAdminList,
-} from "@/hooks/admin/user-management/useAdminList";
+} from "@/hooks/admin/user-management/Admins/useAdminList";
 import Pagination from "@/shared/Pagination/Pagination";
 
 const UserManagementPage = () => {

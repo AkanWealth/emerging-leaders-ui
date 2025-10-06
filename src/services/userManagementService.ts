@@ -41,6 +41,24 @@ class UserManagementService {
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }
+  async createAdmin(payload: {
+    firstname?: string;
+    lastname?: string;
+    email: string;
+  }) {
+    return this.request.post(
+      `/admin/auth/invite-admin`,
+      payload,
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
+  async resendAdminInvite(email: string) {
+    return this.request.post(
+      `/admin/auth/resend-invite`,
+      { email },
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
 }
 
 const userManagementService = new UserManagementService();

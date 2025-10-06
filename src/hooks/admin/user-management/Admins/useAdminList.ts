@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import analyticsService from "@/services/analyticsService";
 import { QUERY_KEYS } from "@/react-query/constants";
 import userManagementService from "@/services/userManagementService";
 

@@ -1,28 +1,48 @@
 import { Button } from "@/components/ui/button";
+import userManagementService from "@/services/userManagementService";
 import { useToastStore } from "@/store/toastStore";
 import { userModalStore } from "@/store/userModalStore";
 import Image from "next/image";
+import { useState } from "react";
+import { BeatLoader } from "react-spinners";
+
+type ResendAdminInviteResponse = {
+  error?: string;
+  message?: string;
+};
 
 const ResendInviteAdmin = () => {
   const { showToast } = useToastStore();
   const { selectedAdmin, closeModal } = userModalStore();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleResendInviteAdmin = () => {
+  const handleResendInviteAdmin = async () => {
     try {
-      //   throw Error();
+      setIsLoading(true);
+      const response = (await userManagementService.resendAdminInvite(
+        selectedAdmin?.email || ""
+      )) as ResendAdminInviteResponse;
+      if (response && "error" in response) {
+        throw new Error(response.error);
+      }
       showToast(
         "success",
         "Admin invite sent successfully.",
-        `An invitation has been sent to ${selectedAdmin?.full_name} to activate their account.`
+        `An invitation has been sent to ${
+          selectedAdmin?.firstname + " " + selectedAdmin?.lastname
+        } to activate their account.`
       );
     } catch (error) {
       showToast(
         "error",
         "Failed to send Admin Invite",
-        `We couldn’t send the invitation to ${selectedAdmin?.full_name}. Please try again later.`
+        `We couldn’t send the invitation to ${
+          selectedAdmin?.firstname + " " + selectedAdmin?.lastname
+        }. Please try again later.`
       );
       console.log(error);
     } finally {
+      setIsLoading(false);
       closeModal();
     }
   };
@@ -48,8 +68,8 @@ const ResendInviteAdmin = () => {
             </p>
           </aside>
           <h3 className="text-[#2A2829] text-[20px] leading-[30px] font-medium">
-            Do you want to resend the invite to Admin {selectedAdmin?.full_name}
-            ?
+            Do you want to resend the invite to Admin{" "}
+            {selectedAdmin?.firstname + " " + selectedAdmin?.lastname}?
           </h3>
         </div>
 
@@ -61,10 +81,11 @@ const ResendInviteAdmin = () => {
             Cancel
           </Button>
           <Button
+            disabled={isLoading}
             onClick={handleResendInviteAdmin}
             className="flex-1  text-[20px] leading-[30px] font-medium  border-none text-[#fff] rounded-[16px] bg-[#A2185A] h-[62px] cursor-pointer hover:bg-[#A2185A]"
           >
-            Resend Invite
+            {isLoading ? <BeatLoader size={8} color="#fff" /> : "Resend Invite"}
           </Button>
         </div>
       </div>

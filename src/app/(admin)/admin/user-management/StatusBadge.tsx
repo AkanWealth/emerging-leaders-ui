@@ -2,10 +2,9 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { AdminStatus } from "@/hooks/admin/user-management/useAdminList";
+import { AdminStatus } from "@/hooks/admin/user-management/Admins/useAdminList";
 import { format } from "path";
 import formatText from "@/utils/formatText";
-
 
 interface StatusBadgeProps {
   status: AdminStatus;
