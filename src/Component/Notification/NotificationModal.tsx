@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import NotificationItem from "./NotificationItem";
 import { groupNotifications } from "./groupNotifications";
 
-type Notification = {
+type NotificationType = {
   id: string;
   message: string;
   createdAt: Date; // ISO date string
 };
 
-const notifications = [
+const notifications: NotificationType[] = [
   // Today
   {
     id: "1",

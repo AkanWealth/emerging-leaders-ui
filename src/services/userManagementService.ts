@@ -18,7 +18,7 @@ class UserManagementService {
     if (filters?.page) query.append("page", String(filters.page));
 
     return this.request.get(
-      `/users?${query.toString()}`,
+      `/admin/users?${query.toString()}`,
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }

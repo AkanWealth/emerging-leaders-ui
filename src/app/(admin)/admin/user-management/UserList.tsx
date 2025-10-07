@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
 import { Ban, EllipsisVertical, RotateCcw } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 import { formatDate } from "@/utils/formatDate";
@@ -21,41 +20,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { manageUserModalStore } from "@/store/userModalStore";
 import EmptyList from "./EmptyList";
+import { AdminResponse } from "@/hooks/admin/user-management/Users/useUserList";
 
 type UserStatus = "Active" | "Deactivated";
 
-export type UserListType = {
-  full_name: string;
-  email: string;
-  last_active: Date;
-  createdAt: Date;
-  status: UserStatus;
-};
-
-const UserData: UserListType[] = [
-  {
-    full_name: "David Jack",
-    email: "iamjack@gmail.com",
-    last_active: new Date("2025-06-01"),
-    createdAt: new Date("2025-01-10"),
-    status: "Active",
-  },
-  {
-    full_name: "Sarah Green",
-    email: "sarah.green@gmail.com",
-    last_active: new Date("2025-05-20"),
-    createdAt: new Date("2025-02-14"),
-    status: "Deactivated",
-  },
-];
-
-const UserList = () => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+const UserList = ({
+  isLoading,
+  userData = [],
+}: {
+  isLoading: boolean;
+  userData: AdminResponse["data"];
+}) => {
+  console.log(userData, "This is the user data");
 
   return (
     <section>
@@ -70,7 +46,7 @@ const UserList = () => {
             <col className="w-[10%]" /> {/* Action */}
           </colgroup>
 
-          {!loading && UserData.length > 0 && (
+          {!isLoading && userData.length > 0 && (
             <TableHeader>
               <TableRow className="bg-[#F9F9F7] h-[60px]">
                 <TableHead className="whitespace-nowrap text-[#2A2829] text-[16px] font-medium">
@@ -96,7 +72,7 @@ const UserList = () => {
           )}
 
           <TableBody>
-            {loading ? (
+            {isLoading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <TableRow key={i} className="h-[60px]">
                   <TableCell>
@@ -119,26 +95,28 @@ const UserList = () => {
                   </TableCell>
                 </TableRow>
               ))
-            ) : UserData.length === 0 ? (
+            ) : userData.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-10">
                   <EmptyList />
                 </TableCell>
               </TableRow>
             ) : (
-              UserData.map((user, i) => (
+              userData.map((user, i) => (
                 <TableRow className="h-[60px]" key={i}>
                   <TableCell className="text-[16px] text-[#2A2829]">
-                    {user.full_name}
+                    {user.firstname} {user.lastname}
                   </TableCell>
                   <TableCell className="text-[16px] text-[#2A2829]">
                     {user.email}
                   </TableCell>
                   <TableCell className="text-center text-[16px] text-[#2A2829]">
-                    {formatDate(user.last_active)}
+                    {formatDate(
+                      user.lastLogin ? user.lastLogin : (user.createdAt as Date)
+                    )}
                   </TableCell>
                   <TableCell className="text-center text-[16px] text-[#2A2829]">
-                    {formatDate(user.createdAt)}
+                    {formatDate(user.createdAt as Date)}
                   </TableCell>
                   <TableCell className="text-center text-[16px] text-[#2A2829]">
                     <StatusBadge status={user.status} />
@@ -154,7 +132,7 @@ const UserList = () => {
                         sideOffset={2}
                         className="w-56 p-0 text-[#65605C] text-[16px] leading-[24px] font-normal rounded-[20px] shadow-md border border-[#E5E7EF]"
                       >
-                        {user.status === "Active" && (
+                        {user.status === "ACTIVE" && (
                           <>
                             <DropdownMenuItem
                               className="gap-2 py-[18px] rounded-t-none px-[25px] cursor-pointer text-[#E81313] focus:bg-[#FEE2E2] focus:text-[#E81313]"
@@ -171,7 +149,7 @@ const UserList = () => {
                           </>
                         )}
 
-                        {user.status === "Deactivated" && (
+                        {user.status === "DEACTIVATED" && (
                           <>
                             <DropdownMenuItem
                               className="gap-2 rounded-t-none py-[18px] px-[25px] cursor-pointer text-[#3DA755] focus:bg-[#c5f8d1] focus:text-[#3DA755]"

@@ -1,4 +1,3 @@
-import { UserListType } from "@/app/(admin)/admin/user-management/UserList";
 import { AdminType } from "@/hooks/admin/user-management/Admins/useAdminList";
 import { create } from "zustand";
 
