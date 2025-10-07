@@ -33,6 +33,7 @@ const ForgotPasswordPage = () => {
           return;
         }
       }
+      
       showToast(
         "success",
         "Reset link sent successfully",
