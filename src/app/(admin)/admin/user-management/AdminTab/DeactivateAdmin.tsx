@@ -1,25 +1,41 @@
 import { Button } from "@/components/ui/button";
+import { AdminType } from "@/hooks/admin/user-management/Admins/useAdminList";
+import { useToggleAdminStatusMutation } from "@/hooks/admin/user-management/Admins/useToggleAdminStatusMutation";
 import { useToastStore } from "@/store/toastStore";
 import { userModalStore } from "@/store/userModalStore";
 import Image from "next/image";
+import { BeatLoader } from "react-spinners";
 
 const DeactivateAdmin = () => {
   const { showToast } = useToastStore();
   const { selectedAdmin, closeModal } = userModalStore();
+  const { mutate: toggleStatus, isPending } = useToggleAdminStatusMutation();
 
   const handleUpdateAdmin = () => {
     try {
-      throw Error();
-      showToast(
-        "success",
-        "Admin Deactivated successfully.",
-        "Clare Brown’s admin account is now deactivated and access has been restricted."
-      );
+      if (!selectedAdmin) {
+        showToast(
+          "error",
+          "No Admin Selected.",
+          "Please select an admin before performing this action."
+        );
+        return;
+      }
+      toggleStatus({
+        id: selectedAdmin.id,
+        action: "DEACTIVATE",
+        admin: selectedAdmin as AdminType,
+      });
     } catch (error) {
       showToast(
         "error",
         "Failed to Deactivate Admin.",
-        `We couldn’t deactivate ${selectedAdmin?.full_name} admin access. Please try again later.`
+        `We couldn’t deactivate ${
+          selectedAdmin?.firstname && selectedAdmin.lastname
+            ? selectedAdmin?.firstname + " " + selectedAdmin?.lastname
+            : selectedAdmin?.email
+        }
+        } admin access. Please try again later.`
       );
       console.log(error);
     } finally {
@@ -50,7 +66,11 @@ const DeactivateAdmin = () => {
             </p>
           </aside>
           <h3 className="text-[#2A2829] text-[20px] leading-[30px] font-medium">
-            Are you sure you want to deactivate Admin Clare Brown?
+            Are you sure you want to deactivate Admin{" "}
+            {selectedAdmin?.firstname && selectedAdmin.lastname
+              ? selectedAdmin?.firstname + " " + selectedAdmin?.lastname
+              : selectedAdmin?.email}
+            ?
           </h3>
         </div>
 
@@ -62,10 +82,15 @@ const DeactivateAdmin = () => {
             Cancel
           </Button>
           <Button
+            disabled={isPending}
             onClick={handleUpdateAdmin}
             className="flex-1  text-[20px] leading-[30px] font-medium  border-none text-[#fff] rounded-[16px] bg-[#E81313] h-[62px] cursor-pointer hover:bg-[#E81313]"
           >
-            Deactivate Admin
+            {isPending ? (
+              <BeatLoader size={8} color="#fff" />
+            ) : (
+              "Deactivate Admin"
+            )}
           </Button>
         </div>
       </div>

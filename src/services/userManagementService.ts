@@ -59,6 +59,20 @@ class UserManagementService {
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }
+  async deactivateAdmin(adminId: string) {
+    return this.request.post(
+      `/admin/users/${adminId}/deactivate-admin`,
+      {},
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
+  async reactivateAdmin(adminId: string) {
+    return this.request.post(
+      `/admin/users/${adminId}/activate-admin`,
+      {},
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
 }
 
 const userManagementService = new UserManagementService();

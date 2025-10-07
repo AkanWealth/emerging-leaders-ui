@@ -69,7 +69,10 @@ const ResendInviteAdmin = () => {
           </aside>
           <h3 className="text-[#2A2829] text-[20px] leading-[30px] font-medium">
             Do you want to resend the invite to Admin{" "}
-            {selectedAdmin?.firstname + " " + selectedAdmin?.lastname}?
+            {selectedAdmin?.firstname && selectedAdmin.lastname
+              ? selectedAdmin?.firstname + " " + selectedAdmin?.lastname
+              : selectedAdmin?.email}
+            ?
           </h3>
         </div>
 
