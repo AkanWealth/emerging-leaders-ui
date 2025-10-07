@@ -4,6 +4,7 @@ import { useToggleAdminStatusMutation } from "@/hooks/admin/user-management/Admi
 import { useToastStore } from "@/store/toastStore";
 import { userModalStore } from "@/store/userModalStore";
 import Image from "next/image";
+import { BeatLoader } from "react-spinners";
 
 const ReactivateAdmin = () => {
   const { showToast } = useToastStore();
@@ -84,7 +85,11 @@ const ReactivateAdmin = () => {
             onClick={handleUpdateAdmin}
             className="flex-1  text-[20px] leading-[30px] font-medium  border-none text-[#fff] rounded-[16px] bg-[#A2185A] h-[62px] cursor-pointer hover:bg-[#A2185A]"
           >
-            Deactivate Admin
+            {isPending ? (
+              <BeatLoader size={8} color="#fff" />
+            ) : (
+              "Reactivate Admin"
+            )}
           </Button>
         </div>
       </div>

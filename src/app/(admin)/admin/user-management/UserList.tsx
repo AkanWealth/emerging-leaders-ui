@@ -20,16 +20,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { manageUserModalStore } from "@/store/userModalStore";
 import EmptyList from "./EmptyList";
-import { AdminResponse } from "@/hooks/admin/user-management/Users/useUserList";
-
-type UserStatus = "Active" | "Deactivated";
+import { UserResponse } from "@/hooks/admin/user-management/Users/useUserList";
 
 const UserList = ({
   isLoading,
   userData = [],
 }: {
   isLoading: boolean;
-  userData: AdminResponse["data"];
+  userData: UserResponse["data"];
 }) => {
   console.log(userData, "This is the user data");
 
@@ -132,7 +130,8 @@ const UserList = ({
                         sideOffset={2}
                         className="w-56 p-0 text-[#65605C] text-[16px] leading-[24px] font-normal rounded-[20px] shadow-md border border-[#E5E7EF]"
                       >
-                        {user.status === "ACTIVE" && (
+                        {(user.status === "ACTIVE" ||
+                          user.status === "PENDING") && (
                           <>
                             <DropdownMenuItem
                               className="gap-2 py-[18px] rounded-t-none px-[25px] cursor-pointer text-[#E81313] focus:bg-[#FEE2E2] focus:text-[#E81313]"
@@ -149,7 +148,8 @@ const UserList = ({
                           </>
                         )}
 
-                        {user.status === "DEACTIVATED" && (
+                        {(user.status === "DEACTIVATED" ||
+                          user.status === "PENDING") && (
                           <>
                             <DropdownMenuItem
                               className="gap-2 rounded-t-none py-[18px] px-[25px] cursor-pointer text-[#3DA755] focus:bg-[#c5f8d1] focus:text-[#3DA755]"

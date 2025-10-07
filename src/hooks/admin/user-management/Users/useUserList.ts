@@ -5,7 +5,8 @@ import { QUERY_KEYS } from "@/react-query/constants";
 import userManagementService from "@/services/userManagementService";
 
 export type AdminStatus = "ACTIVE" | "INACTIVE" | "PENDING" | "DEACTIVATED";
-export type AdminType = {
+
+export type UserType = {
   id: string;
   firstname: string;
   lastname: string;
@@ -30,19 +31,19 @@ export type AdminResponseMeta = {
   totalPages: number;
 };
 
-export type AdminResponse = {
-  data?: AdminType[];
+export type UserResponse = {
+  data?: UserType[];
   meta?: AdminResponseMeta;
   error?: string;
 };
 
 export function useUserList(filters: AdminFilters) {
-  const query = useQuery<AdminResponse>({
+  const query = useQuery<UserResponse>({
     queryKey: [QUERY_KEYS.FETCH_USERS, filters],
     queryFn: async () => {
       const res = (await userManagementService.getAllUsers(
         filters
-      )) as AdminResponse;
+      )) as UserResponse;
 
       if (res.error) {
         throw new Error(res.error);

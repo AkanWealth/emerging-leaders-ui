@@ -24,10 +24,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  Ban,
   EllipsisVertical,
   Eye,
-  RotateCcw,
   Ticket,
   Trash2,
 } from "lucide-react";

@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import { EllipsisVertical, Ban, RotateCcw, Eye } from "lucide-react";
 import StatusBadge from "./StatusBadge";

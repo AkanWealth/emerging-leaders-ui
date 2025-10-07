@@ -23,6 +23,21 @@ class UserManagementService {
     );
   }
 
+  async deactivateUser(userId: string) {
+    return this.request.patch(
+      `/admin/users/${userId}/deactivate`,
+      {},
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
+  async reactivateUser(userId: string) {
+    return this.request.patch(
+      `/admin/users/${userId}/activate`,
+      {},
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
+
   async getAllAdmins(filters?: {
     search?: string;
     status?: string;

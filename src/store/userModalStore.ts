@@ -1,4 +1,5 @@
 import { AdminType } from "@/hooks/admin/user-management/Admins/useAdminList";
+import { UserType } from "@/hooks/admin/user-management/Users/useUserList";
 import { create } from "zustand";
 
 type ModalType =
@@ -28,8 +29,8 @@ export const userModalStore = create<ModalState>((set) => ({
 
 interface UserModalState {
   modalType: UserModalType;
-  selectedUser: UserListType | null;
-  openModal: (type: UserModalType, user?: UserListType) => void;
+  selectedUser: UserType | null;
+  openModal: (type: UserModalType, user?: UserType) => void;
   closeModal: () => void;
 }
 export const manageUserModalStore = create<UserModalState>((set) => ({

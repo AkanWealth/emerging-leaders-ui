@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { userModalStore } from "@/store/userModalStore";
 import { useAddAdminMutation } from "@/hooks/admin/user-management/Admins/useAddAdminMutation";
+import { BeatLoader } from "react-spinners";
 
 const CreateAdmin = () => {
   const { closeModal } = userModalStore();
@@ -124,7 +125,11 @@ const CreateAdmin = () => {
                 : "bg-[#A2185A] hover:bg-[#A2185A]/90"
             }`}
           >
-            {addAdminMutation.isPending ? "Creating..." : "Create Admin"}
+            {addAdminMutation.isPending ? (
+              <BeatLoader size={8} color="#fff" />
+            ) : (
+              "Create Admin"
+            )}
           </Button>
         </div>
       </form>
