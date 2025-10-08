@@ -5,11 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToastStore } from "@/store/toastStore";
 import { userModalStore } from "@/store/userModalStore";
+import { useEditAdminMutation } from "@/hooks/admin/user-management/Admins/useEditAdminMutation";
+import { BeatLoader } from "react-spinners";
 // import userService from "@/services/userService"; // if you have one
 
 const EditAdmin = () => {
   const { showToast } = useToastStore();
   const { selectedAdmin, closeModal } = userModalStore();
+  const { mutate: editAdmin, isPending } = useEditAdminMutation();
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -36,24 +39,22 @@ const EditAdmin = () => {
 
   const handleUpdateAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      // Example API call
-      // await userService.updateAdmin(selectedAdmin._id, formData);
-
-      showToast(
-        "success",
-        "Changes saved successfully.",
-        "User profile has been updated with the new information."
-      );
-      closeModal();
-    } catch (error) {
-      console.error(error);
+    if (!selectedAdmin) {
       showToast(
         "error",
-        "Failed to Save Changes.",
-        "We couldn’t update the user’s details. Please check the information and try again."
+        "No Admin Selected.",
+        "Please select an admin before performing this action."
       );
+      return;
     }
+    editAdmin({
+      adminId: selectedAdmin.id,
+      payload: {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        email: formData.email,
+      },
+    });
   };
 
   const handleDeleteAdmin = async () => {
@@ -150,10 +151,11 @@ const EditAdmin = () => {
           </Button>
 
           <Button
+            disabled={isPending}
             type="submit"
             className="flex-1 text-[20px] leading-[30px] font-medium border-none text-[#fff] rounded-[16px] bg-[#A2185A] h-[62px] cursor-pointer hover:bg-[#A2185A]"
           >
-            Save Changes
+            {isPending ? <BeatLoader size={8} color="#fff" /> : "Save Changes"}
           </Button>
         </div>
       </form>

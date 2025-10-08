@@ -67,6 +67,21 @@ class UserManagementService {
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }
+
+  async editAdmin(
+    adminId: string,
+    payload: {
+      firstname?: string;
+      lastname?: string;
+      email: string;
+    }
+  ) {
+    return this.request.patch(
+      `/admin/users/edit/${adminId}`,
+      payload,
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
   async resendAdminInvite(email: string) {
     return this.request.post(
       `/admin/auth/resend-invite`,
