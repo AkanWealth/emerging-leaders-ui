@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   LeaderboardMeta,
@@ -42,13 +41,13 @@ const UserRankingTable = ({
       <div className="overflow-x-auto">
         <Table className="table-fixed w-full">
           <colgroup>
-            <col style={{ width: "12.5%" }} /> {/* Ranking */}
-            <col style={{ width: "25%" }} /> {/* Name */}
-            <col style={{ width: "12.5%" }} /> {/* Projects */}
-            <col style={{ width: "12.5%" }} /> {/* Goals */}
-            <col style={{ width: "12.5%" }} /> {/* Savings */}
-            <col style={{ width: "12.5%" }} /> {/* Budget */}
-            <col style={{ width: "12.5%" }} /> {/* Streak */}
+            <col className="w-[12.5%]" /> {/* Ranking */}
+            <col className="w-[25%]" /> {/* Name */}
+            <col className="w-[12.5%]" /> {/* Projects */}
+            <col className="w-[12.5%]" /> {/* Goals */}
+            <col className="w-[12.5%]" /> {/* Savings */}
+            <col className="w-[12.5%]" /> {/* Budget */}
+            <col className="w-[12.5%]" /> {/* Streak */}
           </colgroup>
 
           <TableHeader>

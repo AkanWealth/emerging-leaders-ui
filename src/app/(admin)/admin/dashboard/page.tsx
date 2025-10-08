@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 // import ChartComponent from "./ChartComponent";
 import InteractiveChart from "./ChartComponent";
-import UserRankingFilter from "./UserRankingFilter";
+import UserRankingFilter, { parseFilterRange } from "./UserRankingFilter";
 import {
   ChartPoint,
   useCardGrowth,
@@ -57,13 +57,15 @@ const DashboardPage = () => {
     search,
     page,
     limit,
-    ...{
-      ...filters,
-      ranking:
-        filters.ranking === "highest" || filters.ranking === "lowest"
-          ? filters.ranking
-          : undefined,
-    },
+    // Parse the ranking filter
+    ranking:
+      filters.ranking === "highest" || filters.ranking === "lowest"
+        ? filters.ranking
+        : undefined,
+    // Parse the range filters
+    ...parseFilterRange(filters.completed || "", "completed"),
+    ...parseFilterRange(filters.goals || "", "goals"),
+    ...parseFilterRange(filters.streak || "", "streak"),
   });
 
   const { user } = useUserStore();
