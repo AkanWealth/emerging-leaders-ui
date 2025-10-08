@@ -6,6 +6,7 @@ import { groupNotifications } from "./groupNotifications";
 import { forwardRef, useEffect, useState } from "react";
 import notificationService from "@/services/notificationService";
 import NotificationSkeleton from "./NotificationSkeleton";
+import EmptyNotification from "./EmptyNotification";
 
 type NotificationData = {
   id: string;
@@ -195,11 +196,7 @@ const NotificationModal = forwardRef<HTMLDivElement, NotificationModalProps>(
           ) : errorMsg ? (
             <p className="text-center text-red-500 mt-6">{errorMsg}</p>
           ) : filteredNotifications.length === 0 ? (
-            <p className="text-center text-gray-500 mt-6">
-              {showUnreadOnly
-                ? "No unread notifications."
-                : "No notifications yet."}
-            </p>
+            <EmptyNotification />
           ) : (
             Object.entries(grouped).map(([group, items]) => (
               <div className="pt-3" key={group}>
