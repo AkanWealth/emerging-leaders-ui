@@ -3,10 +3,12 @@ import { QUERY_KEYS } from "@/react-query/constants";
 import { useToastStore } from "@/store/toastStore";
 import userManagementService from "@/services/userManagementService";
 import { AdminType } from "./useAdminList";
+import { userModalStore } from "@/store/userModalStore";
 
 export function useEditAdminMutation() {
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
+  const { closeModal } = userModalStore();
 
   return useMutation({
     mutationFn: async ({
@@ -30,9 +32,11 @@ export function useEditAdminMutation() {
         if (errorData.error) {
           showToast(
             "error",
-            "Failed to Update Admin",
-            "There was an issue updating the admin details. Please try again."
+            "Failed to Save Changes.",
+            "We couldn’t update the user’s details. Please check the information and try again."
           );
+          closeModal();
+
           return;
         }
       }
@@ -40,27 +44,29 @@ export function useEditAdminMutation() {
       // ✅ Show success toast
       showToast(
         "success",
-        "Admin Updated Successfully",
-        `${
-          variables.payload.firstname || "The admin"
-        }’s information has been updated.`
+        "Changes saved successfully.",
+        `User profile has been updated with the new information.`
       );
 
       // ✅ Update admin list cache immediately (optimistic UI)
-      queryClient.setQueryData([QUERY_KEYS.FETCH_ADMINS], (oldData: { data: AdminType[]; }) => {
-        if (!oldData || !oldData.data) return oldData;
+      queryClient.setQueryData(
+        [QUERY_KEYS.FETCH_ADMINS],
+        (oldData: { data: AdminType[] }) => {
+          if (!oldData || !oldData.data) return oldData;
 
-        const updatedAdmins = oldData.data.map((admin: AdminType) =>
-          admin.id === variables.adminId
-            ? { ...admin, ...variables.payload }
-            : admin
-        );
+          const updatedAdmins = oldData.data.map((admin: AdminType) =>
+            admin.id === variables.adminId
+              ? { ...admin, ...variables.payload }
+              : admin
+          );
 
-        return {
-          ...oldData,
-          data: updatedAdmins,
-        };
-      });
+          return {
+            ...oldData,
+            data: updatedAdmins,
+          };
+        }
+      );
+      closeModal();
 
       // ✅ Optionally, re-fetch to ensure data consistency with backend
       queryClient.invalidateQueries({
@@ -75,6 +81,7 @@ export function useEditAdminMutation() {
         "Update Failed",
         "We couldn’t update the admin information. Please try again later."
       );
+      closeModal();
     },
   });
 }

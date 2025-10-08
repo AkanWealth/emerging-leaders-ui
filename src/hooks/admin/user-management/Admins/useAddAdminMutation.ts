@@ -2,10 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/react-query/constants";
 import { useToastStore } from "@/store/toastStore";
 import userManagementService from "@/services/userManagementService";
+import { userModalStore } from "@/store/userModalStore";
 
 export function useAddAdminMutation() {
   const queryClient = useQueryClient();
   const { showToast } = useToastStore();
+  const { closeModal } = userModalStore();
 
   return useMutation({
     mutationFn: async (payload: {
@@ -31,6 +33,7 @@ export function useAddAdminMutation() {
           );
           return;
         }
+        closeModal();
       }
 
       // ✅ Success flow
@@ -44,6 +47,7 @@ export function useAddAdminMutation() {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.FETCH_ADMINS],
       });
+      closeModal();
     },
 
     onError: (err) => {
@@ -53,6 +57,7 @@ export function useAddAdminMutation() {
         "Failed to Create Admin.",
         "There was an issue creating the admin. Please check the details and try again."
       );
+      closeModal();
     },
   });
 }
