@@ -4,6 +4,7 @@ import { create } from "zustand";
 
 type ModalType =
   | "createAdmin"
+  | "deleteAdmin"
   | "editAdmin"
   | "resendInvite"
   | "deactivate"

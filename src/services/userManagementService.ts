@@ -82,6 +82,13 @@ class UserManagementService {
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }
+  async deleteAdmin(adminId: string) {
+    return this.request.delete(
+      `/admin/users/${adminId}`,
+      {},
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
   async resendAdminInvite(email: string) {
     return this.request.post(
       `/admin/auth/resend-invite`,

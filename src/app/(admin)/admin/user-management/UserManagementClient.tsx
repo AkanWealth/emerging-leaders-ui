@@ -22,6 +22,7 @@ import {
 } from "@/hooks/admin/user-management/Admins/useAdminList";
 import { useUserList } from "@/hooks/admin/user-management/Users/useUserList"; // Assuming this exists
 import Pagination from "@/shared/Pagination/Pagination";
+import DeleteAdmin from "./AdminTab/DeleteAdmin";
 
 type TabValue = "user" | "admin";
 
@@ -295,6 +296,7 @@ const UserManagementPage = () => {
             {modalType === "resendInvite" && <ResendInviteAdmin />}
             {modalType === "deactivate" && <DeactivateAdmin />}
             {modalType === "reactivate" && <ReactivateAdmin />}
+            {modalType === "deleteAdmin" && <DeleteAdmin />}
           </DialogContent>
         </Dialog>
       </TabsContent>

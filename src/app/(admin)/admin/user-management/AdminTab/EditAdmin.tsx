@@ -11,7 +11,7 @@ import { BeatLoader } from "react-spinners";
 
 const EditAdmin = () => {
   const { showToast } = useToastStore();
-  const { selectedAdmin, closeModal } = userModalStore();
+  const { selectedAdmin } = userModalStore();
   const { mutate: editAdmin, isPending } = useEditAdminMutation();
 
   const [formData, setFormData] = useState({
@@ -58,20 +58,15 @@ const EditAdmin = () => {
   };
 
   const handleDeleteAdmin = async () => {
-    try {
-      // Example delete call
-      // await userService.deleteAdmin(selectedAdmin._id);
-
+    if (!selectedAdmin) {
       showToast(
-        "success",
-        "Admin deleted successfully.",
-        `${formData.firstname} ${formData.lastname} has been removed.`
+        "error",
+        "No Admin Selected.",
+        "Please select an admin before performing this action."
       );
-      closeModal();
-    } catch (error) {
-      console.error(error);
-      showToast("error", "Failed to Delete.", "Something went wrong.");
+      return;
     }
+    userModalStore.getState().openModal("deleteAdmin", selectedAdmin);
   };
 
   return (
