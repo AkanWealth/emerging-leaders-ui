@@ -47,7 +47,7 @@ const UserRankingTable = ({
             <col className="w-[12%]" /> {/* Goals */}
             <col className="w-[12%]" /> {/* Savings */}
             <col className="w-[12%]" /> {/* Budget */}
-            <col className="w-[16%]" /> {/* Streak */}
+            <col className="w-[16%] " /> {/* Streak */}
           </colgroup>
 
           <TableHeader>
@@ -66,7 +66,7 @@ const UserRankingTable = ({
               <TableHead className="whitespace-nowrap text-center">
                 Budget
               </TableHead>
-              <TableHead className="whitespace-nowrap text-right">
+              <TableHead className="whitespace-nowrap text-center pl-[30px] ">
                 Streak
               </TableHead>
             </TableRow>
@@ -95,7 +95,7 @@ const UserRankingTable = ({
                   <TableCell className="text-center">
                     <Skeleton className="h-4 w-10 mx-auto" />
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-center pl-[30px] ">
                     <Skeleton className="h-4 w-16 ml-auto" />
                   </TableCell>
                 </TableRow>
@@ -138,7 +138,7 @@ const UserRankingTable = ({
                     <TableCell className="text-center whitespace-nowrap">
                       {item.budget.toLocaleString()}
                     </TableCell>
-                    <TableCell className="text-right whitespace-nowrap">
+                    <TableCell className="text-center pl-[30px]  whitespace-nowrap">
                       {item.streak} {item.streak > 1 ? "days" : "day"}
                     </TableCell>
                   </TableRow>

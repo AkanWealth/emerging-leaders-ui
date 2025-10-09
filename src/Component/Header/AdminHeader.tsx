@@ -71,14 +71,13 @@ const AdminHeader = () => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
 
-      // if click is not inside either dropdown or modal, close both
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(target) &&
-        modalRef.current &&
-        !modalRef.current.contains(target)
-      ) {
+      // Close dropdown if click is outside wrapper
+      if (wrapperRef.current && !wrapperRef.current.contains(target)) {
         setIsOpen(false);
+      }
+
+      // Close notification modal if click is outside modal
+      if (modalRef.current && !modalRef.current.contains(target)) {
         setShowNotifications(false);
       }
     }
