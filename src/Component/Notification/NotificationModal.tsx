@@ -9,6 +9,7 @@ import NotificationSkeleton from "./NotificationSkeleton";
 import EmptyNotification from "./EmptyNotification";
 
 type NotificationData = {
+  user: { firstname: string; lastname: string; profilePicture: string | null; };
   id: string;
   title: string;
   body: string;
@@ -211,7 +212,7 @@ const NotificationModal = forwardRef<HTMLDivElement, NotificationModalProps>(
                       message={notif.message}
                       createdAt={notif.createdAt}
                       read={(notif as unknown as NotificationData).read}
-                      sender={(notif as unknown as NotificationData).sender}
+                      sender={(notif as unknown as NotificationData).user}
                       onRead={handleMarkAsRead} // 👈 pass the handler
                     />
                   ))}

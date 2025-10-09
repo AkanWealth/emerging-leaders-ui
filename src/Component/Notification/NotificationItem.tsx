@@ -23,6 +23,8 @@ const NotificationItem = ({
   sender,
   onRead,
 }: Props) => {
+  console.log(sender, "This is the sender");
+
   const handleClick = (
     e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
   ) => {
@@ -44,12 +46,14 @@ const NotificationItem = ({
     >
       <Image
         src={
-          sender?.profilePicture && sender?.profilePicture !== ""
+          sender?.profilePicture && sender.profilePicture.trim() !== ""
             ? sender.profilePicture
             : `https://ui-avatars.com/api/?name=${sender?.firstname}&background=000000&color=fff`
         }
         alt={
-          sender?.firstname ? sender.firstname + " " + sender.lastname : "User's name"
+          sender?.firstname
+            ? sender.firstname + " " + sender.lastname
+            : "User's name"
         }
         unoptimized
         width={48}
