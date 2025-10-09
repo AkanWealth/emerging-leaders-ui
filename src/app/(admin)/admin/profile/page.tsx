@@ -25,18 +25,24 @@ const ProfilePage = () => {
           </div>
         </section>
 
-        <section className="flex items-center gap-4 bg-white px-12 py-6 rounded-[12px]">
-          <UserAvatar className="size-19" />
-          <div>
-            <SectionTitle>
-              {user?.firstname
-                ? user?.firstname + " " + user?.lastname
-                : user?.email}
-            </SectionTitle>
-
-            <p className="text-muted-foreground">Admin</p>
-          </div>
-        </section>
+        <UserAvatar
+          src={
+            user?.profilePicture && user?.profilePicture !== ""
+              ? user.profilePicture
+              : `https://ui-avatars.com/api/?name=${user?.firstname}&background=000000&color=fff`
+          }
+          alt={
+            user?.firstname
+              ? user.firstname + " " + user.lastname
+              : "User's name"
+          }
+          title={
+            user?.firstname
+              ? user?.firstname + " " + user?.lastname
+              : user?.email
+          }
+          className="size-19"
+        />
       </section>
       <ScrollArea className="flex-1 overflow-y-auto h-full">
         <div className="space-y-6">

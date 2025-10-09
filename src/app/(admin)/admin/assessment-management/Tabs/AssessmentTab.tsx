@@ -50,9 +50,9 @@ const AssessmentTab = () => {
             <TableHead className="bg-secondary-50 py-[18px] whitespace-nowrap px-[25px]">
               Not Filled
             </TableHead>
-            <TableHead className="bg-secondary-50 py-[18px] rounded-tr-2xl whitespace-nowrap px-[25px]">
+            {/* <TableHead className="bg-secondary-50 py-[18px] rounded-tr-2xl whitespace-nowrap px-[25px]">
               Actions
-            </TableHead>
+            </TableHead> */}
           </TableRow>
         </TableHeader>
 
@@ -72,7 +72,7 @@ const AssessmentTab = () => {
               <TableCell className="whitespace-nowrap px-[25px]">
                 {assessment.notFilled}
               </TableCell>
-              <TableCell className="whitespace-nowrap px-[25px]">
+              {/* <TableCell className="whitespace-nowrap px-[25px]">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm">
@@ -99,7 +99,7 @@ const AssessmentTab = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           ))}
         </TableBody>

@@ -17,6 +17,7 @@ class AdminService {
       city: string;
       country: string;
       postalcode: string;
+      phone: string;
     }
   ) {
     return this.request.patch(
