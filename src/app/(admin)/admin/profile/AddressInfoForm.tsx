@@ -19,6 +19,7 @@ import { LoaderCircle, PencilLine } from "lucide-react";
 import { useState } from "react";
 import clsx from "clsx";
 import { useToastStore } from "@/store/toastStore";
+import { useUserStore } from "@/store/userStore";
 
 const formSchema = z.object({
   country: z
@@ -35,13 +36,14 @@ const formSchema = z.object({
 const AddressInfoForm = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { showToast } = useToastStore();
+  const { user, loading } = useUserStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      country: "UK",
-      town_city: "London",
-      postalCode: "RTS 7398",
+      country: user?.country ? user.country : "",
+      town_city: user?.city ? user.city : "",
+      postalCode: user?.postcalcode ? user.postcalcode : "",
     },
   });
 

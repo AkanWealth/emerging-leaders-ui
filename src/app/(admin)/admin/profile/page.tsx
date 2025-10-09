@@ -1,3 +1,4 @@
+"use client";
 import AddressInfoForm from "./AddressInfoForm";
 import BackButton from "./BackButton";
 import PersonalInformationForm from "./PersonalInformationForm";
@@ -6,30 +7,38 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import UserAvatar from "./UserAvatar";
 
 import clsx from "clsx";
+import { useUserStore } from "@/store/userStore";
 
 const ProfilePage = () => {
+  const { user, loading } = useUserStore();
+
   return (
     <div className="flex flex-col gap-6 h-full">
-      <section className="flex gap-4">
-        <BackButton />
-        <div>
-          <SectionTitle className="text-2xl">My Profile</SectionTitle>
-          <p className="text-muted-foreground">
-            Your personal and professional details at a glance
-          </p>
-        </div>
+      <section className="flex flex-col gap-6">
+        <section className="flex gap-4">
+          <BackButton />
+          <div>
+            <SectionTitle className="text-2xl">My Profile</SectionTitle>
+            <p className="text-muted-foreground">
+              Your personal and professional details at a glance
+            </p>
+          </div>
+        </section>
+
+        <section className="flex items-center gap-4 bg-white px-12 py-6 rounded-[12px]">
+          <UserAvatar className="size-19" />
+          <div>
+            <SectionTitle>
+              {user?.firstname
+                ? user?.firstname + " " + user?.lastname
+                : user?.email}
+            </SectionTitle>
+
+            <p className="text-muted-foreground">Admin</p>
+          </div>
+        </section>
       </section>
-
-      <section className="flex items-center gap-4 bg-white px-12 py-6 rounded-[12px]">
-        <UserAvatar className="size-19" />
-        <div>
-          <SectionTitle>Kayode White</SectionTitle>
-
-          <p className="text-muted-foreground">Admin</p>
-        </div>
-      </section>
-
-      <ScrollArea className="flex-1 min-h-0">
+      <ScrollArea className="flex-1 overflow-y-auto h-full">
         <div className="space-y-6">
           <section className="bg-white p-6 rounded-[12px]">
             <PersonalInformationForm />

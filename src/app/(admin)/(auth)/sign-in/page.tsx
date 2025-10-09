@@ -73,6 +73,7 @@ const LoginPage = () => {
           firstname: response.user.firstname,
           lastname: response.user.lastname,
           profilePicture: response.user.profilePicture,
+          isAdmin: false
         });
         router.push("/admin/dashboard");
         showToast("success", "Login successfully", "You are logged in.", 3000);

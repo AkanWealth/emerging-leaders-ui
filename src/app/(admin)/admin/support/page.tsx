@@ -175,7 +175,7 @@ const SupportPage = () => {
             </section>
           </aside>
           {showFilter && (
-            <section className="absolute z-10 right-0 top-[100px] pb-[100px]">
+            <section className="absolute z-10 right-0 top-[30px] pb-[100px]">
               <SupportFilter
                 setSelected={setSelected}
                 selected={selected}

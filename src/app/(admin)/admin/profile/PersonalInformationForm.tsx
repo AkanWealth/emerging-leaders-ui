@@ -20,6 +20,7 @@ import { useState } from "react";
 import clsx from "clsx";
 
 import { useToastStore } from "@/store/toastStore";
+import { useUserStore } from "@/store/userStore";
 
 const formSchema = z.object({
   firstName: z
@@ -37,14 +38,16 @@ const formSchema = z.object({
 const PersonalInformationForm = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { showToast } = useToastStore();
+  const { user, loading } = useUserStore();
+  console.log(user, "This is the user")
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "Kayode",
-      lastName: "White",
-      email: "kayodewhite@gmail.com",
-      phone: "2125551253",
+      firstName: user?.firstname ? user.firstname : "",
+      lastName: user?.lastname ? user.lastname : "",
+      email: user?.email ? user.email : "",
+      phone: user?.phone ? user.phone : "",
     },
   });
 
