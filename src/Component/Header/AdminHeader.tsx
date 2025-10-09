@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bell, ChevronDown, LogOut, User } from "lucide-react";
+import {  ChevronDown, LogOut, User } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -124,7 +124,8 @@ const AdminHeader = () => {
             setIsOpen(false); // close user dropdown
           }}
         >
-          <Bell className="h-[32px] w-[32px] text-[#65605C]" />
+          <Image src="/bell.svg" alt="Bell icon" width={32} height={32} />
+          {/* <Bell className="h-[32px] w-[32px] text-[#65605C]" /> */}
           {unreadCount > 0 && (
             <span className="absolute top-1 right-3 bg-[#F29100] text-white text-xs font-bold rounded-full h-[12px] w-[12px] flex items-center justify-center"></span>
           )}
