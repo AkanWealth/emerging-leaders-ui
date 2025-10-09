@@ -16,13 +16,23 @@ class AdminService {
       Address: string;
       city: string;
       country: string;
-      postalcode: string;
+      postalcode: string | number;
       phone: string;
     }
   ) {
     return this.request.patch(
       `/admin/users/${loggedInUserId}`,
       payload,
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
+
+  async editUserProfilePicture(adminId: string, imageUrl: string) {
+    return this.request.patch(
+      `/admin/users/${adminId}/profile-picture`,
+      {
+        profilePicture: imageUrl,
+      },
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }

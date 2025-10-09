@@ -1,9 +1,15 @@
 "use client";
+
 import { useRef, useState, DragEvent } from "react";
 import { Upload } from "lucide-react";
 import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
+import adminService from "@/services/adminService";
+import { useUserStore } from "@/store/userStore";
 
 interface UserAvatarProps {
+  userId: string;
+  loading: boolean; // overall component loading
   title?: string;
   src?: string;
   alt?: string;
@@ -11,33 +17,65 @@ interface UserAvatarProps {
   size?: string;
   className?: string;
   fallbackLength?: 1 | 2;
-  onImageUpload?: (file: File) => void;
 }
 
+type ApiResponseType = {
+  error?: string;
+  statusCode?: string;
+};
+
 const UserAvatar = ({
+  userId,
+  loading,
   title,
   src = "/profile.jpg",
   alt = "User",
-  fallback,
+
   size = "size-20",
-  className = "",
-  fallbackLength = 1,
-  onImageUpload,
 }: UserAvatarProps) => {
   const [preview, setPreview] = useState<string | null>(src);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { setUser, user } = useUserStore();
 
-  const generateFallback = () => {
-    if (fallback) return fallback;
-    if (!alt) return "U";
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
 
-    const words = alt.trim().split(" ");
-    if (fallbackLength === 2 && words.length >= 2) {
-      return words[0][0]?.toUpperCase() + words[1][0]?.toUpperCase();
+    try {
+      const res = await fetch("/api/upload-profile-picture", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (data.url) {
+        const response = (await adminService.editUserProfilePicture(
+          userId,
+          data.url
+        )) as ApiResponseType;
+
+        if (response.error || response.statusCode) {
+          throw new Error("Failed to update profile picture");
+        }
+
+        // Update global user state
+        if (user) {
+          setUser({ ...user, profilePicture: data.url });
+        }
+        setPreview(data.url);
+      } else {
+        console.error("Cloudinary upload failed", data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUploading(false);
     }
-    return words[0][0]?.toUpperCase() || "U";
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +84,7 @@ const UserAvatar = ({
       const reader = new FileReader();
       reader.onload = (e) => setPreview(e.target?.result as string);
       reader.readAsDataURL(file);
-      onImageUpload?.(file);
+      handleUpload(file);
     }
   };
 
@@ -71,7 +109,7 @@ const UserAvatar = ({
       const reader = new FileReader();
       reader.onload = (event) => setPreview(event.target?.result as string);
       reader.readAsDataURL(file);
-      onImageUpload?.(file);
+      handleUpload(file);
     }
   };
 
@@ -82,7 +120,19 @@ const UserAvatar = ({
   };
 
   const avatarSize = sizeMap[size] || size;
-  console.log(src, "This is the src");
+
+  // If the whole component is loading
+  if (loading) {
+    return (
+      <section className="flex items-center gap-4 bg-white px-12 py-6 rounded-[12px]">
+        <Skeleton className={`${avatarSize} rounded-full`} />
+        <div className="space-y-2">
+          <Skeleton className="h-6 w-40" />
+          <Skeleton className="h-4 w-16" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="flex items-center gap-4 bg-white px-12 py-6 rounded-[12px]">
@@ -98,16 +148,20 @@ const UserAvatar = ({
         onMouseLeave={() => setIsHovering(false)}
       >
         <div
-          className={`${avatarSize} rounded-full overflow-hidden bg-gray-200`}
+          className={`${avatarSize} rounded-full overflow-hidden bg-gray-200 relative`}
         >
-          <Image
-            src={src}
-            alt={alt}
-            width={80}
-            height={80}
-            className="w-full h-full object-cover"
-            unoptimized
-          />
+          {uploading ? (
+            <Skeleton className="w-full h-full rounded-full" />
+          ) : (
+            <Image
+              src={preview || src}
+              alt={alt}
+              width={80}
+              height={80}
+              className="w-full h-full object-cover"
+              unoptimized
+            />
+          )}
         </div>
 
         <input

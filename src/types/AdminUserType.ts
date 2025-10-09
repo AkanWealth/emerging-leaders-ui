@@ -9,7 +9,7 @@ export type AdminUserType = {
   Address?: string;
   city?: string;
   country?: string;
-  postcalcode?: string;
+  postalcode?: string | number;
   createdAt?: Date;
   updatedAt?: Date;
 };

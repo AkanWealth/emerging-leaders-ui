@@ -26,6 +26,8 @@ const ProfilePage = () => {
         </section>
 
         <UserAvatar
+          userId={user?.id as string}
+          loading={loading}
           src={
             user?.profilePicture && user?.profilePicture !== ""
               ? user.profilePicture
