@@ -41,13 +41,13 @@ const UserRankingTable = ({
       <div className="overflow-x-auto">
         <Table className="table-fixed w-full">
           <colgroup>
-            <col className="w-[12.5%]" /> {/* Ranking */}
-            <col className="w-[25%]" /> {/* Name */}
-            <col className="w-[12.5%]" /> {/* Projects */}
-            <col className="w-[12.5%]" /> {/* Goals */}
-            <col className="w-[12.5%]" /> {/* Savings */}
-            <col className="w-[12.5%]" /> {/* Budget */}
-            <col className="w-[12.5%]" /> {/* Streak */}
+            <col className="w-[8%]" /> {/* Ranking */}
+            <col className="w-[28%]" /> {/* Name */}
+            <col className="w-[12%]" /> {/* Projects */}
+            <col className="w-[12%]" /> {/* Goals */}
+            <col className="w-[12%]" /> {/* Savings */}
+            <col className="w-[12%]" /> {/* Budget */}
+            <col className="w-[16%]" /> {/* Streak */}
           </colgroup>
 
           <TableHeader>

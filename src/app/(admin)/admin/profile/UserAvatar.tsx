@@ -154,7 +154,7 @@ const UserAvatar = ({
             <Skeleton className="w-full h-full rounded-full" />
           ) : (
             <Image
-              src={preview || src}
+              src={src}
               alt={alt}
               width={80}
               height={80}
