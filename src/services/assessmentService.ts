@@ -1,13 +1,20 @@
 import { COOKIE_NAMES } from "@/utils/cookiesUtils";
 import { HttpService } from "./httpService";
-import { UserGrowthPeriodType } from "@/app/(admin)/admin/dashboard/page";
+import { UserReportFilters } from "@/hooks/admin/assessment/useUserReport";
 
 class AssessmentService {
   private request = new HttpService();
 
-  async getUserGrowth(period: UserGrowthPeriodType) {
+  async getUserReport(filters: UserReportFilters) {
+    const query = new URLSearchParams();
+
+    if (filters?.search) query.append("search", filters.search);
+    if (filters?.limit !== undefined)
+      query.append("limit", String(filters.limit));
+    if (filters.year !== undefined) query.append("year", String(filters.year));
+    if (filters.page !== undefined) query.append("page", String(filters.page));
     return this.request.get(
-      `/analytics/user-growth-chart?period=${period}`,
+      `/analytics/admin/leaderboard?${query.toString()}`,
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }

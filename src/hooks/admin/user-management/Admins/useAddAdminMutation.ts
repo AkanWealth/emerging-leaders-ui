@@ -28,7 +28,7 @@ export function useAddAdminMutation() {
         if (errorData.error) {
           showToast(
             "error",
-            "Failed to Add Admin",
+            "Failed to Create Admin.",
             "There was an issue creating the admin. Please check the details and try again."
           );
           return;

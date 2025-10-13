@@ -8,8 +8,9 @@ import UserReportTab from "./Tabs/UserReportTab";
 import FilterDropdown from "../../../../shared/Filter/FilterDropDown";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Search } from "lucide-react";
+import { ListFilter, Search } from "lucide-react";
 import AssessmentTab from "./Tabs/AssessmentTab";
+import AssessmentFilter from "./AssessmentFilter";
 
 const AssessmentManagementPage = () => {
   const [activeTab, setActiveTab] = useState<"assessment-list" | "user-report">(
@@ -17,6 +18,7 @@ const AssessmentManagementPage = () => {
   );
   const [searchInput, setSearchInput] = useState(""); // raw text input
   const [search, setSearch] = useState("");
+  const [showFilter, setShowFilter] = useState<boolean>(false);
 
   return (
     <main className="flex flex-col gap-[39px]">
@@ -40,7 +42,7 @@ const AssessmentManagementPage = () => {
           }
           className="flex-1"
         >
-          <div className="flex justify-between items-center px-5 pt-4 pb-3.5">
+          <div className="flex justify-between items-center px-5 pt-4 pb-3.5 relative">
             <TabsList className="bg-transparent gap-3">
               <TabsTrigger
                 value="assessment-list"
@@ -75,7 +77,13 @@ const AssessmentManagementPage = () => {
                 />
               </div>
 
-              <FilterDropdown />
+              <Button
+                onClick={() => setShowFilter(!showFilter)}
+                className="cursor-pointer flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl"
+              >
+                <ListFilter className="h-[12.75px] w-[22.5px]" />
+                <span>Filter</span>
+              </Button>
 
               <Button
                 variant="toolbar"
@@ -90,6 +98,7 @@ const AssessmentManagementPage = () => {
                 <span className="">Download</span>
               </Button>
             </div>
+            {showFilter && <AssessmentFilter />}
           </div>
 
           {/* Assessment-list Tab */}

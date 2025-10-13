@@ -40,10 +40,51 @@ const UserAvatar = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { setUser, user } = useUserStore();
 
+  // const handleUpload = async (file: File) => {
+  //   setUploading(true);
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+
+  //   try {
+  //     const res = await fetch("/api/upload-profile-picture", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     const data = await res.json();
+
+  //     if (data.url) {
+  //       const response = (await adminService.editUserProfilePicture(
+  //         userId,
+  //         data.url
+  //       )) as ApiResponseType;
+
+  //       if (response.error || response.statusCode) {
+  //         throw new Error("Failed to update profile picture");
+  //       }
+
+  //       // Update global user state
+  //       if (user) {
+  //         setUser({ ...user, profilePicture: data.url });
+  //       }
+  //       setPreview(data.url);
+  //     } else {
+  //       console.error("Cloudinary upload failed", data);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // };
+
   const handleUpload = async (file: File) => {
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
+
+    // keep reference to old image
+    const oldImageUrl = user?.profilePicture;
 
     try {
       const res = await fetch("/api/upload-profile-picture", {
@@ -67,7 +108,18 @@ const UserAvatar = ({
         if (user) {
           setUser({ ...user, profilePicture: data.url });
         }
+
         setPreview(data.url);
+        console.log(oldImageUrl, "This is the old Image");
+
+        // 🔇 silently delete the old image in the background
+        if (oldImageUrl && oldImageUrl.includes("cloudinary.com")) {
+          fetch("/api/delete-image", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: oldImageUrl }),
+          });
+        }
       } else {
         console.error("Cloudinary upload failed", data);
       }

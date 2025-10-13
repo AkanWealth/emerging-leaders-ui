@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dx7vw2wsp/upload";
+const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME!;
+const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
 const UPLOAD_PRESET = "ml_default";
 
 export async function POST(req: NextRequest) {

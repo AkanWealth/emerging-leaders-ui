@@ -11,5 +11,8 @@ export const QUERY_KEYS = {
   FETCH_ADMINS: ["fetchAdmins"] as const,
   FETCH_USERS: ["fetchUsers"] as const,
 
+  USER_REPORT: ["userReports"] as const,
+  ASSESSMENT_LIST: ["assessmentList"] as const,
+
   SUPPORT_TICKETS: ["supportsTicket"] as const,
 };

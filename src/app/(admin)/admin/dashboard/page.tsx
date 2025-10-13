@@ -115,7 +115,12 @@ const DashboardPage = () => {
       {/* Welcome Section */}
       <section className="flex flex-col gap-[4px]">
         <h2 className="text-[#2A2829] font-medium text-[24px]">
-          Welcome back, <span className="">{user?.firstname || "Name"}</span>
+          Welcome back, {""}
+          {user?.firstname ? (
+            <span className="">{user.firstname}</span>
+          ) : (
+            <span className="">Name</span>
+          )}
         </h2>
         <p className="text-[#65605C] font-normal text-[16px]">
           Monitor analytics on users effectively.
