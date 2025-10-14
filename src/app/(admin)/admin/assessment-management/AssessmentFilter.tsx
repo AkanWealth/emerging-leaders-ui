@@ -1,13 +1,15 @@
 "use client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { RefObject, useState } from "react";
 
 type AssessmentFilterProp = {
+  ref: RefObject<HTMLDivElement | null>;
   selectedYear: number;
   setSelectedYear: (year: number) => void;
 };
 
 const AssessmentFilter = ({
+  ref,
   selectedYear,
   setSelectedYear,
 }: AssessmentFilterProp) => {
@@ -19,7 +21,7 @@ const AssessmentFilter = ({
 
   const years = Array.from({ length: 6 }, (_, i) => startYear + i);
   return (
-    <section className="absolute z-10 right-3 top-[100px] pb-[100px]">
+    <section ref={ref} className="absolute z-10 right-3 top-[100px] pb-[100px]">
       <section className="bg-white shadow border w-[260px] rounded-[20px]">
         <div className="w-[260px] rounded-2xl border bg-white  shadow-sm">
           {/* Header */}
