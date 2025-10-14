@@ -41,7 +41,7 @@ export type UserReportResponse = {
   error?: string;
 };
 
-export function useReport(filters: UserReportFilters) {
+export function useUserReport(filters: UserReportFilters) {
   const query = useQuery<UserReportResponse>({
     queryKey: [QUERY_KEYS.USER_REPORT, filters],
     queryFn: async () => {

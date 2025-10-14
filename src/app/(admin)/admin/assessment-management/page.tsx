@@ -1,27 +1,220 @@
 "use client";
-import { useState } from "react";
-import FooterBar from "../../../../shared/Footer/FooterBar";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import UserReportTab from "./Tabs/UserReportTab";
-import FilterDropdown from "../../../../shared/Filter/FilterDropDown";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { ListFilter, Search } from "lucide-react";
 import AssessmentTab from "./Tabs/AssessmentTab";
 import AssessmentFilter from "./AssessmentFilter";
+import Pagination from "@/shared/Pagination/Pagination";
+import { useAssessmentList } from "@/hooks/admin/assessment/useAssessmentList";
+import { useUserReport } from "@/hooks/admin/assessment/useUserReport";
+import { useToastStore } from "@/store/toastStore";
+import {
+  downloadAssessmentListCSV,
+  downloadUserReportCSV,
+} from "./Tabs/downloadCSV";
 
 const AssessmentManagementPage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { showToast } = useToastStore();
+
+  // Get initial values from URL or defaults
   const [activeTab, setActiveTab] = useState<"assessment-list" | "user-report">(
-    "assessment-list"
+    (searchParams.get("tab") as "assessment-list" | "user-report") ||
+      "assessment-list"
   );
-  const [searchInput, setSearchInput] = useState(""); // raw text input
-  const [search, setSearch] = useState("");
-  const [showFilter, setShowFilter] = useState<boolean>(false);
+
+  // Assessment List tab state
+  const [assessmentSearchInput, setAssessmentSearchInput] = useState(
+    searchParams.get("assessmentSearch") || ""
+  );
+  const [assessmentSearch, setAssessmentSearch] = useState(
+    searchParams.get("assessmentSearch") || ""
+  );
+  const [assessmentYear, setAssessmentYear] = useState<number>(
+    Number(searchParams.get("assessmentYear")) || new Date().getFullYear()
+  );
+  const [assessmentPage, setAssessmentPage] = useState(
+    Number(searchParams.get("assessmentPage")) || 1
+  );
+  const [assessmentLimit, setAssessmentLimit] = useState(8);
+  const [showAssessmentFilter, setShowAssessmentFilter] =
+    useState<boolean>(false);
+
+  // User Report tab state
+  const [userReportSearchInput, setUserReportSearchInput] = useState(
+    searchParams.get("userReportSearch") || ""
+  );
+  const [userReportSearch, setUserReportSearch] = useState(
+    searchParams.get("userReportSearch") || ""
+  );
+  const [userReportYear, setUserReportYear] = useState<number>(
+    Number(searchParams.get("userReportYear")) || new Date().getFullYear()
+  );
+  const [userReportPage, setUserReportPage] = useState(
+    Number(searchParams.get("userReportPage")) || 1
+  );
+  const [userReportLimit, setUserReportLimit] = useState(8);
+  const [showUserReportFilter, setShowUserReportFilter] =
+    useState<boolean>(false);
+
+  // Fetch data for Assessment List
+  const { data: assessmentData, isLoading: isAssessmentLoading } =
+    useAssessmentList({
+      limit: assessmentLimit,
+      page: assessmentPage,
+      search: assessmentSearch,
+      year: assessmentYear,
+    });
+
+  // Fetch data for User Report
+  const { data: userReportData, isLoading: isUserReportLoading } =
+    useUserReport({
+      limit: userReportLimit,
+      page: userReportPage,
+      year: userReportYear,
+      search: userReportSearch,
+    });
+
+  // Update URL when parameters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set("tab", activeTab);
+
+    if (activeTab === "assessment-list") {
+      if (assessmentSearch) params.set("assessmentSearch", assessmentSearch);
+      if (assessmentYear !== new Date().getFullYear()) {
+        params.set("assessmentYear", assessmentYear.toString());
+      }
+      if (assessmentPage > 1)
+        params.set("assessmentPage", assessmentPage.toString());
+    } else {
+      if (userReportSearch) params.set("userReportSearch", userReportSearch);
+      if (userReportYear !== new Date().getFullYear()) {
+        params.set("userReportYear", userReportYear.toString());
+      }
+      if (userReportPage > 1)
+        params.set("userReportPage", userReportPage.toString());
+    }
+
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [
+    activeTab,
+    assessmentSearch,
+    assessmentYear,
+    assessmentPage,
+    userReportSearch,
+    userReportYear,
+    userReportPage,
+    router,
+  ]);
+
+  // Debounce search for Assessment List
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setAssessmentSearch(assessmentSearchInput);
+      setAssessmentPage(1);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [assessmentSearchInput]);
+
+  // Debounce search for User Report
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setUserReportSearch(userReportSearchInput);
+      setUserReportPage(1);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [userReportSearchInput]);
+
+  // Get current tab's state
+  const currentSearchInput =
+    activeTab === "assessment-list"
+      ? assessmentSearchInput
+      : userReportSearchInput;
+
+  const currentYear =
+    activeTab === "assessment-list" ? assessmentYear : userReportYear;
+
+  const showFilter =
+    activeTab === "assessment-list"
+      ? showAssessmentFilter
+      : showUserReportFilter;
+
+  // Handle search input change
+  const handleSearchChange = (value: string) => {
+    if (activeTab === "assessment-list") {
+      setAssessmentSearchInput(value);
+    } else {
+      setUserReportSearchInput(value);
+    }
+  };
+
+  // Handle filter toggle
+  const handleFilterToggle = () => {
+    if (activeTab === "assessment-list") {
+      setShowAssessmentFilter(!showAssessmentFilter);
+    } else {
+      setShowUserReportFilter(!showUserReportFilter);
+    }
+  };
+
+  // Handle year change
+  const handleYearChange = (year: number) => {
+    if (activeTab === "assessment-list") {
+      setAssessmentYear(year);
+      setAssessmentPage(1);
+    } else {
+      setUserReportYear(year);
+      setUserReportPage(1);
+    }
+  };
+
+  const handleDownload = () => {
+    if (activeTab === "assessment-list") {
+      if (!assessmentData?.data || assessmentData.data.length === 0) {
+        showToast(
+          "error",
+          "No available data",
+          "No assessment data available to download"
+        );
+        return;
+      }
+      downloadAssessmentListCSV(assessmentData.data, assessmentYear);
+      showToast(
+        "success",
+        "Download successful",
+        "Assessment data downloaded successfully"
+      );
+    } else {
+      if (!userReportData?.data || userReportData.data.length === 0) {
+        showToast(
+          "error",
+          "No available data",
+          "No user report data available to download"
+        );
+        return;
+      }
+      downloadUserReportCSV(userReportData.data, userReportYear);
+      showToast(
+        "success",
+        "Download successful",
+        "User report data downloaded successfully"
+      );
+
+    }
+  };
 
   return (
-    <main className="flex flex-col gap-[39px]">
+    <main className="flex flex-col gap-[39px] h-screen">
       <section className="flex justify-between items-center">
         <div className="flex flex-col gap-[4px]">
           <h1 className="text-[1.5rem] leading-[36px] font-medium text-[#2A2829]">
@@ -33,14 +226,13 @@ const AssessmentManagementPage = () => {
         </div>
       </section>
 
-      <section className="bg-[#FFFFFF] pb-[8px] pt-[12px] rounded-[12px] shadow overflow-hidden">
+      <section className="bg-[#FFFFFF] h-full pb-[8px] pt-[12px] rounded-[12px] shadow overflow-hidden">
         <Tabs
-          defaultValue="assessment-list"
           value={activeTab}
           onValueChange={(val) =>
             setActiveTab(val as "assessment-list" | "user-report")
           }
-          className="flex-1"
+          className="flex-1 h-full"
         >
           <div className="flex justify-between items-center px-5 pt-4 pb-3.5 relative">
             <TabsList className="bg-transparent gap-3">
@@ -72,13 +264,13 @@ const AssessmentManagementPage = () => {
                   className="border-none outline-none pl-[40px] w-full text-[14px] text-[#928F8B]"
                   type="text"
                   placeholder="Search by title, category ..."
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
+                  value={currentSearchInput}
+                  onChange={(e) => handleSearchChange(e.target.value)}
                 />
               </div>
 
               <Button
-                onClick={() => setShowFilter(!showFilter)}
+                onClick={handleFilterToggle}
                 className="cursor-pointer flex items-center gap-[12px] h-[48px] bg-[#F9F9F7] text-[#65605C] hover:text-[#F9F9F7] hover:bg-[#65605C] hover:shadow-2xl"
               >
                 <ListFilter className="h-[12.75px] w-[22.5px]" />
@@ -86,8 +278,9 @@ const AssessmentManagementPage = () => {
               </Button>
 
               <Button
+                onClick={handleDownload}
                 variant="toolbar"
-                className="flex items-center gap-2 px-4 py-3 bg-[#F9F9F7] h-[48px]"
+                className="flex items-center gap-2 px-4 py-3 bg-[#F9F9F7] h-[48px] cursor-pointer"
               >
                 <Image
                   src="/assessment-management/download.svg"
@@ -98,19 +291,68 @@ const AssessmentManagementPage = () => {
                 <span className="">Download</span>
               </Button>
             </div>
-            {showFilter && <AssessmentFilter />}
+            {showFilter && (
+              <AssessmentFilter
+                selectedYear={currentYear}
+                setSelectedYear={handleYearChange}
+              />
+            )}
           </div>
 
           {/* Assessment-list Tab */}
+          <AssessmentTab
+            assessmentData={assessmentData}
+            isLoading={isAssessmentLoading}
+          />
 
-          <AssessmentTab />
-
-          {/* User-report  Tab */}
-          <UserReportTab />
+          {/* User-report Tab */}
+          <UserReportTab
+            isLoading={isUserReportLoading}
+            userReportData={userReportData}
+          />
         </Tabs>
       </section>
 
-      <FooterBar />
+      {/* {activeTab === "assessment-list" && (
+        <Pagination
+          totalItems={assessmentData?.meta?.totalRecords}
+          page={assessmentPage}
+          pageSize={assessmentLimit}
+          onPageChange={setAssessmentPage}
+          onPageSizeChange={setAssessmentLimit}
+        />
+      )}
+      {activeTab === "user-report"  && (
+        <Pagination
+          totalItems={userReportData?.meta?.totalUsers}
+          page={userReportPage}
+          pageSize={userReportLimit}
+          onPageChange={setUserReportPage}
+          onPageSizeChange={setUserReportLimit}
+        />
+      )} */}
+      {activeTab === "assessment-list" &&
+        !isAssessmentLoading &&
+        (assessmentData?.meta?.totalRecords ?? 0) > 0 && (
+          <Pagination
+            totalItems={assessmentData?.meta?.totalRecords ?? 0}
+            page={assessmentPage}
+            pageSize={assessmentLimit}
+            onPageChange={setAssessmentPage}
+            onPageSizeChange={setAssessmentLimit}
+          />
+        )}
+      {activeTab === "user-report" &&
+        !isUserReportLoading &&
+        (userReportData?.meta?.totalUsers ?? 0) > 0 && (
+          <Pagination
+            totalItems={userReportData?.meta?.totalUsers ?? 0}
+            page={userReportPage}
+            pageSize={userReportLimit}
+            onPageChange={setUserReportPage}
+            onPageSizeChange={setUserReportLimit}
+          />
+        )}
     </main>
   );
 };

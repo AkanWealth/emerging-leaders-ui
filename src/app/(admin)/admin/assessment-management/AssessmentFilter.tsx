@@ -2,10 +2,17 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-const AssessmentFilter = () => {
+type AssessmentFilterProp = {
+  selectedYear: number;
+  setSelectedYear: (year: number) => void;
+};
+
+const AssessmentFilter = ({
+  selectedYear,
+  setSelectedYear,
+}: AssessmentFilterProp) => {
   const [startYear, setStartYear] = useState(2020);
   const endYear = startYear + 5;
-  const [selectedYear, setSelectedYear] = useState<number | null>(2025);
 
   const handlePrev = () => setStartYear((prev) => prev - 6);
   const handleNext = () => setStartYear((prev) => prev + 6);
