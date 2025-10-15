@@ -1,47 +1,74 @@
 "use client";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToastStore } from "@/store/toastStore";
 import { userModalStore } from "@/store/userModalStore";
+import { useEditAdminMutation } from "@/hooks/admin/user-management/Admins/useEditAdminMutation";
+import { BeatLoader } from "react-spinners";
+// import userService from "@/services/userService"; // if you have one
 
 const EditAdmin = () => {
   const { showToast } = useToastStore();
-  const { modalType, selectedAdmin, closeModal } = userModalStore();
+  const { selectedAdmin } = userModalStore();
+  const { mutate: editAdmin, isPending } = useEditAdminMutation();
 
-  const handleUpdateAdmin = () => {
-    try {
-      throw Error();
-      showToast(
-        "success",
-        "Changes saved successfully.",
-        "User profile has been updated with the new information."
-      );
-    } catch (error) {
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+  });
+
+  // Prefill when modal opens or admin changes
+  useEffect(() => {
+    if (selectedAdmin) {
+      setFormData({
+        firstname: selectedAdmin.firstname || "",
+        lastname: selectedAdmin.lastname || "",
+        email: selectedAdmin.email || "",
+      });
+    }
+  }, [selectedAdmin]);
+  console.log("Selected Admin:", selectedAdmin);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleUpdateAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedAdmin) {
       showToast(
         "error",
-        "Failed to Save Changes.",
-        "We couldn’t update the user’s details. Please check the information and try again."
+        "No Admin Selected.",
+        "Please select an admin before performing this action."
       );
-      console.log(error);
-    } finally {
-      closeModal();
+      return;
     }
+    editAdmin({
+      adminId: selectedAdmin.id,
+      payload: {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        email: formData.email,
+      },
+    });
   };
-  const handleDeleteAdmin = () => {
-    try {
+
+  const handleDeleteAdmin = async () => {
+    if (!selectedAdmin) {
       showToast(
-        "success",
-        "Changes saved successfully.",
-        "User profile has been updated with the new information."
+        "error",
+        "No Admin Selected.",
+        "Please select an admin before performing this action."
       );
-      closeModal();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      closeModal();
+      return;
     }
+    userModalStore.getState().openModal("deleteAdmin", selectedAdmin);
   };
+
   return (
     <section className="flex flex-col gap-[40px] py-[30px] px-[40px]">
       <aside className="flex flex-col gap-[4px] ">
@@ -53,38 +80,38 @@ const EditAdmin = () => {
         </p>
       </aside>
 
-      <form className="flex flex-col gap-[64px]">
+      <form onSubmit={handleUpdateAdmin} className="flex flex-col gap-[64px]">
         <div className="flex flex-col gap-[24px]">
           <div className="flex flex-col md:flex-row gap-[32px]">
             <div className="grid gap-[4px] w-[350px] text-[#2A2829]">
-              {" "}
-              {/* increased width */}
               <Label
                 className="text-[20px] leading-[30px] font-medium"
-                htmlFor="first_name"
+                htmlFor="firstname"
               >
                 User’s First Name
               </Label>
               <Input
                 type="text"
-                id="first_name"
+                id="firstname"
+                value={formData.firstname}
+                onChange={handleChange}
                 placeholder="User’s First Name"
                 className="h-12 text-[16px] rounded-[12px] border-[#B1B1AE] px-4 outline-none"
               />
             </div>
 
             <div className="grid gap-[4px] w-[350px] text-[#2A2829]">
-              {" "}
-              {/* increased width */}
               <Label
                 className="text-[20px] leading-[30px] font-medium"
-                htmlFor="last_name"
+                htmlFor="lastname"
               >
                 User’s Last Name
               </Label>
               <Input
                 type="text"
-                id="last_name"
+                id="lastname"
+                value={formData.lastname}
+                onChange={handleChange}
                 placeholder="User’s Last Name"
                 className="h-12 text-[16px] rounded-[12px] border-[#B1B1AE] px-4 outline-none"
               />
@@ -99,25 +126,31 @@ const EditAdmin = () => {
               Email Address <span className="text-[#E81313]">*</span>
             </Label>
             <Input
-              type="text"
-              id="last_name"
-              placeholder="User’s Last Name"
+              type="email"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="User’s Email Address"
               className="h-12 w-full text-[16px] rounded-[12px] border-[#B1B1AE] px-4 outline-none"
             />
           </div>
         </div>
-        <div className="flex gap-[12px] ">
+
+        <div className="flex gap-[12px]">
           <Button
+            type="button"
             onClick={handleDeleteAdmin}
-            className="flex-1  text-[20px] leading-[30px] font-medium border border-[#E81313] text-[#E81313] rounded-[16px] bg-white h-[62px] cursor-pointer hover:bg-white"
+            className="flex-1 text-[20px] leading-[30px] font-medium border border-[#E81313] text-[#E81313] rounded-[16px] bg-white h-[62px] cursor-pointer hover:bg-white"
           >
             Delete Admin
           </Button>
+
           <Button
-            onClick={handleUpdateAdmin}
-            className="flex-1  text-[20px] leading-[30px] font-medium  border-none text-[#fff] rounded-[16px] bg-[#A2185A] h-[62px] cursor-pointer hover:bg-[#A2185A]"
+            disabled={isPending}
+            type="submit"
+            className="flex-1 text-[20px] leading-[30px] font-medium border-none text-[#fff] rounded-[16px] bg-[#A2185A] h-[62px] cursor-pointer hover:bg-[#A2185A]"
           >
-            Save Changes
+            {isPending ? <BeatLoader size={8} color="#fff" /> : "Save Changes"}
           </Button>
         </div>
       </form>

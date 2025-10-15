@@ -4,6 +4,7 @@ export enum COOKIE_NAMES {
   ADMIN_AUTH_TOKENS = "emerging_leaders_admin_auth_tokens",
   INVITE_EMAIL = "emerging_leaders_admin_invite_email",
   INVITE_CODE = "emerging_leaders_admin_invite_code",
+  RESET_PASSWORD_EMAIL_AND_CODE = "emerging_leaders_admin_reset_password_email_and_code",
 }
 
 type ExtendedCookieOptions = Cookies.CookieAttributes & {

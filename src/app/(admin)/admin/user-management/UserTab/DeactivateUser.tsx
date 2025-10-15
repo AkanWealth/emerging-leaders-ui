@@ -1,25 +1,40 @@
 import { Button } from "@/components/ui/button";
+import { useToggleUserStatusMutation } from "@/hooks/admin/user-management/Users/useToogleUserStatusMutation";
 import { useToastStore } from "@/store/toastStore";
 import { manageUserModalStore } from "@/store/userModalStore";
 import Image from "next/image";
+import { BeatLoader } from "react-spinners";
 
 const DeactivateUser = () => {
   const { showToast } = useToastStore();
   const { selectedUser, closeModal } = manageUserModalStore();
+  const { mutate: toggleStatus, isPending } = useToggleUserStatusMutation();
 
   const handleUpdateAdmin = () => {
     try {
       //   throw Error();
-      showToast(
-        "success",
-        "User Deactivated successfully.",
-        `${selectedUser?.full_name}’s account is now deactivated and access has been restricted.`
-      );
+      if (!selectedUser) {
+        showToast(
+          "error",
+          "No User Selected.",
+          "Please select an user before performing this action."
+        );
+        return;
+      }
+      toggleStatus({
+        id: selectedUser.id,
+        action: "DEACTIVATE",
+        user: selectedUser,
+      });
     } catch (error) {
       showToast(
         "error",
         "Failed to Deactivate User.",
-        `We couldn’t deactivate ${selectedUser?.full_name} access. Please try again later.`
+        `We couldn’t deactivate ${
+          selectedUser?.firstname && selectedUser.lastname
+            ? selectedUser?.firstname + " " + selectedUser?.lastname
+            : selectedUser?.email
+        } access. Please try again later.`
       );
       console.log(error);
     } finally {
@@ -49,7 +64,11 @@ const DeactivateUser = () => {
             </p>
           </aside>
           <h3 className="text-[#2A2829] text-[20px] leading-[30px] font-medium">
-            Are you sure you want to deactivate User {selectedUser?.full_name}?
+            Are you sure you want to deactivate User{" "}
+            {selectedUser?.firstname && selectedUser.lastname
+              ? selectedUser?.firstname + " " + selectedUser?.lastname
+              : selectedUser?.email}
+            ?
           </h3>
         </div>
 
@@ -64,7 +83,11 @@ const DeactivateUser = () => {
             onClick={handleUpdateAdmin}
             className="flex-1  text-[20px] leading-[30px] font-medium  border-none text-[#fff] rounded-[16px] bg-[#E81313] h-[62px] cursor-pointer hover:bg-[#E81313]"
           >
-            Deactivate User
+            {isPending ? (
+              <BeatLoader size={8} color="#fff" />
+            ) : (
+              "Deactivate User"
+            )}
           </Button>
         </div>
       </div>

@@ -1,9 +1,10 @@
-import { AdminListType } from "@/app/(admin)/admin/user-management/AdminList";
-import { UserListType } from "@/app/(admin)/admin/user-management/UserList";
+import { AdminType } from "@/hooks/admin/user-management/Admins/useAdminList";
+import { UserType } from "@/hooks/admin/user-management/Users/useUserList";
 import { create } from "zustand";
 
 type ModalType =
   | "createAdmin"
+  | "deleteAdmin"
   | "editAdmin"
   | "resendInvite"
   | "deactivate"
@@ -14,8 +15,8 @@ type UserModalType = "reactivateUser" | "deactivateUser" | null;
 
 interface ModalState {
   modalType: ModalType;
-  selectedAdmin: AdminListType | null;
-  openModal: (type: ModalType, admin?: AdminListType) => void;
+  selectedAdmin: AdminType | null;
+  openModal: (type: ModalType, admin?: AdminType) => void;
   closeModal: () => void;
 }
 
@@ -29,8 +30,8 @@ export const userModalStore = create<ModalState>((set) => ({
 
 interface UserModalState {
   modalType: UserModalType;
-  selectedUser: UserListType | null;
-  openModal: (type: UserModalType, user?: UserListType) => void;
+  selectedUser: UserType | null;
+  openModal: (type: UserModalType, user?: UserType) => void;
   closeModal: () => void;
 }
 export const manageUserModalStore = create<UserModalState>((set) => ({

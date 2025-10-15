@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   LeaderboardMeta,
@@ -42,13 +41,13 @@ const UserRankingTable = ({
       <div className="overflow-x-auto">
         <Table className="table-fixed w-full">
           <colgroup>
-            <col style={{ width: "12.5%" }} /> {/* Ranking */}
-            <col style={{ width: "25%" }} /> {/* Name */}
-            <col style={{ width: "12.5%" }} /> {/* Projects */}
-            <col style={{ width: "12.5%" }} /> {/* Goals */}
-            <col style={{ width: "12.5%" }} /> {/* Savings */}
-            <col style={{ width: "12.5%" }} /> {/* Budget */}
-            <col style={{ width: "12.5%" }} /> {/* Streak */}
+            <col className="w-[8%]" /> {/* Ranking */}
+            <col className="w-[28%]" /> {/* Name */}
+            <col className="w-[12%]" /> {/* Projects */}
+            <col className="w-[12%]" /> {/* Goals */}
+            <col className="w-[12%]" /> {/* Savings */}
+            <col className="w-[12%]" /> {/* Budget */}
+            <col className="w-[16%] " /> {/* Streak */}
           </colgroup>
 
           <TableHeader>
@@ -67,7 +66,7 @@ const UserRankingTable = ({
               <TableHead className="whitespace-nowrap text-center">
                 Budget
               </TableHead>
-              <TableHead className="whitespace-nowrap text-right">
+              <TableHead className="whitespace-nowrap text-center pl-[30px] ">
                 Streak
               </TableHead>
             </TableRow>
@@ -96,7 +95,7 @@ const UserRankingTable = ({
                   <TableCell className="text-center">
                     <Skeleton className="h-4 w-10 mx-auto" />
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-center pl-[30px] ">
                     <Skeleton className="h-4 w-16 ml-auto" />
                   </TableCell>
                 </TableRow>
@@ -139,7 +138,7 @@ const UserRankingTable = ({
                     <TableCell className="text-center whitespace-nowrap">
                       {item.budget.toLocaleString()}
                     </TableCell>
-                    <TableCell className="text-right whitespace-nowrap">
+                    <TableCell className="text-center pl-[30px]  whitespace-nowrap">
                       {item.streak} {item.streak > 1 ? "days" : "day"}
                     </TableCell>
                   </TableRow>

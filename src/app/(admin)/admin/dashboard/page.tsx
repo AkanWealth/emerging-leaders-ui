@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 // import ChartComponent from "./ChartComponent";
 import InteractiveChart from "./ChartComponent";
-import UserRankingFilter from "./UserRankingFilter";
+import UserRankingFilter, { parseFilterRange } from "./UserRankingFilter";
 import {
   ChartPoint,
   useCardGrowth,
@@ -57,13 +57,15 @@ const DashboardPage = () => {
     search,
     page,
     limit,
-    ...{
-      ...filters,
-      ranking:
-        filters.ranking === "highest" || filters.ranking === "lowest"
-          ? filters.ranking
-          : undefined,
-    },
+    // Parse the ranking filter
+    ranking:
+      filters.ranking === "highest" || filters.ranking === "lowest"
+        ? filters.ranking
+        : undefined,
+    // Parse the range filters
+    ...parseFilterRange(filters.completed || "", "completed"),
+    ...parseFilterRange(filters.goals || "", "goals"),
+    ...parseFilterRange(filters.streak || "", "streak"),
   });
 
   const { user } = useUserStore();
@@ -113,7 +115,12 @@ const DashboardPage = () => {
       {/* Welcome Section */}
       <section className="flex flex-col gap-[4px]">
         <h2 className="text-[#2A2829] font-medium text-[24px]">
-          Welcome back, <span className="">{user?.firstname || "Name"}</span>
+          Welcome back, {""}
+          {user?.firstname ? (
+            <span className="">{user.firstname}</span>
+          ) : (
+            <span className="">Name</span>
+          )}
         </h2>
         <p className="text-[#65605C] font-normal text-[16px]">
           Monitor analytics on users effectively.

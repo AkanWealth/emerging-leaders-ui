@@ -562,3 +562,30 @@ const UserRankingFilter = ({
 };
 
 export default UserRankingFilter;
+
+
+export const parseFilterRange = (rangeValue: string, filterType: string) => {
+  if (!rangeValue) return {};
+
+  switch (filterType) {
+    case "completed": // Projects Completed
+      if (rangeValue === "0-20") return { completedMin: 0, completedMax: 20 };
+      if (rangeValue === "21-50") return { completedMin: 21, completedMax: 50 };
+      if (rangeValue === "51-above") return { completedMin: 51 };
+      break;
+
+    case "goals": // Goals Completed
+      if (rangeValue === "0-100") return { goalsMin: 0, goalsMax: 100 };
+      if (rangeValue === "101-300") return { goalsMin: 101, goalsMax: 300 };
+      if (rangeValue === "301-above") return { goalsMin: 301 };
+      break;
+
+    case "streak": // Consistency Streak
+      if (rangeValue === "0-20") return { streakMin: 0, streakMax: 20 };
+      if (rangeValue === "21-50") return { streakMin: 21, streakMax: 50 };
+      if (rangeValue === "51-above") return { streakMin: 51 };
+      break;
+  }
+
+  return {};
+};

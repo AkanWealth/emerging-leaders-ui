@@ -43,8 +43,20 @@ class AuthService {
       confirmPassword: data.confirmNewPassword,
     });
   }
-  async getAdminCount(){
-    return this.request.get("/admin/auth/count")
+  async getAdminCount() {
+    return this.request.get("/admin/auth/count");
+  }
+  async changePassword(data: {
+    email: string;
+    otp:string;
+    newPassword: string;
+    confirmNewPassword: string;
+  }) {
+    return this.request.post("/admin/auth/reset-password", {
+      email: data.email,
+      newPassword: data.newPassword,
+      confirmPassword: data.confirmNewPassword,
+    });
   }
 }
 

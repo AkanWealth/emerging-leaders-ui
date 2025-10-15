@@ -11,6 +11,7 @@ import { useToastStore } from "@/store/toastStore";
 import { COOKIE_NAMES, setCookie } from "@/utils/cookiesUtils";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/userStore";
+import { AdminStatus } from "@/hooks/admin/user-management/Users/useUserList";
 type SigninResponse =
   | { error: string }
   | {
@@ -21,6 +22,7 @@ type SigninResponse =
         firstname: string;
         lastname: string;
         profilePicture: string | null;
+        status: AdminStatus;
       };
     };
 
@@ -64,7 +66,16 @@ const LoginPage = () => {
         "tokens" in response &&
         "user" in response
       ) {
-        console.log(response);
+        if (response.user.status === "DEACTIVATED") {
+          showToast(
+            "error",
+            "Your account has been deactivated.",
+            "Please contact support if you believe this is a mistake or wish to reactivate your account.",
+            3000
+          );
+          return;
+        }
+
         setCookie(COOKIE_NAMES.ADMIN_AUTH_TOKENS, response.tokens);
 
         setUser({
@@ -73,6 +84,7 @@ const LoginPage = () => {
           firstname: response.user.firstname,
           lastname: response.user.lastname,
           profilePicture: response.user.profilePicture,
+          isAdmin: false,
         });
         router.push("/admin/dashboard");
         showToast("success", "Login successfully", "You are logged in.", 3000);

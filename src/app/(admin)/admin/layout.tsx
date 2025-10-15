@@ -18,7 +18,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <AdminHeader />
 
         {/* Scrollable content */}
-        <main className="flex-1 overflow-y-auto px-8 py-10">{children}</main>
+        <main className="flex-1 overflow-y-auto px-6 h-full  py-10">{children}</main>
       </div>
     </div>
   );

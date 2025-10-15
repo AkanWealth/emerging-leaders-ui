@@ -5,7 +5,36 @@ class AdminService {
   private request = new HttpService();
 
   async getUser() {
-    return this.request.get("/admin/me", COOKIE_NAMES.ADMIN_AUTH_TOKENS);
+    return this.request.get("/admin/users/me", COOKIE_NAMES.ADMIN_AUTH_TOKENS);
+  }
+  async editUser(
+    loggedInUserId: string,
+    payload: {
+      firstname: string;
+      lastname: string;
+      email: string;
+      Address: string;
+      city: string;
+      country: string;
+      postalcode: string | number;
+      phone: string;
+    }
+  ) {
+    return this.request.patch(
+      `/admin/users/${loggedInUserId}`,
+      payload,
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
+  }
+
+  async editUserProfilePicture(adminId: string, imageUrl: string) {
+    return this.request.patch(
+      `/admin/users/${adminId}/profile-picture`,
+      {
+        profilePicture: imageUrl,
+      },
+      COOKIE_NAMES.ADMIN_AUTH_TOKENS
+    );
   }
 }
 

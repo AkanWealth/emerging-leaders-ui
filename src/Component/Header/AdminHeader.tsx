@@ -1,7 +1,7 @@
- "use client";
+"use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bell, ChevronDown, LogOut, User } from "lucide-react";
+import {  ChevronDown, LogOut, User } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -10,9 +10,13 @@ import { useToastStore } from "@/store/toastStore";
 import { useUserStore } from "@/store/userStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import NotificationModal from "../Notification/NotificationModal";
+import notificationService from "@/services/notificationService";
 // import notificationService from "@/services/notificationService"; // ✅ import service
 
 // TruncatedText with instant tooltip
+type UnreadResponseType = {
+  unreadCount: number;
+};
 const TruncatedText = ({
   text,
   className,
@@ -47,28 +51,33 @@ const AdminHeader = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [unreadCount, setUnreadCount] = useState<number>(0); // ✅ state for unread notifications
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null); // ✅ new ref
 
   const handleAdminLogOut = () => {
     removeCookie(COOKIE_NAMES.ADMIN_AUTH_TOKENS);
     router.push("/sign-in");
     showToast("success", "Logout Successful", "You are now logged out");
   };
-  const GoToProfile=()=>{
-        router.push("/admin/profile");
-  }
 
-  // Close on outside click
+  const GoToProfile = () => {
+    router.push("/admin/profile");
+  };
+
+  // ✅ updated outside click handler
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
-      ) {
+      const target = event.target as Node;
+
+      // Close dropdown if click is outside wrapper
+      if (wrapperRef.current && !wrapperRef.current.contains(target)) {
         setIsOpen(false);
+      }
+
+      // Close notification modal if click is outside modal
+      if (modalRef.current && !modalRef.current.contains(target)) {
         setShowNotifications(false);
       }
     }
@@ -80,23 +89,25 @@ const AdminHeader = () => {
   }, []);
 
   // ✅ Poll for unread notifications every 15 seconds
-  // useEffect(() => {
-  //   let interval: NodeJS.Timeout;
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
 
-  //   async function fetchUnread() {
-  //     try {
-  //       const res = await notificationService.getUnreadNotificationCount();
-  //       setUnreadCount(res?.unreadCount ?? 0);
-  //     } catch (error) {
-  //       console.error("Failed to fetch unread notifications:", error);
-  //     }
-  //   }
+    async function fetchUnread() {
+      try {
+        const res =
+          (await notificationService.getUnreadNotificationCount()) as UnreadResponseType;
+        setUnreadCount(res?.unreadCount ?? 0);
+      } catch (error) {
+        console.error("Failed to fetch unread notifications:", error);
+      }
+    }
 
-  //   fetchUnread(); // run immediately
-  //   interval = setInterval(fetchUnread, 15000); // run every 15s
+    fetchUnread(); // run immediately
+    // eslint-disable-next-line prefer-const
+    interval = setInterval(fetchUnread, 15000); // run every 15s
 
-  //   return () => clearInterval(interval); // cleanup
-  // }, []);
+    return () => clearInterval(interval); // cleanup
+  }, []);
 
   return (
     <header className="w-full h-[80px] bg-white flex justify-end items-center px-6 shadow-md relative">
@@ -113,11 +124,10 @@ const AdminHeader = () => {
             setIsOpen(false); // close user dropdown
           }}
         >
-          <Bell className="h-[32px] w-[32px] text-[#65605C]" />
+          <Image src="/bell.svg" alt="Bell icon" width={32} height={32} />
+          {/* <Bell className="h-[32px] w-[32px] text-[#65605C]" /> */}
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-3 bg-[#F29100] text-white text-xs font-bold rounded-full h-[18px] w-[18px] flex items-center justify-center">
-              {unreadCount}
-            </span>
+            <span className="absolute top-1 right-3 bg-[#F29100] text-white text-xs font-bold rounded-full h-[12px] w-[12px] flex items-center justify-center"></span>
           )}
         </aside>
 
@@ -238,7 +248,10 @@ const AdminHeader = () => {
       {/* Notifications */}
       <AnimatePresence>
         {showNotifications && (
-          <NotificationModal onClose={() => setShowNotifications(false)} />
+          <NotificationModal
+            ref={modalRef}
+            onClose={() => setShowNotifications(false)}
+          />
         )}
       </AnimatePresence>
     </header>

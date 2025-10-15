@@ -1,25 +1,41 @@
 import { Button } from "@/components/ui/button";
+import { AdminType } from "@/hooks/admin/user-management/Admins/useAdminList";
+import { useToggleAdminStatusMutation } from "@/hooks/admin/user-management/Admins/useToggleAdminStatusMutation";
 import { useToastStore } from "@/store/toastStore";
 import { userModalStore } from "@/store/userModalStore";
 import Image from "next/image";
+import { BeatLoader } from "react-spinners";
 
 const ReactivateAdmin = () => {
   const { showToast } = useToastStore();
   const { selectedAdmin, closeModal } = userModalStore();
+  const { mutate: toggleStatus, isPending } = useToggleAdminStatusMutation();
 
   const handleUpdateAdmin = () => {
-    try {
-      throw Error();
+    if (!selectedAdmin) {
       showToast(
-        "success",
-        "Admin Reactivated successfully.",
-        "Clare Brown’s admin account has been reactivated and access has been fully restored."
+        "error",
+        "No Admin Selected.",
+        "Please select an admin before performing this action."
       );
+      return;
+    }
+    try {
+      toggleStatus({
+        id: selectedAdmin.id,
+        action: "REACTIVATE",
+        admin: selectedAdmin as AdminType,
+      });
     } catch (error) {
       showToast(
         "error",
         "Failed to Reactivate Admin.",
-        `We couldn’t reactivate ${selectedAdmin?.full_name} admin access. Please try again later.`
+        `We couldn’t reactivate ${
+          selectedAdmin?.firstname && selectedAdmin.lastname
+            ? selectedAdmin?.firstname + " " + selectedAdmin?.lastname
+            : selectedAdmin?.email
+        }
+        } admin access. Please try again later.`
       );
       console.log(error);
     } finally {
@@ -49,7 +65,10 @@ const ReactivateAdmin = () => {
             </p>
           </aside>
           <h3 className="text-[#2A2829] text-[20px] leading-[30px] font-medium">
-            Are you sure you want to reactivate Admin {selectedAdmin?.full_name}
+            Are you sure you want to reactivate Admin{" "}
+            {selectedAdmin?.firstname && selectedAdmin.lastname
+              ? selectedAdmin?.firstname + " " + selectedAdmin?.lastname
+              : selectedAdmin?.email}
             ?
           </h3>
         </div>
@@ -62,10 +81,15 @@ const ReactivateAdmin = () => {
             Cancel
           </Button>
           <Button
+            disabled={isPending}
             onClick={handleUpdateAdmin}
             className="flex-1  text-[20px] leading-[30px] font-medium  border-none text-[#fff] rounded-[16px] bg-[#A2185A] h-[62px] cursor-pointer hover:bg-[#A2185A]"
           >
-            Deactivate Admin
+            {isPending ? (
+              <BeatLoader size={8} color="#fff" />
+            ) : (
+              "Reactivate Admin"
+            )}
           </Button>
         </div>
       </div>

@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import { EllipsisVertical, Ban, RotateCcw, Eye } from "lucide-react";
 import StatusBadge from "./StatusBadge";
@@ -22,50 +21,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { userModalStore } from "@/store/userModalStore";
 import EmptyList from "./EmptyList";
+import {
+  AdminResponse,
+  AdminType,
+} from "@/hooks/admin/user-management/Admins/useAdminList";
 
-type AdminStatus = "Active" | "Inactive" | "Pending" | "Deactivated";
-
-export type AdminListType = {
-  full_name: string;
-  role: "Admin";
-  createdAt: Date;
-  status: AdminStatus;
-};
-
-const adminData: AdminListType[] = [
-  {
-    full_name: "David Jack",
-    role: "Admin",
-    createdAt: new Date("2025-01-10"),
-    status: "Active",
-  },
-  {
-    full_name: "Sarah Lee",
-    role: "Admin",
-    createdAt: new Date("2024-12-05"),
-    status: "Inactive",
-  },
-  {
-    full_name: "Michael Brown",
-    role: "Admin",
-    createdAt: new Date("2025-02-20"),
-    status: "Pending",
-  },
-  {
-    full_name: "Emily Davis",
-    role: "Admin",
-    createdAt: new Date("2025-03-15"),
-    status: "Deactivated",
-  },
-];
-
-const AdminList = () => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+const AdminList = ({
+  isLoading,
+  adminData = [],
+}: {
+  isLoading: boolean;
+  adminData: AdminResponse["data"];
+}) => {
+  console.log(adminData);
 
   return (
     <section>
@@ -78,7 +46,7 @@ const AdminList = () => {
             <col className="w-[20%]" />
             <col className="w-[15%]" />
           </colgroup>
-          {!loading && adminData.length > 0 && (
+          {!isLoading && adminData.length > 0 && (
             <TableHeader>
               <TableRow className="bg-[#F9F9F7] h-[60px]">
                 <TableHead>Full Name</TableHead>
@@ -91,7 +59,7 @@ const AdminList = () => {
           )}
 
           <TableBody>
-            {loading ? (
+            {isLoading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <TableRow key={i} className="h-[60px]">
                   <TableCell>
@@ -118,12 +86,14 @@ const AdminList = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              adminData.map((admin, i) => (
+              adminData?.map((admin: AdminType, i) => (
                 <TableRow className="h-[60px]" key={i}>
-                  <TableCell>{admin.full_name}</TableCell>
-                  <TableCell className="text-center">{admin.role}</TableCell>
+                  <TableCell>
+                    {admin.firstname} {admin.lastname}
+                  </TableCell>
+                  <TableCell className="text-center">{"Admin"}</TableCell>
                   <TableCell className="text-center">
-                    {formatDate(admin.createdAt)}
+                    {formatDate(admin.createdAt as Date)}
                   </TableCell>
                   <TableCell className="text-center">
                     <StatusBadge status={admin.status} />
@@ -154,7 +124,7 @@ const AdminList = () => {
                           <div className="w-full h-[1px] bg-[#E5E7EF]" />
                         </>
 
-                        {admin.status === "Pending" && (
+                        {admin.status === "PENDING" && (
                           <>
                             <DropdownMenuItem
                               className="gap-2 py-[18px] px-[25px] cursor-pointer rounded-t-none"
@@ -177,8 +147,8 @@ const AdminList = () => {
                           </>
                         )}
 
-                        {(admin.status === "Active" ||
-                          admin.status === "Pending") && (
+                        {(admin.status === "ACTIVE" ||
+                          admin.status === "PENDING") && (
                           <>
                             <DropdownMenuItem
                               onClick={() =>
@@ -195,8 +165,8 @@ const AdminList = () => {
                           </>
                         )}
 
-                        {(admin.status === "Inactive" ||
-                          admin.status === "Deactivated") && (
+                        {(admin.status === "INACTIVE" ||
+                          admin.status === "DEACTIVATED") && (
                           <DropdownMenuItem
                             onClick={() =>
                               userModalStore

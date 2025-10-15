@@ -23,14 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Ban,
-  EllipsisVertical,
-  Eye,
-  RotateCcw,
-  Ticket,
-  Trash2,
-} from "lucide-react";
+import { EllipsisVertical, Eye, Ticket, Trash2 } from "lucide-react";
 import { supportModalStore } from "@/store/supportStore";
 import { SupportTicket } from "@/hooks/admin/support/useSupport";
 import { TicketStatus } from "./SupportFilter";
@@ -108,7 +101,7 @@ const SupportTable = ({
   return (
     <section>
       <div className="w-full overflow-x-auto">
-        <Table className="table-fixed min-w-[800px]">
+        <Table className="min-w-[800px] table-auto">
           <colgroup>
             <col className="w-[15%]" /> {/* Ticket ID */}
             <col className="w-[30%]" /> {/* Subject */}
@@ -131,7 +124,7 @@ const SupportTable = ({
                   Name
                 </TableHead>
                 <TableHead className="text-center text-[#2A2829] text-[16px] font-medium">
-                  Status
+                  Current Status
                 </TableHead>
                 <TableHead className="text-center text-[#2A2829] text-[16px] font-medium">
                   Created At
