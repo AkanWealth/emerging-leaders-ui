@@ -168,7 +168,7 @@ const UserManagementPage = () => {
     <Tabs
       value={activeTab}
       onValueChange={handleTabChange}
-      className="flex flex-col gap-[32px]"
+      className="flex flex-col gap-[32px] min-h-screen "
     >
       <section className="flex items-center justify-between">
         <section className="flex flex-col gap-[4px]">
@@ -188,8 +188,8 @@ const UserManagementPage = () => {
           </Button>
         </TabsContent>
       </section>
-      <section className="">
-        <section className="bg-[#FFFFFF] pb-[8px] pt-[12px] rounded-[12px] shadow relative">
+      <section className="flex-1 flex flex-col">
+        <section className="bg-[#FFFFFF] flex-1 h-full pb-[8px] pt-[12px] rounded-[12px] shadow relative">
           <aside className="flex px-[20px] items-center justify-between ">
             <TabsList className="h-[40px] w-[267px] bg-inherit border-none p-0 flex items-center">
               <TabsTrigger

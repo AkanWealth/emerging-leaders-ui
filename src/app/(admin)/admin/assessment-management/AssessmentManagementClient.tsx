@@ -237,7 +237,7 @@ const AssessmentManagementClient = () => {
   }, [activeTab, showAssessmentFilter, showUserReportFilter]);
 
   return (
-    <main className="flex flex-col gap-[39px] h-screen">
+    <main className="flex flex-col gap-[39px] min-h-screen  ">
       <section className="flex justify-between items-center">
         <div className="flex flex-col gap-[4px]">
           <h1 className="text-[1.5rem] leading-[36px] font-medium text-[#2A2829]">
@@ -249,7 +249,7 @@ const AssessmentManagementClient = () => {
         </div>
       </section>
 
-      <section className="bg-[#FFFFFF] h-full pb-[8px] pt-[12px] rounded-[12px] shadow overflow-hidden">
+      <section className="bg-[#FFFFFF] h-full flex-1 pb-[8px] pt-[12px] rounded-[12px] shadow overflow-hidden">
         <Tabs
           value={activeTab}
           onValueChange={(val) =>

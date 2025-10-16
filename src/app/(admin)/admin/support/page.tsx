@@ -36,7 +36,7 @@ const SupportPage = () => {
     limit,
   });
   return (
-    <main className="flex flex-col gap-[39px]">
+    <main className="flex flex-col gap-[39px] min-h-screen">
       {/* Welcome Section */}
       <section className="flex flex-col gap-[4px]">
         <h2 className="text-[#2A2829] font-medium text-[24px]">
@@ -47,7 +47,7 @@ const SupportPage = () => {
         </p>
       </section>
 
-      <section className="flex flex-col gap-[20px]">
+      <section className="flex flex-col gap-[20px]  flex-1 h-full">
         <section className="grid grid-cols-4 gap-[24px]">
           {/* Total Users */}
           <aside className="bg-white border border-[#E9EAEB] rounded-[12px]">
@@ -137,7 +137,7 @@ const SupportPage = () => {
           </aside>
         </section>
 
-        <section className="bg-[#FFFFFF] pb-[8px] pt-[12px] rounded-[12px] shadow relative">
+        <section className="bg-[#FFFFFF] flex-1 pb-[8px] pt-[12px] rounded-[12px] shadow relative">
           <aside className="flex px-[20px] items-center justify-between ">
             <h3 className="text-[#2A2829] font-medium text-[20px] leading-[30px]">
               Ticket List

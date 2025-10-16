@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/react-query/providers";
+import { AuthGuard } from "@/utils/AuthGuard";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-sans antialiased`}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          <AuthGuard>{children}</AuthGuard>
+        </ReactQueryProvider>
       </body>
     </html>
   );
