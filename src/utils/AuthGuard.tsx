@@ -19,6 +19,18 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       localStorage.setItem("lastAdminPath", pathname);
     }
 
+    if (pathname === "/") {
+      if (!authenticated) {
+        router.push("/sign-in");
+        return;
+      } else {
+        const lastAdminPath =
+          localStorage.getItem("lastAdminPath") || "/admin/dashboard";
+        router.push(lastAdminPath);
+        return;
+      }
+    }
+
     // If not authenticated but trying to access admin pages
     if (!authenticated && pathname.startsWith("/admin")) {
       router.push("/sign-in");
