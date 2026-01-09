@@ -13,19 +13,22 @@ const AuthBackground = () => {
       </section>
       <section className="flex flex-col items-center justify-center relative">
         <Image
-          src="/AuthBg.png"
+          src="/AuthBgNew.png"
           alt="Auth Background"
           width={500}
           height={500}
           className="mt-20 z-50"
         />
-        <Image
+        <h3 className="text-[32px] font-medium text-[#000000] mt-[15px]">
+          Unlock your amazing potential.
+        </h3>
+        {/* <Image
           src="/Vector.png"
           alt="Vector"
           width={502}
           height={490}
           className="absolute -bottom-28  w-[502px] h-[490px]"
-        />
+        /> */}
       </section>
     </section>
   );
