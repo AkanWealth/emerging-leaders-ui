@@ -28,8 +28,8 @@ const FilterDropdown = () => {
             Filter
           </span>
         </Button>
-      </DropdownMenuTrigger> -
-
+      </DropdownMenuTrigger>{" "}
+      -
       <DropdownMenuContent className="min-w-[350px] rounded-xl bg-popover text-popover-foreground shadow-[0px_8px_29px_0px_#5F5E5E30]">
         <FilterDropDownAccordions />
 

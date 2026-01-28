@@ -48,7 +48,7 @@ class AuthService {
   }
   async changePassword(data: {
     email: string;
-    otp:string;
+    otp: string;
     newPassword: string;
     confirmNewPassword: string;
   }) {
