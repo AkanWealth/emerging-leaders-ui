@@ -58,7 +58,7 @@ const UserRankingTable = ({
                 Projects
               </TableHead>
               <TableHead className="whitespace-nowrap text-center">
-                Goals
+                Steps
               </TableHead>
               <TableHead className="whitespace-nowrap text-center">
                 Savings
