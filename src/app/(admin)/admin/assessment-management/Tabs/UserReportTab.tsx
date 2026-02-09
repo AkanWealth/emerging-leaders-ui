@@ -21,19 +21,11 @@ type UserReportTabType = {
 };
 
 const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
-  const months = [
-    { short: "Jan", full: "January" },
-    { short: "Feb", full: "February" },
-    { short: "Mar", full: "March" },
-    { short: "Apr", full: "April" },
-    { short: "May", full: "May" },
-    { short: "Jun", full: "June" },
-    { short: "Jul", full: "July" },
-    { short: "Aug", full: "August" },
-    { short: "Sep", full: "September" },
-    { short: "Oct", full: "October" },
-    { short: "Nov", full: "November" },
-    { short: "Dec", full: "December" },
+  const quarters = [
+    { key: "Q1", label: "ASS- Q1" },
+    { key: "Q2", label: "ASS- Q2" },
+    { key: "Q3", label: "ASS- Q3" },
+    { key: "Q4", label: "ASS- Q4" },
   ];
 
   return (
@@ -43,7 +35,7 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
           <Table className="table-fixed min-w-[1000px]">
             <colgroup>
               <col className="w-[200px]" />
-              {months.map((_, i) => (
+              {quarters.map((_, i) => (
                 <col key={i} className="w-[100px]" />
               ))}
             </colgroup>
@@ -53,12 +45,12 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
                 <TableHead className="sticky left-0 z-10 pl-[25px] bg-[#F9F9F7] text-[16px] font-medium">
                   Full Name
                 </TableHead>
-                {months.map((month) => (
+                {quarters.map((quarter) => (
                   <TableHead
-                    key={month.short}
+                    key={quarter.key}
                     className="text-[16px] font-medium"
                   >
-                    {month.short}
+                    {quarter.label}
                   </TableHead>
                 ))}
               </TableRow>
@@ -70,8 +62,8 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
                   <TableCell className="sticky left-0 z-10 pl-[25px] bg-white">
                     <Skeleton className="h-5 w-[150px]" />
                   </TableCell>
-                  {months.map((month) => (
-                    <TableCell key={month.short}>
+                  {quarters.map((quarter) => (
+                    <TableCell key={quarter.key}>
                       <Skeleton className="h-7 w-[70px] rounded-full" />
                     </TableCell>
                   ))}
@@ -85,8 +77,8 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
           <Table className="table-fixed min-w-[1000px]">
             <colgroup>
               <col className="w-[200px]" /> {/* Full Name fixed width */}
-              {months.map((_, i) => (
-                <col key={i} className="w-[100px]" /> // each month fixed width
+              {quarters.map((_, i) => (
+                <col key={i} className="w-[100px]" /> // each quarter fixed width
               ))}
             </colgroup>
 
@@ -95,12 +87,12 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
                 <TableHead className="sticky left-0 z-10 pl-[25px] bg-[#F9F9F7] text-[16px] font-medium">
                   Full Name
                 </TableHead>
-                {months.map((month) => (
+                {quarters.map((quarter) => (
                   <TableHead
-                    key={month.short}
+                    key={quarter.key}
                     className="text-[16px] font-medium"
                   >
-                    {month.short}
+                    {quarter.label}
                   </TableHead>
                 ))}
               </TableRow>
@@ -112,20 +104,20 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
                   <TableCell className="sticky left-0 z-10 pl-[25px] bg-white text-[16px] text-[#2A2829] truncate">
                     {user.fullname}
                   </TableCell>
-                  {months.map((month) => {
-                    const value = (user[month.full as keyof typeof user] ??
+                  {quarters.map((quarter) => {
+                    const value = (user[quarter.key as keyof typeof user] ??
                       "NULL") as string;
                     const normalizedValue = value.toLowerCase();
 
                     return (
-                      <TableCell key={month.short} className="text-[16px]">
+                      <TableCell key={quarter.key} className="text-[16px]">
                         <Badge
                           variant={
                             normalizedValue === "done"
                               ? "done"
                               : normalizedValue === "not done"
-                              ? "notDone"
-                              : "nullValue"
+                                ? "notDone"
+                                : "nullValue"
                           }
                           className="capitalize px-3 py-1"
                         >

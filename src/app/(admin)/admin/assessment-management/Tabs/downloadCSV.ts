@@ -102,36 +102,20 @@ export const downloadUserReportCSV = (
   const headers = [
     "User ID",
     "Full Name",
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "ASS- Q1",
+    "ASS- Q2",
+    "ASS- Q3",
+    "ASS- Q4",
   ];
 
   // Create CSV rows
   const rows = data.map((item) => [
     escapeCSVValue(item.userId),
     escapeCSVValue(item.fullname),
-    escapeCSVValue(item.January),
-    escapeCSVValue(item.February),
-    escapeCSVValue(item.March),
-    escapeCSVValue(item.April),
-    escapeCSVValue(item.May),
-    escapeCSVValue(item.June),
-    escapeCSVValue(item.July),
-    escapeCSVValue(item.August),
-    escapeCSVValue(item.September),
-    escapeCSVValue(item.October),
-    escapeCSVValue(item.November),
-    escapeCSVValue(item.December),
+    escapeCSVValue(item.Q1),
+    escapeCSVValue(item.Q2),
+    escapeCSVValue(item.Q3),
+    escapeCSVValue(item.Q4),
   ]);
 
   // Combine headers and rows

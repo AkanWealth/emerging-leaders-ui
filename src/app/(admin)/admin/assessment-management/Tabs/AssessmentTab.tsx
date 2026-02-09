@@ -63,7 +63,7 @@ const AssessmentTab = ({ assessmentData, isLoading }: AssessmentTabProp) => {
               </TableRow>
             ))}
           </TableBody>
-          </Table>
+        </Table>
       ) : (assessmentData?.data?.length ?? 0) > 0 ? (
         <Table className="table-auto w-full">
           <TableHeader>
@@ -87,7 +87,7 @@ const AssessmentTab = ({ assessmentData, isLoading }: AssessmentTabProp) => {
             {assessmentData?.data?.map((assessment) => (
               <TableRow key={assessment.id}>
                 <TableCell className="font-medium px-[25px] py-3.5 w-full">
-                  {mapMonthToLabel(assessment.scheduledMonth)}
+                  {assessment.title}
                 </TableCell>
                 <TableCell className="whitespace-nowrap px-[25px] py-3.5 ">
                   {formatNumber(assessment.totalUsers)}
@@ -110,34 +110,3 @@ const AssessmentTab = ({ assessmentData, isLoading }: AssessmentTabProp) => {
 };
 
 export default AssessmentTab;
-
-function mapMonthToLabel(month: string): string {
-  switch (month) {
-    case "January":
-      return "January Assessments";
-    case "February":
-      return "February Assessments";
-    case "March":
-      return "March Assessments";
-    case "April":
-      return "April Assessments";
-    case "May":
-      return "May Assessments";
-    case "June":
-      return "June Assessments";
-    case "July":
-      return "July Assessments";
-    case "August":
-      return "August Assessments";
-    case "September":
-      return "September Assessments";
-    case "October":
-      return "October Assessments";
-    case "November":
-      return "November Assessments";
-    case "December":
-      return "December Assessments";
-    default:
-      return "Unknown Month";
-  }
-}

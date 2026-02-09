@@ -13,18 +13,10 @@ export type UserReportType = {
   userId: string;
   fullname: string;
   profilePicture: null | string;
-  January: string;
-  February: string;
-  March: string;
-  April: string;
-  May: string;
-  June: string;
-  July: string;
-  August: string;
-  September: string;
-  October: string;
-  November: string;
-  December: string;
+  Q1: string;
+  Q2: string;
+  Q3: string;
+  Q4: string;
 };
 
 export type UserReportMeta = {

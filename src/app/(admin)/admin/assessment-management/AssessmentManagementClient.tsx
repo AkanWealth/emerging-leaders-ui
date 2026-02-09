@@ -27,21 +27,21 @@ const AssessmentManagementClient = () => {
   // Get initial values from URL or defaults
   const [activeTab, setActiveTab] = useState<"assessment-list" | "user-report">(
     (searchParams.get("tab") as "assessment-list" | "user-report") ||
-      "assessment-list"
+      "assessment-list",
   );
 
   // Assessment List tab state
   const [assessmentSearchInput, setAssessmentSearchInput] = useState(
-    searchParams.get("assessmentSearch") || ""
+    searchParams.get("assessmentSearch") || "",
   );
   const [assessmentSearch, setAssessmentSearch] = useState(
-    searchParams.get("assessmentSearch") || ""
+    searchParams.get("assessmentSearch") || "",
   );
   const [assessmentYear, setAssessmentYear] = useState<number>(
-    Number(searchParams.get("assessmentYear")) || new Date().getFullYear()
+    Number(searchParams.get("assessmentYear")) || new Date().getFullYear(),
   );
   const [assessmentPage, setAssessmentPage] = useState(
-    Number(searchParams.get("assessmentPage")) || 1
+    Number(searchParams.get("assessmentPage")) || 1,
   );
   const [assessmentLimit, setAssessmentLimit] = useState(8);
   const [showAssessmentFilter, setShowAssessmentFilter] =
@@ -49,16 +49,16 @@ const AssessmentManagementClient = () => {
 
   // User Report tab state
   const [userReportSearchInput, setUserReportSearchInput] = useState(
-    searchParams.get("userReportSearch") || ""
+    searchParams.get("userReportSearch") || "",
   );
   const [userReportSearch, setUserReportSearch] = useState(
-    searchParams.get("userReportSearch") || ""
+    searchParams.get("userReportSearch") || "",
   );
   const [userReportYear, setUserReportYear] = useState<number>(
-    Number(searchParams.get("userReportYear")) || new Date().getFullYear()
+    Number(searchParams.get("userReportYear")) || new Date().getFullYear(),
   );
   const [userReportPage, setUserReportPage] = useState(
-    Number(searchParams.get("userReportPage")) || 1
+    Number(searchParams.get("userReportPage")) || 1,
   );
   const [userReportLimit, setUserReportLimit] = useState(8);
   const [showUserReportFilter, setShowUserReportFilter] =
@@ -183,7 +183,7 @@ const AssessmentManagementClient = () => {
       showToast(
         "error",
         "Still loading",
-        "Please wait while data is still loading."
+        "Please wait while data is still loading.",
       );
     }
     if (activeTab === "assessment-list") {
@@ -191,7 +191,7 @@ const AssessmentManagementClient = () => {
         showToast(
           "error",
           "No available data",
-          "No assessment data available to download"
+          "No assessment data available to download",
         );
         return;
       }
@@ -199,14 +199,14 @@ const AssessmentManagementClient = () => {
       showToast(
         "success",
         "Download successful",
-        "Assessment data downloaded successfully"
+        "Assessment data downloaded successfully",
       );
     } else {
       if (!userReportData?.data || userReportData.data.length === 0) {
         showToast(
           "error",
           "No available data",
-          "No user report data available to download"
+          "No user report data available to download",
         );
         return;
       }
@@ -214,7 +214,7 @@ const AssessmentManagementClient = () => {
       showToast(
         "success",
         "Download successful",
-        "User report data downloaded successfully"
+        "User report data downloaded successfully",
       );
     }
   };
@@ -263,7 +263,7 @@ const AssessmentManagementClient = () => {
                 value="assessment-list"
                 className={cn(
                   "data-[state=active]:shadow-none data-[state=active]:text-[#A2185B] data-[state=active]:bg-transparent text-[1.25rem]",
-                  activeTab === "assessment-list" ? "text-primary" : ""
+                  activeTab === "assessment-list" ? "text-primary" : "",
                 )}
               >
                 Assessment List
@@ -273,7 +273,7 @@ const AssessmentManagementClient = () => {
                 value="user-report"
                 className={cn(
                   "data-[state=active]:shadow-none data-[state=active]:text-[#A2185B] data-[state=active]:bg-transparent text-[1.25rem]",
-                  activeTab === "user-report" ? "text-primary" : ""
+                  activeTab === "user-report" ? "text-primary" : "",
                 )}
               >
                 User Report
@@ -337,24 +337,6 @@ const AssessmentManagementClient = () => {
         </Tabs>
       </section>
 
-      {/* {activeTab === "assessment-list" && (
-        <Pagination
-          totalItems={assessmentData?.meta?.totalRecords}
-          page={assessmentPage}
-          pageSize={assessmentLimit}
-          onPageChange={setAssessmentPage}
-          onPageSizeChange={setAssessmentLimit}
-        />
-      )}
-      {activeTab === "user-report"  && (
-        <Pagination
-          totalItems={userReportData?.meta?.totalUsers}
-          page={userReportPage}
-          pageSize={userReportLimit}
-          onPageChange={setUserReportPage}
-          onPageSizeChange={setUserReportLimit}
-        />
-      )} */}
       {activeTab === "assessment-list" &&
         !isAssessmentLoading &&
         (assessmentData?.meta?.totalRecords ?? 0) > 0 && (
