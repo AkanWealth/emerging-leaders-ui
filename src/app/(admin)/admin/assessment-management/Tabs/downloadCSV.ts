@@ -28,10 +28,8 @@ const escapeCSVValue = (value: string | number | null | undefined): string => {
  */
 export const downloadAssessmentListCSV = (
   data: AssessmentListType[],
-  year?: number
+  year?: number,
 ) => {
-  
-
   // Define headers
   const headers = [
     "Title",
@@ -58,7 +56,7 @@ export const downloadAssessmentListCSV = (
     escapeCSVValue(
       item.createdAt instanceof Date
         ? item.createdAt.toLocaleDateString()
-        : new Date(item.createdAt).toLocaleDateString()
+        : new Date(item.createdAt).toLocaleDateString(),
     ),
   ]);
 
@@ -91,7 +89,7 @@ export const downloadAssessmentListCSV = (
  */
 export const downloadUserReportCSV = (
   data: UserReportType[],
-  year?: number
+  year?: number,
 ) => {
   if (!data || data.length === 0) {
     alert("No data available to download");
@@ -102,20 +100,24 @@ export const downloadUserReportCSV = (
   const headers = [
     "User ID",
     "Full Name",
-    "ASS- Q1",
-    "ASS- Q2",
-    "ASS- Q3",
-    "ASS- Q4",
+    "Total Assigned",
+    "Completed",
+    "Pending",
+    "Completion Rate",
+    "Current Interval",
+    "Status",
   ];
 
   // Create CSV rows
   const rows = data.map((item) => [
     escapeCSVValue(item.userId),
     escapeCSVValue(item.fullname),
-    escapeCSVValue(item.Q1),
-    escapeCSVValue(item.Q2),
-    escapeCSVValue(item.Q3),
-    escapeCSVValue(item.Q4),
+    escapeCSVValue(item.totalAssigned),
+    escapeCSVValue(item.completed),
+    escapeCSVValue(item.pending),
+    escapeCSVValue(item.completionRate),
+    escapeCSVValue(item.currentInterval),
+    escapeCSVValue(item.status),
   ]);
 
   // Combine headers and rows

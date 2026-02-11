@@ -16,7 +16,7 @@ class AssessmentService {
     if (filters.year !== undefined) query.append("year", String(filters.year));
     if (filters.page !== undefined) query.append("page", String(filters.page));
     return this.request.get(
-      `/admin/users/assessment/report?${query.toString()}`,
+      `/admin/users/assessment/report-quarterly?${query.toString()}`,
       COOKIE_NAMES.ADMIN_AUTH_TOKENS
     );
   }

@@ -13,10 +13,12 @@ export type UserReportType = {
   userId: string;
   fullname: string;
   profilePicture: null | string;
-  Q1: string;
-  Q2: string;
-  Q3: string;
-  Q4: string;
+  totalAssigned: number;
+  completed: number;
+  pending: number;
+  completionRate: string;
+  currentInterval: string;
+  status: string;
 };
 
 export type UserReportMeta = {
@@ -38,7 +40,7 @@ export function useUserReport(filters: UserReportFilters) {
     queryKey: [QUERY_KEYS.USER_REPORT, filters],
     queryFn: async () => {
       const res = (await assessmentService.getUserReport(
-        filters
+        filters,
       )) as UserReportResponse;
 
       if (res.error) {

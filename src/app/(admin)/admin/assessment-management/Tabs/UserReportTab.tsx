@@ -21,23 +21,17 @@ type UserReportTabType = {
 };
 
 const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
-  const quarters = [
-    { key: "Q1", label: "ASS- Q1" },
-    { key: "Q2", label: "ASS- Q2" },
-    { key: "Q3", label: "ASS- Q3" },
-    { key: "Q4", label: "ASS- Q4" },
-  ];
-
   return (
     <TabsContent value="user-report" className="flex-1 flex min-h-96">
       {isLoading ? (
         <div className="w-full overflow-x-auto pb-1">
           <Table className="table-fixed min-w-[1000px]">
             <colgroup>
-              <col className="w-[200px]" />
-              {quarters.map((_, i) => (
-                <col key={i} className="w-[100px]" />
-              ))}
+              <col className="w-[30%]" />
+              <col className="w-[15%]" />
+              <col className="w-[15%]" />
+              <col className="w-[15%]" />
+              <col className="w-[25%]" />
             </colgroup>
 
             <TableHeader>
@@ -45,14 +39,18 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
                 <TableHead className="sticky left-0 z-10 pl-[25px] bg-[#F9F9F7] text-[16px] font-medium">
                   Full Name
                 </TableHead>
-                {quarters.map((quarter) => (
-                  <TableHead
-                    key={quarter.key}
-                    className="text-[16px] font-medium"
-                  >
-                    {quarter.label}
-                  </TableHead>
-                ))}
+                <TableHead className="text-[16px] font-medium">
+                  Total Assigned
+                </TableHead>
+                <TableHead className="text-[16px] font-medium">
+                  Completed
+                </TableHead>
+                <TableHead className="text-[16px] font-medium">
+                  Pending
+                </TableHead>
+                <TableHead className="text-[16px] font-medium">
+                  Status
+                </TableHead>
               </TableRow>
             </TableHeader>
 
@@ -62,11 +60,18 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
                   <TableCell className="sticky left-0 z-10 pl-[25px] bg-white">
                     <Skeleton className="h-5 w-[150px]" />
                   </TableCell>
-                  {quarters.map((quarter) => (
-                    <TableCell key={quarter.key}>
-                      <Skeleton className="h-7 w-[70px] rounded-full" />
-                    </TableCell>
-                  ))}
+                  <TableCell>
+                    <Skeleton className="h-5 w-[50px]" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-5 w-[50px]" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-5 w-[50px]" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-7 w-[70px] rounded-full" />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -76,10 +81,11 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
         <div className="w-full overflow-x-auto pb-1">
           <Table className="table-fixed min-w-[1000px]">
             <colgroup>
-              <col className="w-[200px]" /> {/* Full Name fixed width */}
-              {quarters.map((_, i) => (
-                <col key={i} className="w-[100px]" /> // each quarter fixed width
-              ))}
+              <col className="w-[30%]" />
+              <col className="w-[15%]" />
+              <col className="w-[15%]" />
+              <col className="w-[15%]" />
+              <col className="w-[25%]" />
             </colgroup>
 
             <TableHeader>
@@ -87,14 +93,18 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
                 <TableHead className="sticky left-0 z-10 pl-[25px] bg-[#F9F9F7] text-[16px] font-medium">
                   Full Name
                 </TableHead>
-                {quarters.map((quarter) => (
-                  <TableHead
-                    key={quarter.key}
-                    className="text-[16px] font-medium"
-                  >
-                    {quarter.label}
-                  </TableHead>
-                ))}
+                <TableHead className="text-[16px] font-medium">
+                  Total Assigned
+                </TableHead>
+                <TableHead className="text-[16px] font-medium">
+                  Completed
+                </TableHead>
+                <TableHead className="text-[16px] font-medium">
+                  Pending
+                </TableHead>
+                <TableHead className="text-[16px] font-medium">
+                  Status
+                </TableHead>
               </TableRow>
             </TableHeader>
 
@@ -104,28 +114,27 @@ const UserReportTab = ({ isLoading, userReportData }: UserReportTabType) => {
                   <TableCell className="sticky left-0 z-10 pl-[25px] bg-white text-[16px] text-[#2A2829] truncate">
                     {user.fullname}
                   </TableCell>
-                  {quarters.map((quarter) => {
-                    const value = (user[quarter.key as keyof typeof user] ??
-                      "NULL") as string;
-                    const normalizedValue = value.toLowerCase();
-
-                    return (
-                      <TableCell key={quarter.key} className="text-[16px]">
-                        <Badge
-                          variant={
-                            normalizedValue === "done"
-                              ? "done"
-                              : normalizedValue === "not done"
-                                ? "notDone"
-                                : "nullValue"
-                          }
-                          className="capitalize px-3 py-1"
-                        >
-                          {formatText(value)}
-                        </Badge>
-                      </TableCell>
-                    );
-                  })}
+                  <TableCell className="text-[16px]">
+                    {user.totalAssigned}
+                  </TableCell>
+                  <TableCell className="text-[16px]">
+                    {user.completed}
+                  </TableCell>
+                  <TableCell className="text-[16px]">{user.pending}</TableCell>
+                  <TableCell className="text-[16px]">
+                    <Badge
+                      variant={
+                        user.status === "DONE"
+                          ? "done"
+                          : user.status === "NOT DONE"
+                          ? "notDone"
+                          : "nullValue"
+                      }
+                      className="capitalize px-3 py-1"
+                    >
+                      {formatText(user.status)}
+                    </Badge>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
