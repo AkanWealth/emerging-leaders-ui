@@ -16,6 +16,7 @@ export type AssessmentListType = {
   scheduledMonth: string;
   scheduledYear: number;
   totalUsers: number;
+  totalAssigned: number;
   filledUsers: number;
   notFilledUsers: number;
   completionRate: string;
@@ -41,7 +42,7 @@ export function useAssessmentList(filters: AssessmentListFilters) {
     queryKey: [QUERY_KEYS.ASSESSMENT_LIST, filters],
     queryFn: async () => {
       const res = (await assessmentService.getAssessmentList(
-        filters
+        filters,
       )) as AssessmentListResponse;
 
       if (res.error) {

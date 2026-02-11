@@ -90,7 +90,7 @@ const AssessmentTab = ({ assessmentData, isLoading }: AssessmentTabProp) => {
                   {assessment.title}
                 </TableCell>
                 <TableCell className="whitespace-nowrap px-[25px] py-3.5 ">
-                  {formatNumber(assessment.totalUsers)}
+                  {formatNumber(assessment.totalAssigned)}
                 </TableCell>
                 <TableCell className="whitespace-nowrap px-[25px] py-3.5 ">
                   {formatNumber(assessment.filledUsers)}
