@@ -149,6 +149,11 @@ const AssessmentManagementClient = () => {
       ? showAssessmentFilter
       : showUserReportFilter;
 
+  const searchPlaceholder =
+    activeTab === "assessment-list"
+      ? "Search by title..."
+      : "Search by name...";
+
   // Handle search input change
   const handleSearchChange = (value: string) => {
     if (activeTab === "assessment-list") {
@@ -286,7 +291,7 @@ const AssessmentManagementClient = () => {
                 <input
                   className="border-none outline-none pl-[40px] w-full text-[14px] text-[#928F8B]"
                   type="text"
-                  placeholder="Search by title, category ..."
+                  placeholder={searchPlaceholder}
                   value={currentSearchInput}
                   onChange={(e) => handleSearchChange(e.target.value)}
                 />
