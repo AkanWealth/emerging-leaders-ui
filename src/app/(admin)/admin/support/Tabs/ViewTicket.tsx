@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TicketStatus } from "../SupportFilter";
 import { BeatLoader } from "react-spinners";
-import { useEffect, useState } from "react";
 
 const ViewTicket = () => {
   const { showToast } = useToastStore();
@@ -22,18 +21,6 @@ const ViewTicket = () => {
   const isUpdating = updateTicket.isPending;
 
   const isResolved = selectedTicket?.status === TicketStatus.RESOLVED;
-
-  const [subject, setSubject] = useState(selectedTicket?.subject || "");
-  const [description, setDescription] = useState(
-    selectedTicket?.description || "",
-  );
-
-  useEffect(() => {
-    if (selectedTicket) {
-      setSubject(selectedTicket.subject);
-      setDescription(selectedTicket.description);
-    }
-  }, [selectedTicket]);
 
   const handleUpdateAdmin = () => {
     if (!selectedTicket) {
@@ -119,8 +106,7 @@ const ViewTicket = () => {
                 Subject
               </Label>
               <Input
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
+                value={selectedTicket?.subject}
                 type="text"
                 id="last_name"
                 placeholder="User’s Last Name"
@@ -136,8 +122,7 @@ const ViewTicket = () => {
                 Description
               </Label>
               <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                value={selectedTicket?.description}
                 id="description"
                 placeholder="Enter description here"
                 disabled={isResolved} // 🚨 disabled if resolved
