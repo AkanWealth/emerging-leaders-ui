@@ -13,21 +13,34 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TicketStatus } from "../SupportFilter";
 import { BeatLoader } from "react-spinners";
+import { useEffect, useState } from "react";
 
 const ViewTicket = () => {
   const { showToast } = useToastStore();
   const { closeModal, selectedTicket } = supportModalStore();
   const updateTicket = useUpdateTicketMutation();
-  const isUpdating = updateTicket.isPending; 
+  const isUpdating = updateTicket.isPending;
 
   const isResolved = selectedTicket?.status === TicketStatus.RESOLVED;
+
+  const [subject, setSubject] = useState(selectedTicket?.subject || "");
+  const [description, setDescription] = useState(
+    selectedTicket?.description || "",
+  );
+
+  useEffect(() => {
+    if (selectedTicket) {
+      setSubject(selectedTicket.subject);
+      setDescription(selectedTicket.description);
+    }
+  }, [selectedTicket]);
 
   const handleUpdateAdmin = () => {
     if (!selectedTicket) {
       showToast(
         "error",
         "No Ticket Selected.",
-        "Please select a ticket before performing this action."
+        "Please select a ticket before performing this action.",
       );
       return;
     }
@@ -40,7 +53,7 @@ const ViewTicket = () => {
       showToast(
         "error",
         "Failed to Open Ticket.",
-        `We couldn’t open ticket ${selectedTicket?.ticketNumber} right now. Please try again later.`
+        `We couldn’t open ticket ${selectedTicket?.ticketNumber} right now. Please try again later.`,
       );
       console.log(error);
     } finally {
@@ -106,7 +119,8 @@ const ViewTicket = () => {
                 Subject
               </Label>
               <Input
-                value={selectedTicket?.subject}
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
                 type="text"
                 id="last_name"
                 placeholder="User’s Last Name"
@@ -122,7 +136,8 @@ const ViewTicket = () => {
                 Description
               </Label>
               <Textarea
-                value={selectedTicket?.description}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 id="description"
                 placeholder="Enter description here"
                 disabled={isResolved} // 🚨 disabled if resolved
